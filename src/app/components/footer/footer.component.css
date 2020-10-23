@@ -1,0 +1,39 @@
+.footer-responsivo{
+    background: rgb(255, 255, 255);
+    padding: 0px;
+    width: 100%;
+    /*height: 45px;*/
+    height: 6.8vh;
+    bottom: 0;
+    position: fixed;
+    left: 0;
+    margin-top: 0px;
+    display: flex ;
+    align-items: center;
+}
+/*Estilos de columna del footer*/
+.footer-container{
+    width: 100%;
+    background: rgb(255, 255, 255);
+    color: gray;
+    text-align: right;
+}
+
+.footer-columna{
+    margin-right: 30px;
+}
+
+/*Iconos de Redes sociales*/
+.red-social{
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    font-size: 25px;
+    transition: .3s ease all;
+  
+    text-align: right;
+}
+
+.red-social i:hover{
+    transform: scale(1.5);
+}
