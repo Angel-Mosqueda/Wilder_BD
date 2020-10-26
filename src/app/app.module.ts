@@ -5,12 +5,40 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { AltaProductoComponent } from './components/alta-producto/alta-producto.component';
+import { EliminarProductoComponent } from './components/eliminar-producto/eliminar-producto.component';
+import { ModificarProductoComponent } from './components/modificar-producto/modificar-producto.component';
+import { ReporteProductoComponent } from './components/reporte-producto/reporte-producto.component';
+import { PrestamoProductoComponent } from './components/prestamo-producto/prestamo-producto.component';
+import { ContactoComponent } from './components/contacto/contacto.component';
+import { AcercaDeComponent } from './components/acerca-de/acerca-de.component';
+import { InicioSesionComponent } from './components/inicio-sesion/inicio-sesion.component';
+import { SolicitudComponent } from './components/solicitud/solicitud.component';
+import { MantenimientoComponent } from './components/mantenimiento/mantenimiento.component';
+import { AltaUsuarioComponent } from './components/alta-usuario/alta-usuario.component';
+import { BajaUsuarioComponent } from './components/baja-usuario/baja-usuario.component';
+import { ConsultarUsuarioComponent } from './components/consultar-usuario/consultar-usuario.component';
+import { ModificarUsuarioComponent } from './components/modificar-usuario/modificar-usuario.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    FooterComponent
+    FooterComponent,
+    AltaProductoComponent,
+    EliminarProductoComponent,
+    ModificarProductoComponent,
+    ReporteProductoComponent,
+    PrestamoProductoComponent,
+    ContactoComponent,
+    AcercaDeComponent,
+    InicioSesionComponent,
+    SolicitudComponent,
+    MantenimientoComponent,
+    AltaUsuarioComponent,
+    BajaUsuarioComponent,
+    ConsultarUsuarioComponent,
+    ModificarUsuarioComponent
   ],
   imports: [
     BrowserModule,
