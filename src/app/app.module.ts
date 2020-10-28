@@ -19,6 +19,7 @@ import { AltaUsuarioComponent } from './components/alta-usuario/alta-usuario.com
 import { BajaUsuarioComponent } from './components/baja-usuario/baja-usuario.component';
 import { ConsultarUsuarioComponent } from './components/consultar-usuario/consultar-usuario.component';
 import { ModificarUsuarioComponent } from './components/modificar-usuario/modificar-usuario.component';
+import { RevisarproductoComponent } from './components/revisarproducto/revisarproducto.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { ModificarUsuarioComponent } from './components/modificar-usuario/modifi
     AltaUsuarioComponent,
     BajaUsuarioComponent,
     ConsultarUsuarioComponent,
-    ModificarUsuarioComponent
+    ModificarUsuarioComponent,
+    RevisarproductoComponent
   ],
   imports: [
     BrowserModule,

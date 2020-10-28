@@ -10,7 +10,8 @@ import * as $ from 'jquery';
 export class AppComponent {
   title = 'angularbootstrap';
    ngOnInit() {
-                //Toggle Click Function
+    //Toggle Click Function
+    
     $("#menu-toggle").click(function(e) {
       e.preventDefault();
       $("#wrapper").toggleClass("toggled");

@@ -14,10 +14,11 @@ import { ModificarUsuarioComponent } from './components/modificar-usuario/modifi
 import { PrestamoProductoComponent } from './components/prestamo-producto/prestamo-producto.component';
 import { ReporteProductoComponent } from './components/reporte-producto/reporte-producto.component';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
+import { RevisarproductoComponent } from './components/revisarproducto/revisarproducto.component';
 
 const routes: Routes = [
   { path: '',component:HomeComponent},
-  { path:'acerca-de',component:AcercaDeComponent},
+  { path: 'acerca-de',component:AcercaDeComponent},
   { path: 'alta-producto',component:AltaProductoComponent},
   { path: 'baja-usuario',component:BajaUsuarioComponent},
   { path: 'consultar-usuario',component:ConsultarUsuarioComponent},
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'prestamo-producto',component:PrestamoProductoComponent},
   { path: 'reporte-producto',component:ReporteProductoComponent},
   { path: 'solicitud',component:SolicitudComponent},
+  { path: 'revisar-producto',component:RevisarproductoComponent},
   { path: '**', redirectTo:'',pathMatch:'full'}
 ];
 
