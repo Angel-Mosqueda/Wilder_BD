@@ -1,1 +1,40 @@
-<p>revisarproducto works!</p>
+<div class="galeria">
+    
+    <div class="contenedor-imagenes">
+        
+        <div class="imagen">
+            <img src="../../../assets/images/Tipo_de_producto.jpg" alt="Option 1">
+            <a [routerLink]="['/inicio-sesion']"><div class="overlay">
+                <h2>Tipo de Producto</h2>
+            </div></a>
+        </div>
+        <div class="imagen">
+            <img src="../../../assets/images/Fecha_solicitud.jpg" alt="Option 2">
+            <a [routerLink]="['/revisar-producto']">
+                <div class="overlay">
+                    <h2>Fecha en la que se <br> realizo la solicitud</h2><br>
+                </div>
+            </a>
+        </div>
+        <div class="imagen">
+            <img src="../../../assets/images/Fecha_entrega.jpg" alt="Option 3">
+            <a [routerLink]="['/mantenimiento']">
+                <div class="overlay">
+                    <h2>Fecha en la que se <br> debe devolver el producto</h2>
+                </div></a>
+        </div>
+        <div class="imagen">
+            <img src="../../../assets/images/Area_del_producto.jpg" alt="Option 4">
+            <a [routerLink]="['/solicitud']"><div class="overlay">
+                <h2>Area en la que se <br>solicito el producto</h2>
+            </div></a>
+        </div>
+        
+        <div class="imagen">
+            <img src="../../../assets/images/ayuda.jpg" alt="Option 6">
+            <a [routerLink]="['/']"><div class="overlay">
+                <h2>Ayuda</h2>
+            </div></a>
+        </div>
+    </div>
+</div>
