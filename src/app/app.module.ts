@@ -21,6 +21,8 @@ import { ConsultarUsuarioComponent } from './components/consultar-usuario/consul
 import { ModificarUsuarioComponent } from './components/modificar-usuario/modificar-usuario.component';
 import { RevisarproductoComponent } from './components/revisarproducto/revisarproducto.component';
 
+import { Globals } from './globals/globals';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,7 +48,7 @@ import { RevisarproductoComponent } from './components/revisarproducto/revisarpr
     BrowserModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [Globals],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

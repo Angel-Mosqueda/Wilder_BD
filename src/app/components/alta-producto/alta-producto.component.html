@@ -1,1 +1,110 @@
-<p>alta-producto works!</p>
+<button class="btn btn-dark mt-2 mr-2" (click)="isnull()" [routerLink]="['/revisar-producto']">Atrás</button>
+
+<div class="container-md pt-5" id="contenedor">
+  <form class="needs-validation">
+    <div *ngIf="globals.producto === true else tituloConsumible">
+      <h3 class="row justify-content-md-center">AGREGAR A INVENTARIO</h3>
+    </div>
+
+    <ng-template #tituloConsumible>
+      <h3 class="row justify-content-md-center">AGREGAR CONSUMIBLE</h3>
+    </ng-template>
+  
+
+
+    <div class="form-row row justify-content-md-center">
+      <div class="col mt-3">
+        <label for="validationCustom01">Nombre del Producto</label>
+        <input type="text" class="form-control" id="productNameText" placeholder="" required>
+        <div class="invalid-feedback">
+          Campo Obligatorio.
+        </div>
+      </div>
+    </div>
+
+    
+
+    <div *ngIf="globals.producto === true else otro">
+      <div class="form-row row justify-content-md-center">
+        <div class="col mt-3">
+          <label for="validationCustom01">Número de Serie</label>
+          <input type="text" class="form-control" id="validationCustom01" placeholder="" required>
+          <div class="invalid-feedback">
+            Campo Obligatorio.
+          </div>
+        </div>
+
+        <div class="col mt-3">
+          <label for="validationCustom01">Número de Factura</label>
+          <input type="text" class="form-control" id="validationCustom01" placeholder="" required>
+          <div class="invalid-feedback">
+            Campo Obligatorio.
+          </div>
+        </div>
+      </div>
+
+
+      <div class="form-row row justify-content-md-center">
+        <div class="col mt-3">
+          <label for="ubicacionSelect">Ubicación</label>
+          <select class="form-control" id="ubicacionSelect">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </select>
+          <div class="invalid-feedback">
+            Campo Obligatorio.
+          </div>
+        </div>
+
+        <div class="col mt-3">
+          <label for="validationCustom01">Costo del Producto</label>
+          <input type="number" class="form-control" id="validationCustom01" placeholder="" required>
+          <div class="invalid-feedback">
+            Campo Obligatorio.
+          </div>
+        </div>
+      </div>
+  </div>
+
+
+    <ng-template #otro>
+      <p>consumible</p>
+    </ng-template>
+    
+
+  
+
+
+    <div class="form-row row justify-content-md-center">
+      <div class="col mt-3">
+        <label for="validationTextarea">Descripción</label>
+        <textarea class="form-control" id="descriptionTextArea" placeholder="" required></textarea>
+        <div class="valid-feedback">
+          Please enter a message in the textarea.
+        </div>
+        <div class="invalid-feedback">
+          Campo Obligatorio.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row row justify-content-md-center">
+      <div class="col mt-3">
+        <label for="exampleFormControlFile1">Importar Imagen</label>
+        <input type="file" class="form-control-file" id="imageImg">
+      </div>
+    </div>
+
+ 
+    <div class="form-row row justify-content-md-center">
+      <div class="col mt-3">
+        <button class="btn btn-primary" type="submit">Submit form</button>
+      </div>
+    </div>
+  </form>
+  
+  
+</div>
