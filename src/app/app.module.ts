@@ -20,8 +20,9 @@ import { BajaUsuarioComponent } from './components/baja-usuario/baja-usuario.com
 import { ConsultarUsuarioComponent } from './components/consultar-usuario/consultar-usuario.component';
 import { ModificarUsuarioComponent } from './components/modificar-usuario/modificar-usuario.component';
 import { RevisarproductoComponent } from './components/revisarproducto/revisarproducto.component';
-
+import { ConsumibleInventarioComponent } from './components/consumible-inventario/consumible-inventario.component';
 import { Globals } from './globals/globals';
+
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { Globals } from './globals/globals';
     BajaUsuarioComponent,
     ConsultarUsuarioComponent,
     ModificarUsuarioComponent,
-    RevisarproductoComponent
+    RevisarproductoComponent,
+    ConsumibleInventarioComponent
   ],
   imports: [
     BrowserModule,
