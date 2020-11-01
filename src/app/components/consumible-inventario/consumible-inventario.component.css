@@ -1,0 +1,261 @@
+.galeria{
+    font-family: 'open sans';
+    /*margin-top: 2vh;*/
+    margin-top: 6%;
+}
+
+.galeria h1{
+    text-align: center;
+    margin: 20px 0 15px 0;
+    font-weight: 300;
+}
+
+.linea{
+    border-top: 5px solid black;
+    margin-bottom: 40px;
+}
+
+.contenedor-imagenes{
+    display: flex;
+    width: 80% !important;
+    margin: auto;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    border-radius: 3px;
+    margin-bottom: 3rem;
+}
+
+.contenedor-imagenes .imagen{
+    /*width: 24vw;*/
+    width: 310px;
+    position: relative;
+    height: 252px;
+    margin-bottom: 5vh;
+    box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, .75);
+}
+
+.imagen img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.overlay{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: rgb(146, 146, 146, 0.781);
+    width: 100%;
+    height: 0;
+    overflow: hidden;
+    transition: .5s ease;
+}
+
+.overlay h2{
+    color: rgb(255, 255, 255);
+    font-weight: 300;
+    /*font-size: 4vh;*/
+    font-size: 25px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    text-align: center;
+    transform: translate(-50%, -50%);
+}
+
+.imagen:hover .overlay{
+    height: 100%;
+    cursor: pointer;
+}
+
+
+/*Estilos del modal LightBox */
+.modals{
+    visibility: hidden;
+    opacity: 0;
+}
+
+.modals:target{
+    visibility: visible;
+    opacity: 1;
+    transition: all 0.5s;
+    position: fixed;
+    background: rgba(0, 0, 0, .8);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.modals h3{
+    color: white;
+    font-size: 30px;
+    text-align: center;
+    margin: 15px 0;
+}
+
+.imagen-lightbox{
+    width: 100%;
+    height: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imagen-lightbox a{
+    color: white;
+    font-size: 40px;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.imagen-lightbox a:nth-child(2){
+    margin: 0;
+    height: 100%;
+    flex-shrink: 2;
+}
+
+.cerrar{
+    display: block;
+    
+    width: 25px;
+    height: 25px;
+    margin: 15px auto;
+    text-align: center;
+    text-decoration: none;
+    padding: 5px;
+    border-radius: 50%;
+    line-height: 25px;
+    font-size: 40px; 
+    color: red;
+}
+
+.imagen-lightbox img{
+    width: 500px;
+    height: 100%;
+    max-width: 100%;
+    border: 7px solid #fff;
+    box-sizing: border-box;
+}
+
+@media screen and (max-width: 2100px){
+    .contenedor-imagenes{
+        width: 55% !important;
+    }
+    .contenedor-imagenes .imagen{
+        height: 252px;
+    }
+}
+
+@media screen and (max-width: 2000px){
+    .contenedor-imagenes{
+        width: 55% !important;
+    }
+    .contenedor-imagenes .imagen{
+        height: 252px;
+    }
+}
+
+@media screen and (max-width: 1800px){
+    .contenedor-imagenes{
+        width: 65% !important;
+    }
+    .contenedor-imagenes .imagen{
+        height: 252px;
+    }
+}
+@media screen and (max-width: 1525px){
+    .galeria{
+        margin-top: 3% !important;
+    }
+    .contenedor-imagenes{
+        width: 75% !important;
+    }
+    .contenedor-imagenes .imagen{
+        height: 252px;
+    }
+}
+
+@media screen and (max-width: 1330px){
+    .contenedor-imagenes{
+        width: 85% !important;
+    }
+    .contenedor-imagenes .imagen{
+        height: 252px;
+    }
+}
+
+@media screen and (max-width: 1260px){
+    .contenedor-imagenes{
+        width: 95% !important;
+    }
+}
+
+@media screen and (max-width: 1111px){
+    .contenedor-imagenes{
+        width: 95% !important;
+    }
+}
+
+@media screen and (max-width: 1000px){
+    .contenedor-imagenes{
+        width: 95% !important;
+    }
+}
+
+@media screen and (max-width: 995px){
+    .contenedor-imagenes{
+        width: 99% !important;
+    }
+}
+
+
+@media screen and (max-width: 956px){
+    .contenedor-imagenes{
+        width: 99%;
+        
+    }
+    .contenedor-imagenes .imagen{
+        /*width: 48%;*/
+        width: 300px;
+    }
+}
+
+/*700px*/
+@media screen and (max-width: 930px){
+    .contenedor-imagenes{
+        width: 90%;
+        
+    }
+    .contenedor-imagenes .imagen{
+        /*width: 48%;*/
+        width: 40%;
+    }
+}
+
+@media screen and (max-width: 500px){
+    h1{
+        font-size: 22px;
+    }
+    .contenedor-imagenes{
+        width: 98%;
+    }
+    .contenedor-imagenes .imagen{
+        /*width: 80%;*/
+        width: 70%;
+    }
+}
+
+@media screen and (max-width: 450px){
+    h1{
+        font-size: 22px;
+    }
+    .contenedor-imagenes{
+        width: 98%;
+    }
+    .contenedor-imagenes .imagen{
+        width: 80%;
+    }
+}

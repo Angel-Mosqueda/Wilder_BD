@@ -1,4 +1,21 @@
+<!--<button (click)="istrue()" [routerLink]="['/alta-producto']">Verdadero</button>
+<button (click)="isfalse()" [routerLink]="['/alta-producto']">Falso</button>-->
 
-<button (click)="istrue()" [routerLink]="['/alta-producto']">Verdadero</button>
-<button (click)="isfalse()" [routerLink]="['/alta-producto']">Falso</button>
-
+<div class="galeria">
+    <div class="contenedor-imagenes">
+        
+        <div class="imagen">
+            <img src="../../../assets/images/consumibles.jpg" alt="Option 1">
+            <a (click)="istrue()" [routerLink]="['/alta-producto']"><div class="overlay">
+                <h2>Consumible</h2>
+            </div></a>
+        </div>
+        <div class="imagen">
+            <img src="../../../assets/images/inventario.jpg" alt="Option 2">
+            <a (click)="isfalse()" [routerLink]="['/alta-producto']"><div class="overlay">
+                    <h2>Inventario</h2><br>
+            </div></a>
+        </div>
+       
+    </div>
+</div>
