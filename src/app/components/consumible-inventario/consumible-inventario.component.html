@@ -1,12 +1,4 @@
 
-<p>revisarproducto works!</p>
-<p>{{globals.producto}}</p>
 <button (click)="istrue()" [routerLink]="['/alta-producto']">Verdadero</button>
 <button (click)="isfalse()" [routerLink]="['/alta-producto']">Falso</button>
-
-<div *ngIf="globals.producto === true else normal"> es verdadero</div>
-
-<ng-template #normal>
-    <p>Es falso</p>
-  </ng-template>
 

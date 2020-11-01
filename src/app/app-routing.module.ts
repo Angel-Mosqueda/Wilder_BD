@@ -15,28 +15,30 @@ import { PrestamoProductoComponent } from './components/prestamo-producto/presta
 import { ReporteProductoComponent } from './components/reporte-producto/reporte-producto.component';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { RevisarproductoComponent } from './components/revisarproducto/revisarproducto.component';
+import { ConsumibleInventarioComponent } from './components/consumible-inventario/consumible-inventario.component';
 
 const routes: Routes = [
-  { path: '',component:HomeComponent},
-  { path: 'acerca-de',component:AcercaDeComponent},
-  { path: 'alta-producto',component:AltaProductoComponent},
-  { path: 'baja-usuario',component:BajaUsuarioComponent},
-  { path: 'consultar-usuario',component:ConsultarUsuarioComponent},
-  { path: 'contacto',component:ContactoComponent},
-  { path: 'eliminar-producto',component:EliminarProductoComponent},
-  { path: 'inicio-sesion',component:InicioSesionComponent},
-  { path: 'mantenimiento',component:MantenimientoComponent},
-  { path: 'modificar-producto',component:ModificarProductoComponent},
-  { path: 'modificar-usuario',component:ModificarUsuarioComponent},
-  { path: 'prestamo-producto',component:PrestamoProductoComponent},
-  { path: 'reporte-producto',component:ReporteProductoComponent},
-  { path: 'solicitud',component:SolicitudComponent},
-  { path: 'revisar-producto',component:RevisarproductoComponent},
-  { path: '**', redirectTo:'',pathMatch:'full'}
+  { path: '', component: HomeComponent },
+  { path: 'acerca-de', component: AcercaDeComponent },
+  { path: 'alta-producto', component: AltaProductoComponent },
+  { path: 'baja-usuario', component: BajaUsuarioComponent },
+  { path: 'consultar-usuario', component: ConsultarUsuarioComponent },
+  { path: 'contacto', component: ContactoComponent },
+  { path: 'eliminar-producto', component: EliminarProductoComponent },
+  { path: 'inicio-sesion', component: InicioSesionComponent },
+  { path: 'mantenimiento', component: MantenimientoComponent },
+  { path: 'modificar-producto', component: ModificarProductoComponent },
+  { path: 'modificar-usuario', component: ModificarUsuarioComponent },
+  { path: 'prestamo-producto', component: PrestamoProductoComponent },
+  { path: 'reporte-producto', component: ReporteProductoComponent },
+  { path: 'solicitud', component: SolicitudComponent },
+  { path: 'revisar-producto', component: RevisarproductoComponent },
+  { path: 'consumible-inventario', component: ConsumibleInventarioComponent },
+  { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
