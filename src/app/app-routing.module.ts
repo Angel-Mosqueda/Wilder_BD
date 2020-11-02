@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AcercaDeComponent } from './components/acerca-de/acerca-de.component';
 import { AltaProductoComponent } from './components/alta-producto/alta-producto.component';
+import { AltaUsuarioComponent } from './components/alta-usuario/alta-usuario.component';
 import { BajaUsuarioComponent } from './components/baja-usuario/baja-usuario.component';
 import { ConsultarUsuarioComponent } from './components/consultar-usuario/consultar-usuario.component';
 import { ContactoComponent } from './components/contacto/contacto.component';
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'acerca-de', component: AcercaDeComponent },
   { path: 'alta-producto', component: AltaProductoComponent },
+  { path: 'alta-usuario', component: AltaUsuarioComponent },
   { path: 'baja-usuario', component: BajaUsuarioComponent },
   { path: 'consultar-usuario', component: ConsultarUsuarioComponent },
   { path: 'contacto', component: ContactoComponent },

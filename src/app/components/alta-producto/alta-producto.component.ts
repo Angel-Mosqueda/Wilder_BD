@@ -25,6 +25,7 @@ export class AltaProductoComponent implements OnInit {
 
   isnull(){
     this.globals.producto = null;
+    this.globals.altas = null;
   }
 
 }

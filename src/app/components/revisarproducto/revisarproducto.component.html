@@ -1,16 +1,16 @@
-
+<button class="btn btn-dark mt-2 mr-2" [routerLink]="['/home']">Atrás</button>
 <div class="galeria">
     <div class="contenedor-imagenes">
         
         <div class="imagen">
             <img src="../../../assets/images/altas.jpg" alt="Option 1">
-            <a [routerLink]="['/consumible-inventario']"><div class="overlay">
+            <a [routerLink]="['/consumible-inventario']" (click) ="esAlta()"><div class="overlay">
                 <h2>Altas</h2>
             </div></a>
         </div>
         <div class="imagen">
             <img src="../../../assets/images/bajas.png" alt="Option 2">
-            <a [routerLink]="['/consumible-inventario']">
+            <a [routerLink]="['/consumible-inventario']" (click) ="esBaja()">
                 <div class="overlay">
                     <h2>Bajas</h2><br>
                 </div>
@@ -18,14 +18,14 @@
         </div>
         <div class="imagen">
             <img src="../../../assets/images/cambios2.jpg" alt="Option 3">
-            <a [routerLink]="['/modificar-producto']">
+            <a [routerLink]="['/consumible-inventario']" (click) ="esCambio()">
                 <div class="overlay">
                     <h2>Cambios</h2>
                 </div></a>
         </div>
         <div class="imagen">
             <img src="../../../assets/images/consultas.png" alt="Option 4">
-            <a [routerLink]="['/solicitud']"><div class="overlay">
+            <a [routerLink]="['/consumible-inventario']" (click) ="esConsulta()"><div class="overlay">
                 <h2>Consultas</h2>
             </div></a>
         </div>

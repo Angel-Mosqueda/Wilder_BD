@@ -1,1 +1,8 @@
-<p>reporte-producto works!</p>
+<button class="btn btn-dark mt-2 mr-2" (click)="isnull()" [routerLink]="['/revisar-producto']">Atrás</button>
+<div *ngIf="globals.producto === true else tituloConsumible">
+    <h3 class="row justify-content-md-center">CONSULTA INVENTARIO</h3>
+  </div>
+
+  <ng-template #tituloConsumible>
+    <h3 class="row justify-content-md-center">CONSULTA CONSUMIBLE</h3>
+  </ng-template>

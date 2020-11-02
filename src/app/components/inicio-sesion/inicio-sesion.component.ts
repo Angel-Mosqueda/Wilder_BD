@@ -10,6 +10,7 @@ export class InicioSesionComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    
   }
 
 }
