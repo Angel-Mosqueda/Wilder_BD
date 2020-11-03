@@ -3,46 +3,95 @@
         <div class="card-body">
             <h3 class="mb-4">Registrarse</h3>
             <form>
-                <div class="form-row row justify-content-md-center">
-                    <div class="col mt-3">
-                        <label for="exampleFormControlInput1">Nombre(s)</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" />
+                <fieldset [disabled]="globals.deshabilitar">
+                    <div class="form-row row justify-content-md-center">
+                        <div class="col mt-3">
+                            <label for="nombres">Nombre(s)</label>
+                            <input type="text" class="form-control" id="nombres" />
+                        </div>
+                    </div>
+    
+                    <div class="form-row row justify-content-md-center">
+                        <div class="col mt-3">
+                            <label for="apepat">Apellido Paterno</label>
+                            <input type="text" class="form-control" id="apepat" />
+                        </div>
+                        <div class="col mt-3">
+                            <label for="apemat">Apellido Materno</label>
+                            <input type="text" class="form-control" id="apemat" />
+                        </div>
+                    </div>
+    
+                    <div class="form-row row justify-content-md-center">
+                        <div class="col mt-3">
+                            <label for="correo">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="correo"
+                                placeholder="nombre@ejemplo.com" />
+                        </div>
+                    </div>
+    
+                    <div class="form-row row justify-content-md-center">
+                        <div class="col mt-3">                           
+                            <label for="inputPassword1">Nueva Contraseña</label>
+                                <div class="input-group">
+                                    <input ID="txtPassword1" [type]="globals.passwordNueva1" Class="form-control">
+                                    <div class="input-group-append">
+                                        <button type="button" id="show_password1" (click)="showPassword1()" class="btn btn-primary"> <span class="fa fa-eye-slash icon"></span> </button>
+                                    </div>
+                              </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row row justify-content-md-center">
+                        <div class="col mt-3">                           
+                            <label for="inputPassword2">Ingrese De Nuevo Su Contraseña</label>
+                                <div class="input-group">
+                                    <input ID="inputPassword2" [type]="globals.passwordNueva2" Class="form-control">
+                                    <div class="input-group-append">
+                                        <button type="button" id="show_password2" (click)="showPassword2()" class="btn btn-primary"> <span class="fa fa-eye-slash icon"></span> </button>
+                                    </div>
+                              </div>
+                          
+                        </div>
+                    </div>
+
+                    <div class="form-row row justify-content-md-center">
+                        <div class="col mt-3">
+                            <label for="empresaSelect"></label>
+                            <select class="custom-select" id="empresaSelect">
+                                <option selected>Selecciona Una Empresa</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                              </select>
+                        </div>
+                        <div class="col mt-3 text-center">
+                            <button type="button" class="btn btn-outline-secondary" (click)="agregarEmpresa()">Agregar Nueva Empresa</button>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div *ngIf="globals.nuevaEmpresa === true else noNuevaEmpresa">
+                    <div class="form-row row justify-content-md-center">
+                        <div class="col mt-3">
+                            <label for="nombreEmpresa">Nombre De La Empresa</label>
+                            <input type="text" class="form-control" id="nombreEmpresa" />
+                        </div>
+                    </div>
+
+                    <div class="form-row row justify-content-md-center">
+                        <div class="col mt-3">
+                            <label for="razSocial">Razon Social</label>
+                            <input type="text" class="form-control" id="razSocial" />
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-row row justify-content-md-center">
-                    <div class="col mt-3">
-                        <label for="exampleFormControlInput1">Apellido Paterno</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" />
-                    </div>
-                    <div class="col mt-3">
-                        <label for="exampleFormControlInput1">Apellido Materno</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" />
-                    </div>
-                </div>
-
-                <div class="form-row row justify-content-md-center">
-                    <div class="col mt-3">
-                        <label for="exampleFormControlInput1">Correo Electrónico</label>
-                        <input type="email" class="form-control" id="exampleFormControlInput1"
-                            placeholder="nombre@ejemplo.com" />
-                    </div>
-                </div>
-
-                <div class="form-row row justify-content-md-center">
-                    <div class="col mt-3">
-                        <label for="inputPassword">Contraseña</label>
-                        <input type="password" class="form-control" id="inputPassword" />
-                    </div>
-                    <div class="col mt-3">
-                        <label for="inputPassword">Ingrese De Nuevo Su Contraseña</label>
-                        <input type="password" class="form-control" id="inputPassword" />
-                    </div>
-                </div>
-
+                <ng-template #noNuevaEmpresa></ng-template>
+                
             </form>
         </div>
-        <div class="card-footer text-center">
+        <div class="card-footer text-center mt-3">
             <button type="button" class="btn btn-primary mr-3">Terminar Registro</button>
         </div>
     </div>

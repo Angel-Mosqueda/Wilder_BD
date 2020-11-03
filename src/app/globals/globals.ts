@@ -7,4 +7,9 @@ export class Globals {
   bajas: boolean = null;
   cambios: boolean = null;
   consultas: boolean = null;
+  nuevaEmpresa: boolean = null;
+  deshabilitar: boolean = false;
+  passwordLogin: string = "Password";
+  passwordNueva1: string = "Password";
+  passwordNueva2: string = "Password";
 }

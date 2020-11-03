@@ -11,8 +11,14 @@
 
                 <div class="form-group">
                     <label for="inputPassword">Contraseña</label>
-                    <input type="password" class="form-control" id="inputPassword" />
+                    <div class="input-group">
+                        <input ID="txtPassword" [type]="globals.passwordLogin" Class="form-control">
+                        <div class="input-group-append">
+                            <button id="show_password" (click)="showPassword()" class="btn btn-primary" type="button"> <span class="fa fa-eye-slash icon"></span> </button>
+                        </div>
+                    </div>
                 </div>
+
             </form>
         </div>
         <div class="card-footer text-center">
