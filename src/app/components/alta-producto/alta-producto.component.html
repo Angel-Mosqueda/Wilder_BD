@@ -1,114 +1,119 @@
 <button class="btn btn-dark mt-2 mr-2" (click)="isnull()" [routerLink]="['/revisar-producto']">Atrás</button>
 
-<div class="container-md pt-5" id="contenedor">
+
+<div class="container-md pt-5" id="contenedor" style="margin-bottom: 45px;">
   
-  <form class="needs-validation">
-    <div *ngIf="globals.producto === true else tituloConsumible">
-      <h3 class="row justify-content-md-center">AGREGAR A INVENTARIO</h3>
-    </div>
-
-    <ng-template #tituloConsumible>
-      <h3 class="row justify-content-md-center">AGREGAR CONSUMIBLE</h3>
-    </ng-template>
-  
-
-
-    <div class="form-row row justify-content-md-center">
-      <div class="col mt-3">
-        <label for="validationCustom01">Nombre del Producto</label>
-        <input type="text" class="form-control" id="productNameText" placeholder="" required>
-      </div>
-    </div>
-
+  <div class="card">
+    <div class="card-body">
+      <form class="needs-validation">
+        <div *ngIf="globals.producto === true else tituloConsumible">
+          <h3 class="row justify-content-md-center">AGREGAR A INVENTARIO</h3>
+        </div>
     
-
-    <div *ngIf="globals.producto === true else otro">
-      <div class="form-row row justify-content-md-center">
-        <div class="col mt-3">
-          <label for="validationCustom01">Número de Serie</label>
-          <input type="text" class="form-control" id="serieNumberInventario" placeholder="" required>
+        <ng-template #tituloConsumible>
+          <h3 class="row justify-content-md-center">AGREGAR CONSUMIBLE</h3>
+        </ng-template>
+      
+    
+    
+        <div class="form-row row justify-content-md-center">
+          <div class="col mt-3">
+            <label for="validationCustom01">Nombre del Producto</label>
+            <input type="text" class="form-control" id="productNameText" placeholder="" required>
+          </div>
         </div>
-
-        <div class="col mt-3">
-          <label for="validationCustom01">Número de Factura</label>
-          <input type="text" class="form-control" id="facturaNumberInventario" placeholder="" required>
-        </div>
+    
+        
+    
+        <div *ngIf="globals.producto === true else otro">
+          <div class="form-row row justify-content-md-center">
+            <div class="col mt-3">
+              <label for="validationCustom01">Número de Serie</label>
+              <input type="text" class="form-control" id="serieNumberInventario" placeholder="" required>
+            </div>
+    
+            <div class="col mt-3">
+              <label for="validationCustom01">Número de Factura</label>
+              <input type="text" class="form-control" id="facturaNumberInventario" placeholder="" required>
+            </div>
+          </div>
+    
+          <div class="form-row row justify-content-md-center">
+            <div class="col mt-3">
+              <label for="validationCustom01">Proveedor</label>
+              <input type="text" class="form-control" id="proveedorInventario" placeholder="" required>
+            </div>
+    
+            <div class="col mt-3">
+              <label for="validationCustom01">Factura</label>
+              <input type="text" class="form-control" id="facturaInventario" placeholder="" required>
+            </div>
+          </div>
+    
+          <div class="form-row row justify-content-md-center">
+            <div class="col mt-3">
+              <label for="validationCustom01">Fecha De Compra</label>
+              <input type="date" class="form-control" id="fechaCompraInventario" placeholder="" required>
+            </div>
+    
+            <div class="col mt-3">
+              <label for="validationCustom01">Costo Del Producto</label>
+              <input type="number" class="form-control" id="costoProductoinventario" placeholder="" required>
+            </div>
+          </div>
+    
+    
       </div>
-
-      <div class="form-row row justify-content-md-center">
-        <div class="col mt-3">
-          <label for="validationCustom01">Proveedor</label>
-          <input type="text" class="form-control" id="proveedorInventario" placeholder="" required>
+    
+    
+        <ng-template #otro>
+          <div class="form-row row justify-content-md-center">
+            <div class="col mt-3">
+              <label for="validationCustom01">Cantidad</label>
+              <input type="number" class="form-control" id="cantidadConsumible" placeholder="" required>
+            </div>
+    
+    
+            <div class="col mt-3">
+              <label for="validationCustom01">SKU</label>
+              <input type="text" class="form-control" id="skuConsumible" placeholder="" required>
+            </div>
+          </div>
+    
+          <div class="form-row row justify-content-md-center">
+            <div class="col mt-3">
+              <label for="validationCustom01">Proveedor</label>
+              <input type="number" class="form-control" id="proveedorConsumible" placeholder="" required>
+            </div>
+          </div>
+        </ng-template>
+        
+        <div class="form-row row justify-content-md-center">
+          <div class="col mt-3">
+            <label for="validationTextarea">Descripción</label>
+            <textarea class="form-control" id="descriptionTextArea" placeholder="" required></textarea>
+            <div class="valid-feedback">
+              Please enter a message in the textarea.
+            </div>
+          </div>
         </div>
-
-        <div class="col mt-3">
-          <label for="validationCustom01">Factura</label>
-          <input type="text" class="form-control" id="facturaInventario" placeholder="" required>
+    
+        <div class="form-row row justify-content-md-center">
+          <div class="col mt-3">
+            <input type="file" class="custom-file-input" id="customFileLang" lang="es">
+      <label class="custom-file-label" for="customFileLang">Seleccionar Imagen</label>
+          </div>
         </div>
-      </div>
-
-      <div class="form-row row justify-content-md-center">
-        <div class="col mt-3">
-          <label for="validationCustom01">Fecha De Compra</label>
-          <input type="date" class="form-control" id="fechaCompraInventario" placeholder="" required>
+    
+     
+        <div class="form-row row justify-content-md-center">
+          <div class="col mt-3">
+            <button class="btn btn-primary" type="submit">Submit form</button>
+          </div>
         </div>
-
-        <div class="col mt-3">
-          <label for="validationCustom01">Costo Del Producto</label>
-          <input type="number" class="form-control" id="costoProductoinventario" placeholder="" required>
-        </div>
-      </div>
-
-
+      </form>
+    </div>
   </div>
-
-
-    <ng-template #otro>
-      <div class="form-row row justify-content-md-center">
-        <div class="col mt-3">
-          <label for="validationCustom01">Cantidad</label>
-          <input type="number" class="form-control" id="cantidadConsumible" placeholder="" required>
-        </div>
-
-
-        <div class="col mt-3">
-          <label for="validationCustom01">SKU</label>
-          <input type="text" class="form-control" id="skuConsumible" placeholder="" required>
-        </div>
-      </div>
-
-      <div class="form-row row justify-content-md-center">
-        <div class="col mt-3">
-          <label for="validationCustom01">Proveedor</label>
-          <input type="number" class="form-control" id="proveedorConsumible" placeholder="" required>
-        </div>
-      </div>
-    </ng-template>
-    
-    <div class="form-row row justify-content-md-center">
-      <div class="col mt-3">
-        <label for="validationTextarea">Descripción</label>
-        <textarea class="form-control" id="descriptionTextArea" placeholder="" required></textarea>
-        <div class="valid-feedback">
-          Please enter a message in the textarea.
-        </div>
-      </div>
-    </div>
-
-    <div class="form-row row justify-content-md-center">
-      <div class="col mt-3">
-        <input type="file" class="custom-file-input" id="customFileLang" lang="es">
-  <label class="custom-file-label" for="customFileLang">Seleccionar Imagen</label>
-      </div>
-    </div>
-
- 
-    <div class="form-row row justify-content-md-center">
-      <div class="col mt-3">
-        <button class="btn btn-primary" type="submit">Submit form</button>
-      </div>
-    </div>
-  </form>
   
   
 </div>

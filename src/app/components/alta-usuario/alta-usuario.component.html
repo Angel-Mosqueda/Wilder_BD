@@ -1,3 +1,5 @@
+<button class="btn btn-dark mt-2 mr-2" [routerLink]="['/inicio-sesion']">Atrás</button>
+
 <div class="container-md pt-5" id="contenedor" style="margin-bottom: 45px;">
     <div class="card">
         <div class="card-body">
@@ -85,9 +87,18 @@
                             <input type="text" class="form-control" id="razSocial" />
                         </div>
                     </div>
+
+                    <div class="form-row row justify-content-md-center">
+                        <div class="col mt-3">
+                            <label for="razSocial">Razon Social</label>
+                            <input type="text" class="form-control" id="razSocial" />
+                        </div>
+                    </div>
                 </div>
 
-                <ng-template #noNuevaEmpresa></ng-template>
+                <ng-template #noNuevaEmpresa>
+
+                </ng-template>
                 
             </form>
         </div>

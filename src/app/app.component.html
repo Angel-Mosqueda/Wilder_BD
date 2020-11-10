@@ -16,7 +16,7 @@
     <div id="page-content-wrapper">
       <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
         <button class="btn btn-primary" id="menu-toggle">Menu</button>
-        <h3 class="ml-3 mt-2">WILDER</h3>
+        <a class="nav-link text-decoration-none" [routerLink]="['/']"><h3 class="ml-3 mt-2">WILDER</h3></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -25,13 +25,18 @@
             <li class="nav-item active">
               <a class="nav-link" [routerLink]="['/']">Home <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
+
+            <li class="nav-item align-baseline">
               <a class="nav-link" [routerLink]="['/inicio-sesion']">Iniciar Sesion</a>
             </li>
-            <!-- Incluir en opciones de cuenta para usuarios
+
+            <li class="nav-item"> 
+              
+            </li>
+            <!-- Incluir en opciones de cuenta para usuarios -->
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Dropdown
+              <a class="nav-link align-baseline" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img src="../assets/images/prueba.jpg" class="border border-dark rounded-circle" width="40px" height="40px">
               </a>
               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="#">Action</a>
@@ -40,7 +45,7 @@
                 <a class="dropdown-item" href="#">Something else here</a>
               </div>
             </li>
-            -->
+            <!---->
           </ul>
         </div>
       </nav>

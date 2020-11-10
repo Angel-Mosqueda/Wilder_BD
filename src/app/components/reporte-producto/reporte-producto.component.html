@@ -6,3 +6,90 @@
   <ng-template #tituloConsumible>
     <h3 class="row justify-content-md-center">CONSULTA CONSUMIBLE</h3>
   </ng-template>
+
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-2 mt-5">
+        
+        <div class="card border-dark">
+          <div class="card-header text-center">
+            <h5>Filtros</h5>
+          </div>
+          <div class="card-body text-dark">
+            <h6 class="card-title">Status</h6>
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="check1">
+              <label class="custom-control-label" for="check1">
+                <p><small class="align-text-top">Disabled checkbox</small></p>
+              </label>
+            </div>
+            
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="check2">
+              <label class="custom-control-label" for="check2">
+                <p><small class="align-text-top">Disabled checkbox</small></p>
+              </label>
+            </div>
+  
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="check3">
+              <label class="custom-control-label" for="check3">
+                <p><small class="align-text-top">Disabled checkbox</small></p>
+              </label>
+            </div>
+  
+            <label for="customRange3">Example range</label>
+            <input type="range" class="custom-range" min="0" max="5" step="0.5" id="customRange3">
+          </div>
+        </div>
+  
+      </div>
+      <div class="col-10">
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Imagen de Referencia</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Modificar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@mdo</td>
+              <td><button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#modalConsulta">Cambiar</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="modal fade" id="modalConsulta" tabindex="-1" role="dialog" aria-labelledby="consultaModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="consultaModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
