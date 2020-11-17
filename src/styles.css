@@ -1,0 +1,28 @@
+a{
+    text-decoration: none;
+}
+
+.custom-slider .ngx-slider .ngx-slider-bar {
+    background: #ffffff;
+    height: 2px;
+  }
+
+.custom-slider .ngx-slider .ngx-slider-pointer {
+    margin-top: 3px;
+    width: 8px;
+    height: 16px;
+    top: auto; /* to remove the default positioning */
+    bottom: 0;
+    background-color: rgb(255, 255, 255);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+
+  .custom-slider .ngx-slider .ngx-slider-pointer:after {
+    display: none;
+  }
+
+  .custom-slider .ngx-slider .ngx-slider-bubble{
+    color: #ffffff;
+  }
+

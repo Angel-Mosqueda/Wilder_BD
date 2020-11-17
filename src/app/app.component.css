@@ -22,7 +22,7 @@ body {
   #wrapper.toggled #sidebar-wrapper {
     margin-left: 0;
   }
-  @media (min-width: 768px) {
+  @media (min-width: 1250px) {
     #sidebar-wrapper {
       margin-left: 0;
     }
@@ -34,3 +34,7 @@ body {
       margin-left: -15rem;
     }
   }
+
+  a{
+    text-decoration: none;
+}
