@@ -1,10 +1,20 @@
-<button class="btn btn-dark mt-2 mr-2 mb-3" (click)="isnull()" [routerLink]="['/revisar-producto']">Atrás</button>
+
+<form class="mt-4 mr-2 mb-3">
+  <div class="row">
+    <div class="col-md-8">
+      <button class="btn btn-dark mb-3" (click)="isnull()" [routerLink]="['/revisar-producto']">Atrás</button>
+    </div>
+    <div class="col-md-4 mb-3" >
+      <input type="text"  class="form-control align-bottom" placeholder="¿Qué Producto Estás Buscando?">
+    </div>
+  </div>
+</form>
 <div *ngIf="globals.producto === true else tituloConsumible">
-  <h3 class="row justify-content-md-center mb-5">CAMBIOS INVENTARIO</h3>
+  <h3 class="row-md-12 text-center">CAMBIOS INVENTARIO</h3>
 </div>
 
 <ng-template #tituloConsumible>
-  <h3 class="row justify-content-md-center mb-5">CAMBIOS CONSUMIBLE</h3>
+  <h3 class="row-md-12 text-center">CAMBIOS CONSUMIBLE</h3>
 </ng-template>
 
 
@@ -23,22 +33,22 @@
               <div id="statusProducto">
                 <h6 class="card-title">Status</h6>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="check1">
-                  <label class="custom-control-label" for="check1">
+                  <input type="checkbox" class="custom-control-input" id="checkPrestamo" (click)="checkPrestamoInventarioFunction()">
+                  <label class="custom-control-label" for="checkPrestamo">
                     <p><small class="align-text-top">En Préstamo</small></p>
                   </label>
                 </div>
 
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="check2">
-                  <label class="custom-control-label" for="check2">
+                  <input type="checkbox" class="custom-control-input" id="checkMantenimiento" (click)="checkMantenimientoInventarioFunction()">
+                  <label class="custom-control-label" for="checkMantenimiento">
                     <p><small class="align-text-top">En Mantenimiento</small></p>
                   </label>
                 </div>
 
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="check3">
-                  <label class="custom-control-label" for="check3">
+                  <input type="checkbox" class="custom-control-input" id="checkAlmacen" (click)="checkAlmacenInventarioFunction()">
+                  <label class="custom-control-label" for="checkAlmacen">
                     <p><small class="align-text-top">En Almacén</small></p>
                   </label>
                 </div>
@@ -47,47 +57,38 @@
               <div id="categoriaProducto">
                 <h6 class="card-title">Categoria</h6>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="check1">
-                  <label class="custom-control-label" for="check1">
+                  <input type="checkbox" class="custom-control-input" id="checkComputacionInventario" (click)="checkComputacionInventarioFunction()">
+                  <label class="custom-control-label" for="checkComputacionInventario">
                     <p><small class="align-text-top">Computación</small></p>
                   </label>
                 </div>
 
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="check2">
-                  <label class="custom-control-label" for="check2">
+                  <input type="checkbox" class="custom-control-input" id="checkHerramientasInventario" (click)="checkHerramientasInventarioFuntion()">
+                  <label class="custom-control-label" for="checkHerramientasInventario">
                     <p><small class="align-text-top">Herramientas</small></p>
                   </label>
                 </div>
 
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="check3">
-                  <label class="custom-control-label" for="check3">
+                  <input type="checkbox" class="custom-control-input" id="checkMaquinariaInventario" (click)="checkMaquinariaInventarioFunction()">
+                  <label class="custom-control-label" for="checkMaquinariaInventario">
                     <p><small class="align-text-top">Maquinaria</small></p>
                   </label>
                 </div>
 
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="check3">
-                  <label class="custom-control-label" for="check3">
+                  <input type="checkbox" class="custom-control-input" id="checkMuebleriaInventario" (click)="checkMuebleriaInventarioFunction()">
+                  <label class="custom-control-label" for="checkMuebleriaInventario">
                     <p><small class="align-text-top">Muebleria</small></p>
                   </label>
                 </div>
 
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="check3">
-                  <label class="custom-control-label" for="check3">
+                  <input type="checkbox" class="custom-control-input" id="checkVehiculosInventario" (click)="checkVehiculosInventarioFunction()">
+                  <label class="custom-control-label" for="checkVehiculosInventario">
                     <p><small class="align-text-top">Vehículos</small></p>
                   </label>
-                </div>
-              </div>
-
-
-              <div id="sliderCosto">
-                <h6 class="card-title">Costo</h6>
-                <div class="custom-slider">
-                  <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options">
-                  </ngx-slider>
                 </div>
               </div>
             </div>
@@ -97,15 +98,15 @@
               <div id="statusConsumible">
                 <h6 class="card-title">Status</h6>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="check1">
-                  <label class="custom-control-label" for="check1">
+                  <input type="checkbox" class="custom-control-input" id="checkDisponible" (click)="checkDisponibleConsumibleFunction()">
+                  <label class="custom-control-label" for="checkDisponible">
                     <p><small class="align-text-top">Disponible</small></p>
                   </label>
                 </div>
 
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="check2">
-                  <label class="custom-control-label" for="check2">
+                  <input type="checkbox" class="custom-control-input" id="checkAgotado" (click)="checkAgotadoConsumibleFunction()">
+                  <label class="custom-control-label" for="checkAgotado">
                     <p><small class="align-text-top">Agotado</small></p>
                   </label>
                 </div>
@@ -114,51 +115,48 @@
               <div id="categoriaConsumible">
                 <h6 class="card-title">Categoria</h6>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="check1">
-                  <label class="custom-control-label" for="check1">
+                  <input type="checkbox" class="custom-control-input" id="checkAutomotriz" (click)="checkAutomotrizConsumibleFunction()">
+                  <label class="custom-control-label" for="checkAutomotriz">
                     <p><small class="align-text-top">Automotriz</small></p>
                   </label>
                 </div>
 
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="check2">
-                  <label class="custom-control-label" for="check2">
+                  <input type="checkbox" class="custom-control-input" id="checkHerramientasConsumible" (click)="checkHerramientasConsumibleFunction()">
+                  <label class="custom-control-label" for="checkHerramientasConsumible">
                     <p><small class="align-text-top">Herramientas</small></p>
                   </label>
                 </div>
 
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="check3">
-                  <label class="custom-control-label" for="check3">
+                  <input type="checkbox" class="custom-control-input" id="checkLimpieza" (click)="checkLimpiezaConsumibleFunction()">
+                  <label class="custom-control-label" for="checkLimpieza">
                     <p><small class="align-text-top">Limpieza</small></p>
                   </label>
                 </div>
 
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="check3">
-                  <label class="custom-control-label" for="check3">
+                  <input type="checkbox" class="custom-control-input" id="checkMaquinariaConsumible" (click)="checkMaquinariaConsumibleFunction()">
+                  <label class="custom-control-label" for="checkMaquinariaConsumible">
                     <p><small class="align-text-top">Maquinaria</small></p>
                   </label>
                 </div>
 
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="check3">
-                  <label class="custom-control-label" for="check3">
+                  <input type="checkbox" class="custom-control-input" id="checkPapeleria" (click)="checkPapeleriaConsumibleFunction()">
+                  <label class="custom-control-label" for="checkPapeleria">
                     <p><small class="align-text-top">Papeleria</small></p>
                   </label>
                 </div>
               </div>
-
-
-              <div id="sliderCosto">
-                <h6 class="card-title">Costo</h6>
-                <div class="custom-slider">
-                  <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options">
-                  </ngx-slider>
-                </div>
-              </div>
             </ng-template>
-
+            <div id="sliderCosto">
+              <h6 class="card-title">Costo</h6>
+              <div class="custom-slider">
+                <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options" (click)="sliderCosto()">
+                </ngx-slider>
+              </div>
+            </div>
 
           </div>
         </form>

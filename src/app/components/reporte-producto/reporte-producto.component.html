@@ -1,11 +1,21 @@
-<button class="btn btn-dark mt-2 mr-2 mb-3" (click)="isnull()" [routerLink]="['/revisar-producto']">Atrás</button>
-<div class="col">
+
+<form class="mt-4 mr-2 mb-3">
+  <div class="row">
+    <div class="col-md-8">
+      <button class="btn btn-dark mb-3" (click)="isnull()" [routerLink]="['/revisar-producto']">Atrás</button>
+    </div>
+    <div class="col-md-4 mb-3" >
+      <input type="text"  class="form-control align-bottom" placeholder="¿Qué Producto Estás Buscando?">
+    </div>
+  </div>
+</form>
+<div class="col mt-5">
   <div *ngIf="globals.producto === true else tituloConsumible">
-    <h3 class="row justify-content-md-center">CONSULTA INVENTARIO</h3>
+    <h3 class="row-md-12 text-center">CONSULTA INVENTARIO</h3>
   </div>
 
   <ng-template #tituloConsumible>
-    <h3 class="row justify-content-md-center">CONSULTA CONSUMIBLE</h3>
+    <h3 class="row-md-12 text-center">CONSULTA CONSUMIBLE</h3>
   </ng-template>
 </div>
 <div class="container-md" style="margin-bottom: 45px;">
@@ -162,7 +172,7 @@
             <th scope="col">Nombre</th>
             <th scope="col">Imagen de Referencia</th>
             <th scope="col">Cantidad</th>
-            <th scope="col">Modificar</th>
+            <th scope="col">Ver Reporte</th>
           </tr>
         </thead>
         <tbody>
@@ -172,7 +182,7 @@
             <td>Otto</td>
             <td>@mdo</td>
             <td><button type="button" class="btn btn-outline-info" data-toggle="modal"
-                data-target="#modalConsulta">Cambiar</button></td>
+                data-target="#modalConsulta">Ver</button></td>
           </tr>
         </tbody>
       </table>
