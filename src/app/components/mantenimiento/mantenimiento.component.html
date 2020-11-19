@@ -1,1 +1,154 @@
-<p>mantenimiento works!</p>
+
+<form class="mt-4 mr-2 mb-3">
+    <div class="row">
+      <div class="col-md-8">
+        <button class="btn btn-dark mb-3"  [routerLink]="['/']">Atrás</button>
+      </div>
+      <div class="col-md-4 mb-3" >
+        <input type="text"  class="form-control align-bottom" placeholder="¿Qué Producto Estás Buscando?">
+      </div>
+    </div>
+  </form>
+  <div class="col mt-5">
+    <div>
+      <h3 class="row-md-12 text-center">MANTENIMIENTO DE INVENTARIO</h3>
+    </div>
+  
+  </div>
+  <div class="container-md" style="margin-bottom: 45px;">
+    <div class="row">
+  
+      <div class="col-4 col-xl-2 mt-5">
+        <div class="card border-dark mb-3 bg-dark text-white text-align-center">
+          <form>
+            <div class="card-header">
+              <h5>Filtros</h5>
+            </div>
+            <div class="card-body">
+  
+              <div id="separacion">
+                <div id="statusProducto">
+                  <h6 class="card-title">Status</h6>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkPrestamo" (click)="checkPrestamoInventarioFunction()">
+                    <label class="custom-control-label" for="checkPrestamo">
+                      <p><small class="align-text-top">En Préstamo</small></p>
+                    </label>
+                  </div>
+  
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkMantenimiento" (click)="checkMantenimientoInventarioFunction()">
+                    <label class="custom-control-label" for="checkMantenimiento">
+                      <p><small class="align-text-top">En Mantenimiento</small></p>
+                    </label>
+                  </div>
+  
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkAlmacen" (click)="checkAlmacenInventarioFunction()">
+                    <label class="custom-control-label" for="checkAlmacen">
+                      <p><small class="align-text-top">En Almacén</small></p>
+                    </label>
+                  </div>
+                </div>
+  
+                <div id="categoriaProducto">
+                  <h6 class="card-title">Categoria</h6>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkComputacionInventario" (click)="checkComputacionInventarioFunction()">
+                    <label class="custom-control-label" for="checkComputacionInventario">
+                      <p><small class="align-text-top">Computación</small></p>
+                    </label>
+                  </div>
+  
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkHerramientasInventario" (click)="checkHerramientasInventarioFuntion()">
+                    <label class="custom-control-label" for="checkHerramientasInventario">
+                      <p><small class="align-text-top">Herramientas</small></p>
+                    </label>
+                  </div>
+  
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkMaquinariaInventario" (click)="checkMaquinariaInventarioFunction()">
+                    <label class="custom-control-label" for="checkMaquinariaInventario">
+                      <p><small class="align-text-top">Maquinaria</small></p>
+                    </label>
+                  </div>
+  
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkMuebleriaInventario" (click)="checkMuebleriaInventarioFunction()">
+                    <label class="custom-control-label" for="checkMuebleriaInventario">
+                      <p><small class="align-text-top">Muebleria</small></p>
+                    </label>
+                  </div>
+  
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkVehiculosInventario" (click)="checkVehiculosInventarioFunction()">
+                    <label class="custom-control-label" for="checkVehiculosInventario">
+                      <p><small class="align-text-top">Vehículos</small></p>
+                    </label>
+                  </div>
+                </div>
+              </div>
+  
+              <div id="sliderCosto">
+                <h6 class="card-title">Costo</h6>
+                <div class="custom-slider">
+                  <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options" (click)="sliderCosto()">
+                  </ngx-slider>
+                </div>
+              </div>
+  
+            </div>
+          </form>
+        </div>
+      </div>
+  
+  
+      <div class="col-xl-10">
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Imagen de Referencia</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Mantenimiento</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@mdo</td>
+              <td><button type="button" class="btn btn-outline-info" data-toggle="modal"
+                  data-target="#modalConsulta">Aceptar</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  <div class="modal fade" id="modalConsulta" tabindex="-1" role="dialog" aria-labelledby="consultaModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="consultaModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
