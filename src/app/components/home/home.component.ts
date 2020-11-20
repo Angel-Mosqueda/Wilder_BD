@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { RequestsService } from 'src/app/services/requests.service';
 
 @Component({
   selector: 'app-home',
@@ -7,9 +8,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    public _requests: RequestsService
+  ) { }
 
   ngOnInit(): void {
+    this._requests.getOKServer().subscribe(
+      (response: any) => {
+        debugger;
+        alert(response.status);
+      },
+      (error) => {
+        debugger;
+        alert(error);
+      }
+    )
   }
 
 }
