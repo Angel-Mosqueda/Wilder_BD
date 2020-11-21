@@ -13,4 +13,16 @@ export class RequestsService {
   getOKServer() {
     return this.http.get('/get_ok/');
   }
+
+  getEmpresas() {
+    return this.http.get('/get_empresas/');
+  }
+
+  createUser(payload: any) {
+    return this.http.post('/add_user/', payload);
+  }
+
+  createEmpresa(payload: any) {
+    return this.http.post('/add_empresa/', payload);
+  }
 }

@@ -94,6 +94,24 @@ def crear_empresa():
     return jsonify(response)
 
 
+@app.route('/get_empresas/', methods=['GET'])
+def obtener_empresas():
+    response = {}
+    response["empresas"] = []
+    cur = mysql.connection.cursor()
+    query = ("SELECT ID, RAZSOC FROM EMPRESA;")
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    for empresa in rows:
+        response["empresas"].append({
+            "id": empresa[0],
+            "razon_social": empresa[1]
+        })
+        counter = counter + 1
+    return response
+
+
 @app.route('/add_user/', methods=['POST'])
 def crear_usuario():
     response = {}
