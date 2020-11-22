@@ -64,9 +64,8 @@
                     <div class="form-row row justify-content-md-center">
                         <div class="col mt-3">
                             <label for="empresaSelect"></label>
-                            <select class="custom-select" id="empresaSelect">
-                                <option selected>Selecciona Una Empresa</option>
-                                <option *ngFor="let empresa of empresas;" value="{{ empresa.id }}">{{ empresa.razon_social }}</option>
+                            <select [(ngModel)]="empresa" formControlName="company" class="custom-select" id="empresaSelect">
+                                <option *ngFor="let comp of empresas;" [value]="comp.id">{{ comp.razon_social }}</option>
                             </select>
                         </div>
                         <div class="col mt-3 text-center">
@@ -109,7 +108,7 @@
 
                 </ng-template>
                 <div class="card-footer text-center mt-3">
-                    <button type="submit" class="btn btn-primary mr-3">Terminar Registro</button>
+                    <button [disabled]="!this.formulario.valid" type="submit" class="btn btn-primary mr-3">Terminar Registro</button>
                 </div>
             </form>
         </div>

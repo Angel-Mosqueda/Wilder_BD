@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { RequestsService } from 'src/app/services/requests.service';
 import { Globals } from '../../globals/globals';
 
@@ -16,6 +17,7 @@ export class AltaUsuarioComponent implements OnInit {
   email: String;
   pwd1: String;
   pwd2: String;
+  empresa: String;
   empresas: any;
 
   formulario: FormGroup;
@@ -23,7 +25,8 @@ export class AltaUsuarioComponent implements OnInit {
   constructor(
     globals: Globals,
     private formBuilder: FormBuilder,
-    private _requestService: RequestsService
+    private _requestService: RequestsService,
+    private _router: Router
   ) {
     this.globals = globals;
   }
@@ -36,7 +39,7 @@ export class AltaUsuarioComponent implements OnInit {
         this.empresas = response.empresas;
       },
       (error) => {
-
+        alert("Error pidiendo las emrpesas");
       }
     );
     this.formulario = this.formBuilder.group({
@@ -45,7 +48,8 @@ export class AltaUsuarioComponent implements OnInit {
       apmat: ['', Validators.required],
       correo: ['', Validators.required],
       cont1: ['', Validators.required],
-      cont2: ['', Validators.required]
+      cont2: ['', Validators.required],
+      company: ['', Validators.required]
     });
   }
 
@@ -71,9 +75,32 @@ export class AltaUsuarioComponent implements OnInit {
   }
 
   enviarFormulario() {
-    this._requestService.createUser({
+    debugger;
+    console.log(this.empresa);
+    if (this.formulario.valid && this.pwd1 == this.pwd2) {
+      this._requestService.createUser({
+        NOMBRE: this.name,
+        APEPAT: this.apepat,
+        APEMAT: this.apemat,
+        ROL: 1,
+        FOTO: '',
+        ACTIVO: '',
+        EMPRESA_ID: this.empresa,
+        CORREO: this.email,
+        PASSWORD: this.pwd1
+      }).subscribe(
+        (success) => {
+          alert("Usuario creado con éxito");
+          this._router.navigate(['/']);
+        },
+        (error) => {
+          alert("Error al crear usuario.");
+        }
+      );
+    } else {
+      alert("Termina el formulario primero.");
+    }
 
-    });
   }
 
 }

@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request, render_template
-from flaskext.mysql import MySQL
-import hashlib
+from flask_mysqldb import MySQL
+import hashlib, json
 
 app = Flask(
     __name__,
@@ -59,11 +59,6 @@ def root():
     return jsonify(response)
 
 
-@app.route('/', methods=['GET'])
-def angular_root():
-    return render_template('index.html')
-
-
 @app.route('/get_ok/', methods=['GET'])
 def enviar_ok():
     response = {
@@ -108,7 +103,6 @@ def obtener_empresas():
             "id": empresa[0],
             "razon_social": empresa[1]
         })
-        counter = counter + 1
     return response
 
 
@@ -116,18 +110,20 @@ def obtener_empresas():
 def crear_usuario():
     response = {}
     cur = mysql.connection.cursor()
+    data = json.loads(request.data)
     query = ("INSERT INTO USUARIO (NOMBRE, APEPAT, APEMAT, ROL,"
     "FOTO, ACTIVO, EMPRESA_ID, CORREO, PASSWORD) VALUES ("
-    + "'" + request.form['NOMBRE'] + "', "
-    + "'" + request.form['APEPAT'] + "', "
-    + "'" + request.form['APEMAT'] + "', "
-    + "" + request.form['ROL'] + ", "
-    + "'" + request.form['FOTO'] + "', "
-    + "" + request.form['ACTIVO'] + ", "
-    + "'" + request.form['EMPRESA_ID'] + "', "
-    + "'" + request.form['CORREO'] + "', "
-    + "sha2('" + request.form['PASSWORD'] + "', 512));"
+    + "'" + data['NOMBRE'] + "', "
+    + "'" + data['APEPAT'] + "', "
+    + "'" + data['APEMAT'] + "', "
+    + "" + str(data['ROL']) + ", "
+    + "'" + data['FOTO'] + "', "
+    + "true, "
+    + "'" + data['EMPRESA_ID'] + "', "
+    + "'" + data['CORREO'] + "', "
+    + "sha2('" + data['PASSWORD'] + "', 512));"
     )
+    import pdb; pdb.set_trace()
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()
@@ -268,6 +264,11 @@ def get_mantenimientos():
         counter = counter + 1
     cur.close()
     return jsonify(request)
+
+
+@app.route('/')
+def angular_root():
+    return render_template('index.html')
 
 
 if __name__ == '__main__':
