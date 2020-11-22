@@ -25,6 +25,9 @@ import { ConsumibleInventarioComponent } from './components/consumible-inventari
 import { Globals } from './globals/globals';
 
 
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -46,12 +49,15 @@ import { Globals } from './globals/globals';
     ConsultarUsuarioComponent,
     ModificarUsuarioComponent,
     RevisarproductoComponent,
-    ConsumibleInventarioComponent,
+    ConsumibleInventarioComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgxSliderModule
+    NgxSliderModule,
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [Globals],
   bootstrap: [AppComponent]

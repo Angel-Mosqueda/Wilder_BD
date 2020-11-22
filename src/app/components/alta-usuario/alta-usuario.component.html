@@ -4,71 +4,73 @@
     <div class="card">
         <div class="card-body">
             <h3 class="mb-4">Registrarse</h3>
-            <form>
+            <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
                 <fieldset [disabled]="globals.deshabilitar">
                     <div class="form-row row justify-content-md-center">
                         <div class="col mt-3">
                             <label for="nombres">Nombre(s)</label>
-                            <input type="text" class="form-control" id="nombres" />
+                            <input type="text" [(ngModel)]="name" formControlName="nombre" class="form-control" id="nombres" />
                         </div>
                     </div>
-    
+
                     <div class="form-row row justify-content-md-center">
                         <div class="col mt-3">
                             <label for="apepat">Apellido Paterno</label>
-                            <input type="text" class="form-control" id="apepat" />
+                            <input type="text" [(ngModel)]="apepat" formControlName="appat" class="form-control" id="apepat" />
                         </div>
                         <div class="col mt-3">
                             <label for="apemat">Apellido Materno</label>
-                            <input type="text" class="form-control" id="apemat" />
+                            <input type="text" [(ngModel)]="apemat" formControlName="apmat" class="form-control" id="apemat" />
                         </div>
                     </div>
-    
+
                     <div class="form-row row justify-content-md-center">
                         <div class="col mt-3">
                             <label for="correo">Correo Electrónico</label>
-                            <input type="email" class="form-control" id="correo"
+                            <input type="email" [(ngModel)]="email" formControlName="correo" class="form-control" id="correo"
                                 placeholder="nombre@ejemplo.com" />
                         </div>
                     </div>
-    
+
                     <div class="form-row row justify-content-md-center">
-                        <div class="col mt-3">                           
+                        <div class="col mt-3">
                             <label for="inputPassword1">Nueva Contraseña</label>
-                                <div class="input-group">
-                                    <input ID="txtPassword1" [type]="globals.passwordNueva1" Class="form-control">
-                                    <div class="input-group-append">
-                                        <button type="button" id="show_password1" (click)="showPassword1()" class="btn btn-primary"> <span class="fa fa-eye-slash icon"></span> </button>
-                                    </div>
-                              </div>
+                            <div class="input-group">
+                                <input ID="txtPassword1" [(ngModel)]="pwd1" formControlName="cont1" [type]="globals.passwordNueva1"
+                                    Class="form-control">
+                                <div class="input-group-append">
+                                    <button type="button" id="show_password1" (click)="showPassword1()"
+                                        class="btn btn-primary"> <span class="fa fa-eye-slash icon"></span> </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
+
                     <div class="form-row row justify-content-md-center">
-                        <div class="col mt-3">                           
+                        <div class="col mt-3">
                             <label for="inputPassword2">Ingrese De Nuevo Su Contraseña</label>
-                                <div class="input-group">
-                                    <input ID="inputPassword2" [type]="globals.passwordNueva2" Class="form-control">
-                                    <div class="input-group-append">
-                                        <button type="button" id="show_password2" (click)="showPassword2()" class="btn btn-primary"> <span class="fa fa-eye-slash icon"></span> </button>
-                                    </div>
-                              </div>
-                          
+                            <div class="input-group">
+                                <input ID="inputPassword2" [(ngModel)]="pwd2" formControlName="cont2" [type]="globals.passwordNueva2"
+                                    Class="form-control">
+                                <div class="input-group-append">
+                                    <button type="button" id="show_password2" (click)="showPassword2()"
+                                        class="btn btn-primary"> <span class="fa fa-eye-slash icon"></span> </button>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
                     <div class="form-row row justify-content-md-center">
                         <div class="col mt-3">
                             <label for="empresaSelect"></label>
-                            <select class="custom-select" id="empresaSelect">
-                                <option selected>Selecciona Una Empresa</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                              </select>
+                            <select [(ngModel)]="empresa" formControlName="company" class="custom-select" id="empresaSelect">
+                                <option *ngFor="let comp of empresas;" [value]="comp.id">{{ comp.razon_social }}</option>
+                            </select>
                         </div>
                         <div class="col mt-3 text-center">
-                            <button type="button" class="btn btn-outline-secondary" (click)="agregarEmpresa()">Agregar Nueva Empresa</button>
+                            <button type="button" class="btn btn-outline-secondary" (click)="agregarEmpresa()">Agregar
+                                Nueva Empresa</button>
                         </div>
                     </div>
                 </fieldset>
@@ -96,18 +98,19 @@
                     </div>
                     <!--Mapa-->
                     <section style="text-align: center; margin-top: 20px;">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m26!1m12!1m3!1d41882.53964366872!2d-102.32721051423955!3d21.898829904203822!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m11!3e6!4m3!3m2!1d21.905959!2d-102.28913209999999!4m5!1s0x8429eef61e160ecb%3A0xfeb58ed8ad121db4!2samerix%20burger!3m2!1d21.9005012!2d-102.3006439!5e0!3m2!1ses-419!2smx!4v1605723665675!5m2!1ses-419!2smx" width="300" height="250" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m26!1m12!1m3!1d41882.53964366872!2d-102.32721051423955!3d21.898829904203822!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m11!3e6!4m3!3m2!1d21.905959!2d-102.28913209999999!4m5!1s0x8429eef61e160ecb%3A0xfeb58ed8ad121db4!2samerix%20burger!3m2!1d21.9005012!2d-102.3006439!5e0!3m2!1ses-419!2smx!4v1605723665675!5m2!1ses-419!2smx"
+                            width="300" height="250" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
                     </section>
                 </div>
 
                 <ng-template #noNuevaEmpresa>
 
                 </ng-template>
-                
+                <div class="card-footer text-center mt-3">
+                    <button [disabled]="!this.formulario.valid" type="submit" class="btn btn-primary mr-3">Terminar Registro</button>
+                </div>
             </form>
-        </div>
-        <div class="card-footer text-center mt-3">
-            <button type="button" class="btn btn-primary mr-3">Terminar Registro</button>
         </div>
     </div>
 </div>
