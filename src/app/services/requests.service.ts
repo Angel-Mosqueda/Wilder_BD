@@ -25,4 +25,8 @@ export class RequestsService {
   createEmpresa(payload: any) {
     return this.http.post('/add_empresa/', payload);
   }
+
+  login(payload: any) {
+    return this.http.post('/iniciar/', payload);
+  }
 }

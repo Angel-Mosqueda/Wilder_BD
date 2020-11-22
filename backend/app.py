@@ -17,46 +17,41 @@ app.config['MYSQL_DB'] = 'wilder'
 mysql = MySQL(app)
 
 
-def check_user():
-    return True
-
-def check_empresa():
-    return True
-
 @app.before_request
 def check_cookie():
     response = {}
-    # galleta = request.cookies.get('session_cookie')
-    # if galleta is None:
-    #     return response, 401
-    # else:
-    #     galleta_args = galleta.split(",")
-    #     check_user(galleta_args[0])
-    #     check_empresa(galleta_args[1])
-    #     if not check_user and check_empresa:
-    #     return response, 401
-    
+    galleta1 = request.cookies.get('logged')
+    if galleta is None:
+        return response, 401
 
-def root():
+@app.route('/iniciar/', methods=['POST'])
+def iniciar_sesion():
     response = {}
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM EMPLOYEES LIMIT 10;")
+    data = json.loads(request.data)
+    query = (
+        "SELECT NOMBRE, EMPRESA_ID, ID FROM USUARIO WHERE CORREO = '"
+        + data["NOMBRE"] +
+        "' AND PASSWORD = sha2('"
+        + data["PASSWORD"] + "', 512);"
+    )
+    cur.execute(query)
     mysql.connection.commit()
-    rows = cur.fetchall()
-    response["employees"] = {}
-    counter = 0
-    for i in rows:
-        import pdb; pdb.set_trace()
-        response["employees"]["emp" + str(counter)] = {}
-        response["employees"]["emp" + str(counter)]["id"] = i[0]
-        response["employees"]["emp" + str(counter)]["nacimiento"] = i[1]
-        response["employees"]["emp" + str(counter)]["nombre"] = i[2]
-        response["employees"]["emp" + str(counter)]["apellido"] = i[3]
-        response["employees"]["emp" + str(counter)]["sexo"] = i[4]
-        response["employees"]["emp" + str(counter)]["contratacion"] = i[5]
-        counter = counter + 1
-    cur.close()
-    return jsonify(response)
+    row = cur.fetchone()
+    if row:
+        galleta = request.cookies.set('logged', True)
+        galleta = request.cookies.set('empresa', row[1])
+        galleta = request.cookies.set('usario', row[2])
+        response = {
+            'exito': True,
+            'desc': 'Bienvenido ' + row[0]
+        }
+    else:
+        response = {
+            'exito': False,
+            'desc': 'Error en usuario o contraseña.'
+        }
+    return response
 
 
 @app.route('/get_ok/', methods=['GET'])
@@ -118,7 +113,7 @@ def crear_usuario():
     + "'" + data['APEMAT'] + "', "
     + "" + str(data['ROL']) + ", "
     + "'" + data['FOTO'] + "', "
-    + "true, "
+    + "1, "
     + "'" + data['EMPRESA_ID'] + "', "
     + "'" + data['CORREO'] + "', "
     + "sha2('" + data['PASSWORD'] + "', 512));"
