@@ -5,7 +5,7 @@
   
   <div class="card">
     <div class="card-body">
-      <form class="needs-validation">
+      <form class="needs-validation" [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
         <div *ngIf="globals.producto === true else tituloConsumible">
           <h3 class="row justify-content-md-center">AGREGAR A INVENTARIO</h3>
         </div>
@@ -19,7 +19,7 @@
         <div class="form-row row justify-content-md-center">
           <div class="col mt-3">
             <label for="validationCustom01">Nombre del Producto</label>
-            <input type="text" class="form-control" id="productNameText" placeholder="" required>
+            <input type="text" class="form-control" id="productNameText" [(ngModel)]="nombre" formControlName="nombreCampo" required>
           </div>
         </div>
     
@@ -29,36 +29,46 @@
           <div class="form-row row justify-content-md-center">
             <div class="col mt-3">
               <label for="validationCustom01">Número de Serie</label>
-              <input type="text" class="form-control" id="serieNumberInventario" placeholder="" required>
+              <input type="text" class="form-control" id="serieNumberInventario" [(ngModel)]="numserie" formControlName="numserieCampo" required>
             </div>
     
             <div class="col mt-3">
               <label for="validationCustom01">Número de Factura</label>
-              <input type="text" class="form-control" id="facturaNumberInventario" placeholder="" required>
+              <input type="text" class="form-control" id="facturaNumberInventario" [(ngModel)]="numfactura" formControlName="numfacturaCampo" required>
             </div>
           </div>
     
           <div class="form-row row justify-content-md-center">
             <div class="col mt-3">
               <label for="validationCustom01">Proveedor</label>
-              <input type="text" class="form-control" id="proveedorInventario" placeholder="" required>
+              <input type="text" class="form-control" id="proveedorInventario" [(ngModel)]="proveedor" formControlName="proveedorCampo1" required>
             </div>
     
             <div class="col mt-3">
               <label for="validationCustom01">Factura</label>
-              <input type="text" class="form-control" id="facturaInventario" placeholder="" required>
+              <input type="text" class="form-control" id="facturaInventario" [(ngModel)]="factura" formControlName="facturaCampo" required>
             </div>
           </div>
     
           <div class="form-row row justify-content-md-center">
             <div class="col mt-3">
               <label for="validationCustom01">Fecha De Compra</label>
-              <input type="date" class="form-control" id="fechaCompraInventario" placeholder="" required>
+              <input type="date" class="form-control" id="fechaCompraInventario" [(ngModel)]="fecha" formControlName="fechaCampo" required>
             </div>
     
             <div class="col mt-3">
               <label for="validationCustom01">Costo Del Producto</label>
-              <input type="number" class="form-control" id="costoProductoinventario" placeholder="" required>
+              <input type="number" class="form-control" id="costoProductoinventario" [(ngModel)]="costo" formControlName="costoCampo" required>
+            </div>
+          </div>
+
+          <div class="form-row row justify-content-md-center">
+            <div class="col mt-3">
+              <label for="validationTextarea">Descripción</label>
+              <textarea class="form-control" id="descriptionTextArea" [(ngModel)]="descripcion" formControlName="descripcionCampo1" required></textarea>
+              <div class="valid-feedback">
+                Please enter a message in the textarea.
+              </div>
             </div>
           </div>
     
@@ -70,33 +80,36 @@
           <div class="form-row row justify-content-md-center">
             <div class="col mt-3">
               <label for="validationCustom01">Cantidad</label>
-              <input type="number" class="form-control" id="cantidadConsumible" placeholder="" required>
+              <input type="number" class="form-control" id="cantidadConsumible" [(ngModel)]="cantidad" formControlName="cantidadCampo" required>
             </div>
     
     
             <div class="col mt-3">
               <label for="validationCustom01">SKU</label>
-              <input type="text" class="form-control" id="skuConsumible" placeholder="" required>
+              <input type="text" class="form-control" id="skuConsumible" [(ngModel)]="sku" formControlName="skuCampo" required>
             </div>
           </div>
     
           <div class="form-row row justify-content-md-center">
             <div class="col mt-3">
               <label for="validationCustom01">Proveedor</label>
-              <input type="number" class="form-control" id="proveedorConsumible" placeholder="" required>
+              <input type="number" class="form-control" id="proveedorConsumible" [(ngModel)]="proveedor" formControlName="proveedorCampo2" required>
             </div>
           </div>
-        </ng-template>
-        
+
+           
         <div class="form-row row justify-content-md-center">
           <div class="col mt-3">
             <label for="validationTextarea">Descripción</label>
-            <textarea class="form-control" id="descriptionTextArea" placeholder="" required></textarea>
+            <textarea class="form-control" id="descriptionTextArea" [(ngModel)]="descripcion" formControlName="descripcionCampo2" required></textarea>
             <div class="valid-feedback">
               Please enter a message in the textarea.
             </div>
           </div>
         </div>
+        </ng-template>
+        
+        
     
         <div class="form-row row justify-content-md-center">
           <div class="col mt-3">
