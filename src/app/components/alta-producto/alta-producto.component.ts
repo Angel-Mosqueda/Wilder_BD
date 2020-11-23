@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Globals } from '../../globals/globals';
+import { RequestsService } from 'src/app/services/requests.service';
 import { Router } from '@angular/router';
 
 
@@ -11,8 +13,31 @@ import { Router } from '@angular/router';
 export class AltaProductoComponent implements OnInit {
 
   globals: Globals;
+  formulario: FormGroup;
 
-  constructor(globals: Globals, private router: Router) { 
+  //variables compatibles
+  nombre: string;
+  descripcion: string;
+  numfactura: string;
+  proveedor: string;
+  /*imagen: ImageData;*/
+  
+  //variables para inventario
+  numserie: string;
+  factura: string;
+  fecha: Date;
+  costo: Float32Array;
+
+  //variables para consumible
+  cantidad: Int16Array;
+  sku: string;
+
+
+
+  constructor(globals: Globals, 
+    private formBuilder: FormBuilder,
+    private _requestService: RequestsService,
+    private router: Router) { 
     this.globals = globals;
    }
 
@@ -21,11 +46,44 @@ export class AltaProductoComponent implements OnInit {
       this.router.navigate(['/']);
     }
 
+    if(this.globals.producto === true){
+      this.formulario = this.formBuilder.group({
+        nombreCampo: ['', Validators.required],
+        numserieCampo: ['', Validators.required],
+        numfacturaCampo: ['', Validators.required],
+        proveedorCampo1: ['', Validators.required],
+        facturaCampo: ['', Validators.required],
+        fechaCampo: ['', Validators.required],
+        costoCampo: ['', Validators.required],
+        descripcionCampo1: ['', Validators.required]
+        
+      });
+    }else{
+      this.formulario = this.formBuilder.group({
+        nombreCampo: ['', Validators.required],
+        skuCampo: ['', Validators.required],
+        cantidadCampo: ['', Validators.required],
+        proveedorCampo2: ['', Validators.required],
+        descripcionCampo2: ['', Validators.required]
+      });
+    }
+
+    
+
   }
 
   isnull(){
     this.globals.producto = null;
     this.globals.altas = null;
+  }
+
+  enviarFormulario(){
+    if(this.globals.producto === true){
+      console.log(this.nombre+" "+this.numserie+" "+this.numfactura+" "+this.proveedor+" "+this.factura+" "+this.fecha+" "+this.costo+" "+this.descripcion);
+    }else{
+      console.log(this.nombre+" "+this.cantidad+" "+this.sku+" "+this.proveedor+" "+this.descripcion);
+    }
+    
   }
 
 }

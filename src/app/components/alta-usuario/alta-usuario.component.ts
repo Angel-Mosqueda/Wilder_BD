@@ -89,9 +89,11 @@ export class AltaUsuarioComponent implements OnInit {
         CORREO: this.email,
         PASSWORD: this.pwd1
       }).subscribe(
-        (success) => {
-          alert("Usuario creado con éxito");
-          this._router.navigate(['/']);
+        (success: any) => {
+          if (success.exito) {
+            alert("Usuario creado con éxito");
+            this._router.navigate(['/']);
+          }
         },
         (error) => {
           alert("Error al crear usuario.");
