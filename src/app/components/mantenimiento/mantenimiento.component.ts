@@ -7,6 +7,7 @@ import { Options } from '@angular-slider/ngx-slider';
   styleUrls: ['./mantenimiento.component.css']
 })
 export class MantenimientoComponent implements OnInit {
+  array = []; //Arreglo para almacenar info de base de datos
   minValue: number = 0;
   maxValue: number = 500;
   options: Options = {
