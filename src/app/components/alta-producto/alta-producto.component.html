@@ -3,130 +3,233 @@
 
 <div class="container-md pt-5" id="contenedor" style="margin-bottom: 45px;">
   
-  <div class="card">
-    <div class="card-body">
-      <form class="needs-validation" [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
-        <div *ngIf="globals.producto === true else tituloConsumible">
-          <h3 class="row justify-content-md-center">AGREGAR A INVENTARIO</h3>
-        </div>
-    
-        <ng-template #tituloConsumible>
-          <h3 class="row justify-content-md-center">AGREGAR CONSUMIBLE</h3>
-        </ng-template>
-      
-    
-    
-        <div class="form-row row justify-content-md-center">
-          <div class="col mt-3">
-            <label for="validationCustom01">Nombre del Producto</label>
-            <input type="text" class="form-control" id="productNameText" [(ngModel)]="nombre" formControlName="nombreCampo" required>
+  <div class="starter-template">
+
+    <div class="card">
+      <div class="card-body">
+
+        <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
+
+          <div *ngIf="globals.producto === true else tituloConsumible">
+            <h3 class="row justify-content-md-center">AGREGAR A INVENTARIO</h3>
           </div>
-        </div>
-    
-        
-    
-        <div *ngIf="globals.producto === true else otro">
-          <div class="form-row row justify-content-md-center">
-            <div class="col mt-3">
-              <label for="validationCustom01">Número de Serie</label>
-              <input type="text" class="form-control" id="serieNumberInventario" [(ngModel)]="numserie" formControlName="numserieCampo" required>
-            </div>
-    
-            <div class="col mt-3">
-              <label for="validationCustom01">Número de Factura</label>
-              <input type="text" class="form-control" id="facturaNumberInventario" [(ngModel)]="numfactura" formControlName="numfacturaCampo" required>
-            </div>
-          </div>
-    
-          <div class="form-row row justify-content-md-center">
-            <div class="col mt-3">
-              <label for="validationCustom01">Proveedor</label>
-              <input type="text" class="form-control" id="proveedorInventario" [(ngModel)]="proveedor" formControlName="proveedorCampo1" required>
-            </div>
-    
-            <div class="col mt-3">
-              <label for="validationCustom01">Factura</label>
-              <input type="text" class="form-control" id="facturaInventario" [(ngModel)]="factura" formControlName="facturaCampo" required>
-            </div>
-          </div>
-    
-          <div class="form-row row justify-content-md-center">
-            <div class="col mt-3">
-              <label for="validationCustom01">Fecha De Compra</label>
-              <input type="date" class="form-control" id="fechaCompraInventario" [(ngModel)]="fecha" formControlName="fechaCampo" required>
-            </div>
-    
-            <div class="col mt-3">
-              <label for="validationCustom01">Costo Del Producto</label>
-              <input type="number" class="form-control" id="costoProductoinventario" [(ngModel)]="costo" formControlName="costoCampo" required>
+
+          <ng-template #tituloConsumible>
+            <h3 class="row justify-content-md-center">AGREGAR CONSUMIBLE</h3>
+          </ng-template>
+
+          <div class="form-group">
+            <label for="nombre">Nombre del producto</label>
+            <input type="text" formControlName="nombre" class="form-control" [ngClass]="{'is-invalid': submitted && f.nombre.errors}">
+            <div *ngIf="submitted && f.nombre.errors" class="invalid-feedback">
+              <div *ngIf="f.nombre.errors.required">Por favor ingrese el nombre del producto</div>
             </div>
           </div>
 
           <div class="form-row row justify-content-md-center">
+            <div class="form-group col mt-3">
+              <label for="num_serie">Número de Serie</label>
+              <input type="text" formControlName="num_serie" class="form-control" [ngClass]="{'is-invalid': submitted && f.num_serie.errors}">
+              <div *ngIf="submitted && f.num_serie.errors" class="invalid-feedback">
+                <div *ngIf="f.num_serie.errors.required">Por favor ingrese el numero de serie</div>
+              </div>
+            </div>
+
+            <div class="form-group col mt-3">
+              <label for="num_factura">Número de Factura</label>
+              <input type="text" formControlName="num_factura" class="form-control" [ngClass]="{'is-invalid': submitted && f.num_factura.errors}">
+              <div *ngIf="submitted && f.num_factura.errors" class="invalid-feedback">
+                <div *ngIf="f.num_factura.errors.required">Por favor ingrese el numero de factura</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row row justify-content-md-center">
+            <div class="form-group col mt-3">
+              <label for="proveedor">Proveedor</label>
+              <input type="text" formControlName="proveedor" class="form-control" [ngClass]="{'is-invalid': submitted && f.proveedor.errors}">
+              <div *ngIf="submitted && f.proveedor.errors" class="invalid-feedback">
+                <div *ngIf="f.proveedor.errors.required">Por favor ingrese el nombre del proveedor</div>
+              </div>
+            </div>
+
+            <div class="form-group col mt-3">
+              <label for="factura">Factura</label>
+              <input type="text" formControlName="factura" class="form-control" [ngClass]="{'is-invalid': submitted && f.factura.errors}">
+              <div *ngIf="submitted && f.factura.errors" class="invalid-feedback">
+                <div *ngIf="f.factura.errors.required">Por favor ingrese la Factura</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row row justify-content-md-center">
+            <div class="form-group col mt-3">
+              <label for="fecha_compra">Fecha de Compra</label>
+              <input type="date" formControlName="fecha_compra" class="form-control" [ngClass]="{'is-invalid': submitted && f.fecha_compra.errors}">
+              <div *ngIf="submitted && f.fecha_compra.errors" class="invalid-feedback">
+                <div *ngIf="f.fecha_compra.errors.required">Por favor ingrese la Fecha de Compra</div>
+              </div>
+            </div>
+
+            <div class="form-group col mt-3">
+              <label for="costo_producto">Costo del Producto</label>
+              <input type="number" formControlName="costo_producto" class="form-control" [ngClass]="{'is-invalid': submitted && f.costo_producto.errors}">
+              <div *ngIf="submitted && f.costo_producto.errors" class="invalid-feedback">
+                <div *ngIf="f.costo_producto.errors.required">Por favor ingrese el Costo del Producto</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="descripcion">Descripcion</label>
+            <textarea formControlName="descripcion" class="form-control" [ngClass]="{'is-invalid': submitted && f.descripcion.errors}"></textarea>
+            <div *ngIf="submitted && f.descripcion.errors" class="invalid-feedback">
+              <div *ngIf="f.descripcion.errors.required">Por favor ingrese una descripcion</div>
+            </div>
+          </div>
+
+          <div class="form-group form-row row justify-content-md-center">
+            <input type="file" formControlName="select_img" class="form-control" [ngClass]="{'is-invalid': submitted && f.select_img.errors}">
+            <label for="select_img">Seleccionar Imagen</label>
+            <div *ngIf="submitted && f.select_img.errors" class="invalid-feedback">
+              <div *ngIf="f.select_img.errors.required">Por favor ingrese una imagen</div>
+            </div>
+          </div>
+
+          <div class="form-group" style="text-align: center;">
+            <button class="btn btn-primary">Enviar</button>
+          </div>
+
+        </form>
+
+
+        <!--<form id="form1" method="POST" class="needs-validation" [formGroup]="formulario" (ngSubmit)="enviarFormulario()" novalidate>
+          <div *ngIf="globals.producto === true else tituloConsumible">
+            <h3 class="row justify-content-md-center">AGREGAR A INVENTARIO</h3>
+          </div>
+      
+          <ng-template #tituloConsumible>
+            <h3 class="row justify-content-md-center">AGREGAR CONSUMIBLE</h3>
+          </ng-template>
+        
+      
+      
+          <div class="form-row row justify-content-md-center">
+            <div class="col mt-3">
+              <label for="nombre">Nombre del Producto</label>
+              <input name="nombre" type="text" class="form-control" id="nombre" [(ngModel)]="nombre" formControlName="nombreCampo" required>
+              <div class="valid-feedback">Ok, válido</div>
+              <div class="invalid-feedback">Complete el campo</div>
+            </div>
+          </div>
+      
+          
+      
+          <div *ngIf="globals.producto === true else otro">
+            <div class="form-row row justify-content-md-center">
+              <div class="col mt-3">
+                <label for="validationCustom01">Número de Serie</label>
+                <input type="text" class="form-control" id="serieNumberInventario" [(ngModel)]="numserie" formControlName="numserieCampo" required>
+              </div>
+      
+              <div class="col mt-3">
+                <label for="validationCustom01">Número de Factura</label>
+                <input type="text" class="form-control" id="facturaNumberInventario" [(ngModel)]="numfactura" formControlName="numfacturaCampo" required>
+              </div>
+            </div>
+      
+            <div class="form-row row justify-content-md-center">
+              <div class="col mt-3">
+                <label for="validationCustom01">Proveedor</label>
+                <input type="text" class="form-control" id="proveedorInventario" [(ngModel)]="proveedor" formControlName="proveedorCampo1" required>
+              </div>
+      
+              <div class="col mt-3">
+                <label for="validationCustom01">Factura</label>
+                <input type="text" class="form-control" id="facturaInventario" [(ngModel)]="factura" formControlName="facturaCampo" required>
+              </div>
+            </div>
+      
+            <div class="form-row row justify-content-md-center">
+              <div class="col mt-3">
+                <label for="validationCustom01">Fecha De Compra</label>
+                <input type="date" class="form-control" id="fechaCompraInventario" [(ngModel)]="fecha" formControlName="fechaCampo" required>
+              </div>
+      
+              <div class="col mt-3">
+                <label for="validationCustom01">Costo Del Producto</label>
+                <input type="number" class="form-control" id="costoProductoinventario" [(ngModel)]="costo" formControlName="costoCampo" required>
+              </div>
+            </div>
+
+            <div class="form-row row justify-content-md-center">
+              <div class="col mt-3">
+                <label for="validationTextarea">Descripción</label>
+                <textarea class="form-control" id="descriptionTextArea" [(ngModel)]="descripcion" formControlName="descripcionCampo1" required></textarea>
+                <div class="valid-feedback">
+                  Please enter a message in the textarea.
+                </div>
+              </div>
+            </div>
+      
+      
+        </div>
+      
+      
+          <ng-template #otro>
+            <div class="form-row row justify-content-md-center">
+              <div class="col mt-3">
+                <label for="validationCustom01">Cantidad</label>
+                <input type="number" class="form-control" id="cantidadConsumible" [(ngModel)]="cantidad" formControlName="cantidadCampo" required>
+              </div>
+      
+      
+              <div class="col mt-3">
+                <label for="validationCustom01">SKU</label>
+                <input type="text" class="form-control" id="skuConsumible" [(ngModel)]="sku" formControlName="skuCampo" required>
+              </div>
+            </div>
+      
+            <div class="form-row row justify-content-md-center">
+              <div class="col mt-3">
+                <label for="validationCustom01">Proveedor</label>
+                <input type="number" class="form-control" id="proveedorConsumible" [(ngModel)]="proveedor" formControlName="proveedorCampo2" required>
+              </div>
+            </div>
+
+            
+          <div class="form-row row justify-content-md-center">
             <div class="col mt-3">
               <label for="validationTextarea">Descripción</label>
-              <textarea class="form-control" id="descriptionTextArea" [(ngModel)]="descripcion" formControlName="descripcionCampo1" required></textarea>
+              <textarea class="form-control" id="descriptionTextArea" [(ngModel)]="descripcion" formControlName="descripcionCampo2" required></textarea>
               <div class="valid-feedback">
                 Please enter a message in the textarea.
               </div>
             </div>
           </div>
-    
-    
+          </ng-template>
+          
+          
+      
+          <div class="form-row row justify-content-md-center">
+            <div class="col mt-3">
+              <input type="file" class="custom-file-input" id="customFileLang" lang="es">
+        <label class="custom-file-label" for="customFileLang">Seleccionar Imagen</label>
+            </div>
+          </div>
+      
+      
+          <div class="form-row row justify-content-md-center">
+            <div class="col mt-3">
+              <button class="btn btn-primary" type="submit">Submit form</button>
+            </div>
+          </div>
+        </form>-->
       </div>
-    
-    
-        <ng-template #otro>
-          <div class="form-row row justify-content-md-center">
-            <div class="col mt-3">
-              <label for="validationCustom01">Cantidad</label>
-              <input type="number" class="form-control" id="cantidadConsumible" [(ngModel)]="cantidad" formControlName="cantidadCampo" required>
-            </div>
-    
-    
-            <div class="col mt-3">
-              <label for="validationCustom01">SKU</label>
-              <input type="text" class="form-control" id="skuConsumible" [(ngModel)]="sku" formControlName="skuCampo" required>
-            </div>
-          </div>
-    
-          <div class="form-row row justify-content-md-center">
-            <div class="col mt-3">
-              <label for="validationCustom01">Proveedor</label>
-              <input type="number" class="form-control" id="proveedorConsumible" [(ngModel)]="proveedor" formControlName="proveedorCampo2" required>
-            </div>
-          </div>
-
-           
-        <div class="form-row row justify-content-md-center">
-          <div class="col mt-3">
-            <label for="validationTextarea">Descripción</label>
-            <textarea class="form-control" id="descriptionTextArea" [(ngModel)]="descripcion" formControlName="descripcionCampo2" required></textarea>
-            <div class="valid-feedback">
-              Please enter a message in the textarea.
-            </div>
-          </div>
-        </div>
-        </ng-template>
-        
-        
-    
-        <div class="form-row row justify-content-md-center">
-          <div class="col mt-3">
-            <input type="file" class="custom-file-input" id="customFileLang" lang="es">
-      <label class="custom-file-label" for="customFileLang">Seleccionar Imagen</label>
-          </div>
-        </div>
-    
-     
-        <div class="form-row row justify-content-md-center">
-          <div class="col mt-3">
-            <button class="btn btn-primary" type="submit">Submit form</button>
-          </div>
-        </div>
-      </form>
     </div>
+  
   </div>
-  
-  
+
 </div>
+
+
