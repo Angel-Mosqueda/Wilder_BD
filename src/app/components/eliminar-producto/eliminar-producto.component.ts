@@ -9,6 +9,7 @@ import { Options } from '@angular-slider/ngx-slider';
   styleUrls: ['./eliminar-producto.component.css']
 })
 export class EliminarProductoComponent implements OnInit {
+  array = []; //Arreglo para almacenar info de base de datos
   minValue: number = 0;
   maxValue: number = 500;
   options: Options = {
@@ -302,3 +303,4 @@ export class EliminarProductoComponent implements OnInit {
   }
 
 }
+

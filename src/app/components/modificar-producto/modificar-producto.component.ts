@@ -9,6 +9,7 @@ import { Options } from '@angular-slider/ngx-slider';
   styleUrls: ['./modificar-producto.component.css']
 })
 export class ModificarProductoComponent implements OnInit {
+  array = []; //Arreglo para almacenar info de base de datos
   minValue: number = 0;
   maxValue: number = 500;
   options: Options = {

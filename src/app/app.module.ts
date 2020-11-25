@@ -61,7 +61,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ReactiveFormsModule,
     NgbModule
   ],
-  providers: [Globals],
+  providers: [
+    Globals,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
