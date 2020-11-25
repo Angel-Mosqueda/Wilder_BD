@@ -27,6 +27,7 @@ import { Globals } from './globals/globals';
 
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -57,7 +58,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     NgxSliderModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbModule
   ],
   providers: [
     Globals,

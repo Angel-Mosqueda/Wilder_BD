@@ -14,6 +14,7 @@ export class AltaProductoComponent implements OnInit {
 
   globals: Globals;
   formulario: FormGroup;
+  submitted=false;
 
   //variables compatibles
   nombre: string;
@@ -42,10 +43,24 @@ export class AltaProductoComponent implements OnInit {
    }
 
   ngOnInit(): void {
+
+    this.formulario = this.formBuilder.group({
+      nombre: ['',Validators.required],
+      num_serie: ['',Validators.required],
+      num_factura: ['',Validators.required],
+      proveedor: ['',Validators.required],
+      factura: ['',Validators.required],
+      fecha_compra: ['',Validators.required],
+      costo_producto: ['',Validators.required],
+      descripcion: ['',Validators.required],
+      select_img: ['',Validators.required]
+    });
+
+
     if(this.globals.producto === null){
       this.router.navigate(['/']);
     }
-
+    /*
     if(this.globals.producto === true){
       this.formulario = this.formBuilder.group({
         nombreCampo: ['', Validators.required],
@@ -66,11 +81,13 @@ export class AltaProductoComponent implements OnInit {
         proveedorCampo2: ['', Validators.required],
         descripcionCampo2: ['', Validators.required]
       });
-    }
+    }*/
 
     
 
   }
+
+  get f(){ return this.formulario.controls;}
 
   isnull(){
     this.globals.producto = null;
@@ -78,6 +95,14 @@ export class AltaProductoComponent implements OnInit {
   }
 
   enviarFormulario(){
+
+    this.submitted=true;
+    if(this.formulario.invalid){
+      return;
+    }else{
+      alert("Funciono");
+    }
+
     if(this.globals.producto === true){
       console.log(this.nombre+" "+this.numserie+" "+this.numfactura+" "+this.proveedor+" "+this.factura+" "+this.fecha+" "+this.costo+" "+this.descripcion);
     }else{
