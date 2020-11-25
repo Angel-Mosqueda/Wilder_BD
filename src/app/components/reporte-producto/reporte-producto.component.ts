@@ -3,13 +3,14 @@ import { Globals } from '../../globals/globals';
 import { Router } from '@angular/router';
 import { Options } from '@angular-slider/ngx-slider';
 
-
 @Component({
   selector: 'app-reporte-producto',
   templateUrl: './reporte-producto.component.html',
   styleUrls: ['./reporte-producto.component.css']
 })
 export class ReporteProductoComponent implements OnInit {
+  array = []; //Arreglo para almacenar info de base de datos
+
   minValue: number = 0;
   maxValue: number = 500;
   options: Options = {
