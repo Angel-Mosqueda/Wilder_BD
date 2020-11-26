@@ -2,31 +2,33 @@
 
 <div class="container-md pt-5" id="contenedor">
     <div class="card">
-        <div class="card-body">
-            <h3 class="mb-4">Iniciar Sesión</h3>
-            <form [formGroup]="formulario" (ngSubmit)="login()">
+        <form [formGroup]="formulario" (ngSubmit)="login()">
+            <div class="card-body">
+                <h3 class="mb-4">Iniciar Sesión</h3>
                 <div class="form-group">
                     <label for="exampleFormControlInput1">Correo Electrónico</label>
-                    <input type="email" class="form-control" [(ngModel)]="email" formControlName="correo"  id="exampleFormControlInput1"
-                        placeholder="nombre@ejemplo.com" />
+                    <input type="email" class="form-control" [(ngModel)]="email" formControlName="correo"
+                        id="exampleFormControlInput1" placeholder="nombre@ejemplo.com" />
                 </div>
 
                 <div class="form-group">
                     <label for="inputPassword">Contraseña</label>
                     <div class="input-group">
-                        <input ID="txtPassword" [type]="globals.passwordLogin" [(ngModel)]="password" formControlName="contrasena"
-                        Class="form-control">
+                        <input ID="txtPassword" [type]="globals.passwordLogin" [(ngModel)]="password"
+                            formControlName="contrasena" Class="form-control">
                         <div class="input-group-append">
-                            <button id="show_password" (click)="showPassword()" class="btn btn-primary" type="button"> <span class="fa fa-eye-slash icon"></span> </button>
+                            <button id="show_password" (click)="showPassword()" class="btn btn-primary" type="button">
+                                <span class="fa fa-eye-slash icon"></span> </button>
                         </div>
                     </div>
                 </div>
 
-            </form>
-        </div>
-        <div class="card-footer text-center">
-            <button type="submit" class="btn btn-primary mr-3">Iniciar Sesión</button>
-            <button type="button" [routerLink]="['/alta-usuario']" class="btn btn-secondary ml-3">Registrarse</button>
-        </div>
+            </div>
+            <div class="card-footer text-center">
+                <button type="submit" class="btn btn-primary mr-3">Iniciar Sesión</button>
+                <button type="button" [routerLink]="['/alta-usuario']"
+                    class="btn btn-secondary ml-3">Registrarse</button>
+            </div>
+        </form>
     </div>
 </div>

@@ -17,13 +17,6 @@ app.config['MYSQL_DB'] = 'wilder'
 mysql = MySQL(app)
 
 
-@app.before_request
-def check_cookie():
-    response = {}
-    galleta1 = request.cookies.get('logged')
-    if galleta is None:
-        return response, 401
-
 @app.route('/iniciar/', methods=['POST'])
 def iniciar_sesion():
     response = {}
@@ -31,7 +24,7 @@ def iniciar_sesion():
     data = json.loads(request.data)
     query = (
         "SELECT NOMBRE, EMPRESA_ID, ID FROM USUARIO WHERE CORREO = '"
-        + data["NOMBRE"] +
+        + data["EMAIL"] +
         "' AND PASSWORD = sha2('"
         + data["PASSWORD"] + "', 512);"
     )
@@ -39,9 +32,9 @@ def iniciar_sesion():
     mysql.connection.commit()
     row = cur.fetchone()
     if row:
-        galleta = request.cookies.set('logged', True)
-        galleta = request.cookies.set('empresa', row[1])
-        galleta = request.cookies.set('usario', row[2])
+        request.cookies.set('logged', True)
+        request.cookies.set('empresa', row[1])
+        request.cookies.set('usario', row[2])
         response = {
             'exito': True,
             'desc': 'Bienvenido ' + row[0]
