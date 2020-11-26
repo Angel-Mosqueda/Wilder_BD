@@ -50,7 +50,7 @@ export class InicioSesionComponent implements OnInit {
       (success: any) => {
         if (success.exito) {
           alert(success.desc);
-          this._router.navigate['/'];
+          this._router.navigate(['/']);
         }
         else
           alert("hubo un error, mensaje del servidor: " + success.desc)

@@ -1,4 +1,5 @@
-from flask import Flask, jsonify, request, render_template
+from flask import (Flask, jsonify, request, render_template, \
+make_response)
 from flask_mysqldb import MySQL
 import hashlib, json
 
@@ -32,18 +33,23 @@ def iniciar_sesion():
     mysql.connection.commit()
     row = cur.fetchone()
     if row:
-        request.cookies.set('logged', True)
-        request.cookies.set('empresa', row[1])
-        request.cookies.set('usario', row[2])
-        response = {
-            'exito': True,
-            'desc': 'Bienvenido ' + row[0]
-        }
+        response = make_response(json.dumps(
+            {
+                'exito': True,
+                'desc': 'Bienvenido ' + row[0]
+            }
+        ))
+        response.set_cookie('logged', 'true')
+        response.set_cookie('empresa', str(row[1]))
+        response.set_cookie('usario', str(row[2]))
     else:
-        response = {
-            'exito': False,
-            'desc': 'Error en usuario o contraseña.'
-        }
+        response = make_response(json.dumps(
+            {
+                'exito': False,
+                'desc': 'Error en usuario o contraseña.'
+            }
+        ))
+    
     return response
 
 
