@@ -17,6 +17,7 @@ import { ReporteProductoComponent } from './components/reporte-producto/reporte-
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { RevisarproductoComponent } from './components/revisarproducto/revisarproducto.component';
 import { ConsumibleInventarioComponent } from './components/consumible-inventario/consumible-inventario.component';
+import { AuthGuardService } from './services/auth-guard.service'
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -35,7 +36,7 @@ const routes: Routes = [
   { path: 'reporte-producto', component: ReporteProductoComponent },
   { path: 'solicitud', component: SolicitudComponent },
   { path: 'revisar-producto', component: RevisarproductoComponent },
-  { path: 'consumible-inventario', component: ConsumibleInventarioComponent },
+  { path: 'consumible-inventario', component: ConsumibleInventarioComponent, canActivate: [AuthGuardService] },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 

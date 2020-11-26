@@ -1,4 +1,5 @@
-from flask import Flask, jsonify, request, render_template
+from flask import (Flask, jsonify, request, render_template, \
+make_response)
 from flask_mysqldb import MySQL
 import hashlib, json
 
@@ -17,13 +18,6 @@ app.config['MYSQL_DB'] = 'wilder'
 mysql = MySQL(app)
 
 
-@app.before_request
-def check_cookie():
-    response = {}
-    galleta1 = request.cookies.get('logged')
-    if galleta is None:
-        return response, 401
-
 @app.route('/iniciar/', methods=['POST'])
 def iniciar_sesion():
     response = {}
@@ -31,7 +25,7 @@ def iniciar_sesion():
     data = json.loads(request.data)
     query = (
         "SELECT NOMBRE, EMPRESA_ID, ID FROM USUARIO WHERE CORREO = '"
-        + data["NOMBRE"] +
+        + data["EMAIL"] +
         "' AND PASSWORD = sha2('"
         + data["PASSWORD"] + "', 512);"
     )
@@ -39,18 +33,23 @@ def iniciar_sesion():
     mysql.connection.commit()
     row = cur.fetchone()
     if row:
-        galleta = request.cookies.set('logged', True)
-        galleta = request.cookies.set('empresa', row[1])
-        galleta = request.cookies.set('usario', row[2])
-        response = {
-            'exito': True,
-            'desc': 'Bienvenido ' + row[0]
-        }
+        response = make_response(json.dumps(
+            {
+                'exito': True,
+                'desc': 'Bienvenido ' + row[0]
+            }
+        ))
+        response.set_cookie('logged', 'true')
+        response.set_cookie('empresa', str(row[1]))
+        response.set_cookie('usario', str(row[2]))
     else:
-        response = {
-            'exito': False,
-            'desc': 'Error en usuario o contraseña.'
-        }
+        response = make_response(json.dumps(
+            {
+                'exito': False,
+                'desc': 'Error en usuario o contraseña.'
+            }
+        ))
+    
     return response
 
 
