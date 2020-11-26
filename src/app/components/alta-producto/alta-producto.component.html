@@ -81,22 +81,32 @@
           </div>
           
           <div class="form-group">
-            <label for="descripcion">Descripcion</label>
+            <label for="descripcion">Descripción</label>
             <textarea formControlName="descripcion" class="form-control" [ngClass]="{'is-invalid': submitted && f.descripcion.errors}"></textarea>
             <div *ngIf="submitted && f.descripcion.errors" class="invalid-feedback">
               <div *ngIf="f.descripcion.errors.required">Por favor ingrese una descripcion</div>
             </div>
           </div>
 
-          <div class="form-group form-row row justify-content-md-center">
+          <!--<div class="form-group form-row row justify-content-md-center">
             <input type="file" formControlName="select_img" class="form-control" [ngClass]="{'is-invalid': submitted && f.select_img.errors}">
             <label for="select_img">Seleccionar Imagen</label>
             <div *ngIf="submitted && f.select_img.errors" class="invalid-feedback">
               <div *ngIf="f.select_img.errors.required">Por favor ingrese una imagen</div>
             </div>
+          </div>-->
+
+          <div class="form-row row justify-content-md-center">
+            <div class="col mt-3">
+              <input type="file" class="custom-file-input" id="customFileLang" lang="es" formControlName="select_img" class="form-control" [ngClass]="{'is-invalid': submitted && f.select_img.errors}">
+              <label class="custom-file-label" for="customFileLang">Seleccionar Imagen</label>
+              <div *ngIf="submitted && f.select_img.errors" class="invalid-feedback">
+                <div *ngIf="f.select_img.errors.required">Por favor ingrese una imagen</div>
+              </div>
+            </div>
           </div>
 
-          <div class="form-group" style="text-align: center;">
+          <div class="form-group" style="text-align: center; margin-top: 20px;">
             <button class="btn btn-primary">Enviar</button>
           </div>
 

@@ -14,6 +14,7 @@ export class InicioSesionComponent implements OnInit {
   password: string;
 
   formulario: FormGroup;
+  submitted=false;
 
   constructor(globals: Globals,
     private formBuilder: FormBuilder,
@@ -25,8 +26,8 @@ export class InicioSesionComponent implements OnInit {
   ngOnInit(): void {
     this.globals.passwordLogin = "Password";
     this.formulario = this.formBuilder.group({
-      correo: ['', Validators.required],
-      contrasena: ['', Validators.required]
+      email: ['', [Validators.required, Validators.email]],
+      contrasena: ['',Validators.required]
     });
   }
   
@@ -38,7 +39,17 @@ export class InicioSesionComponent implements OnInit {
     }
   }
 
+  get f(){return this.formulario.controls; }
+
   login(){
+
+    this.submitted=true;
+    if(this.formulario.invalid){
+      return;
+    }else{
+      alert("funciono");
+    }
+
     console.log(this.email+" "+this.password);
   }
 
