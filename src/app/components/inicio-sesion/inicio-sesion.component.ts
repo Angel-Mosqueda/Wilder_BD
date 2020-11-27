@@ -15,6 +15,7 @@ export class InicioSesionComponent implements OnInit {
   password: string;
 
   formulario: FormGroup;
+  submitted = false;
 
   constructor(globals: Globals,
     private formBuilder: FormBuilder,
@@ -27,8 +28,8 @@ export class InicioSesionComponent implements OnInit {
   ngOnInit(): void {
     this.globals.passwordLogin = "Password";
     this.formulario = this.formBuilder.group({
-      correo: ['', Validators.required],
-      contrasena: ['', Validators.required]
+      email: ['', [Validators.required, Validators.email]],
+      contrasena: ['', [Validators.required]]
     });
   }
 
@@ -40,25 +41,34 @@ export class InicioSesionComponent implements OnInit {
     }
   }
 
+  get f() { return this.formulario.controls; }
+
   login() {
-    console.log(this.email + " " + this.password);
-    let payload = {
-      EMAIL: this.email,
-      PASSWORD: this.password
-    };
-    this._requestService.login(payload).subscribe(
-      (success: any) => {
-        if (success.exito) {
-          alert(success.desc);
-          this._router.navigate(['/']);
+
+    this.submitted = true;
+    if (this.formulario.invalid) {
+      return;
+    } else {
+      let payload = {
+        EMAIL: this.email,
+        PASSWORD: this.password
+      };
+      this._requestService.login(payload).subscribe(
+        (success: any) => {
+          if (success.exito) {
+            alert(success.desc);
+            this._router.navigate(['/']);
+          }
+          else
+            alert("hubo un error, mensaje del servidor: " + success.desc)
+        },
+        () => {
+          alert("Error con tus credenciales.");
         }
-        else
-          alert("hubo un error, mensaje del servidor: " + success.desc)
-      },
-      () => {
-        alert("Error con tus credenciales.");
-      }
-    );
+      );
+    }
+
+    console.log(this.email + " " + this.password);
   }
 
 }

@@ -1,11 +1,34 @@
 <button class="btn btn-dark mt-2 mr-2" [routerLink]="['/']">Atrás</button>
 
-<div class="container-md pt-5" id="contenedor">
+<div class="container-md pt-5" id="contenedor" style="margin-bottom: 50px;">
     <div class="card">
-        <form [formGroup]="formulario" (ngSubmit)="login()">
-            <div class="card-body">
-                <h3 class="mb-4">Iniciar Sesión</h3>
+        <div class="card-body">
+            <h3 class="mb-4">Iniciar Sesión</h3>
+            <form [formGroup]="formulario" (ngSubmit)="login()">
+                <div class="from-group">
+                    <label>Correo Electrónico</label>
+                    <input type="text" formControlName="email" class="form-control"
+                        [ngClass]="{'is-invalid': f.email.touched && f.email.errors }">
+                    <div class="invalid-feedback">
+                        <div *ngIf="f.email.errors.required">El email es obligatorio</div>
+                        <div *ngIf="f.email.errors.email">Por favor, ingresa un email válido</div>
+                    </div>
+                </div>
+
                 <div class="form-group">
+                    <label for="contrasena">Contraseña</label>
+
+                    <input type="password" formControlName="contrasena"
+                        class="form-control" [ngClass]="{'is-invalid': f.contrasena.touched && f.contrasena.errors}">
+                    <!--<input type="password" fromControl="contrasena" class="form-control" [ngClass]="{'is-invalid': submitted && f.contrasena.errors }">-->
+                    <div class="invalid-feedback">
+                        <div>Por favor, ingrese su contrasena</div>
+                    </div>
+
+
+                </div>
+
+                <!--<div class="form-group">
                     <label for="exampleFormControlInput1">Correo Electrónico</label>
                     <input type="email" class="form-control" [(ngModel)]="email" formControlName="correo"
                         id="exampleFormControlInput1" placeholder="nombre@ejemplo.com" />
@@ -21,14 +44,15 @@
                                 <span class="fa fa-eye-slash icon"></span> </button>
                         </div>
                     </div>
-                </div>
+                </div>-->
 
-            </div>
-            <div class="card-footer text-center">
-                <button type="submit" class="btn btn-primary mr-3">Iniciar Sesión</button>
-                <button type="button" [routerLink]="['/alta-usuario']"
-                    class="btn btn-secondary ml-3">Registrarse</button>
-            </div>
-        </form>
+                <div class="card-footer text-center form-group">
+                    <button type="submit" class="btn btn-primary mr-3">Iniciar Sesión</button>
+                    <button type="button" [routerLink]="['/alta-usuario']"
+                        class="btn btn-secondary ml-3">Registrarse</button>
+                </div>
+            </form>
+        </div>
+
     </div>
 </div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Globals } from '../../globals/globals';
 import { Router } from '@angular/router';
 import { Options } from '@angular-slider/ngx-slider';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-modificar-producto',
@@ -23,11 +24,27 @@ export class ModificarProductoComponent implements OnInit {
 
   globals: Globals;
 
-  constructor(globals: Globals, private router: Router) { 
+  formulario: FormGroup;
+  submitted=false;
+
+  constructor(globals: Globals, private router: Router, private formBuilder: FormBuilder) { 
     this.globals = globals;
    }
 
    ngOnInit(): void {
+
+    this.formulario = this.formBuilder.group({
+      nombre: ['',Validators.required],
+      num_serie: ['',Validators.required],
+      num_factura: ['',Validators.required],
+      proveedor: ['',Validators.required],
+      factura: ['',Validators.required],
+      fecha_compra: ['',Validators.required],
+      costo_producto: ['',Validators.required],
+      descripcion: ['',Validators.required],
+      select_img: ['',Validators.required]
+    });
+
     if(this.globals.producto === null){
       this.router.navigate(['/']);
     }
@@ -53,6 +70,8 @@ export class ModificarProductoComponent implements OnInit {
     this.stringInventario = "";
 
   }
+
+  get f(){ return this.formulario.controls;}
 
   isnull(){
     this.globals.producto = null;
@@ -302,4 +321,14 @@ export class ModificarProductoComponent implements OnInit {
     this.stringInventario += "max=" + this.sliderCostoMax;
     console.log(this.stringInventario);
   }
+
+  enviarFormulario(){
+    this.submitted=true;
+    if(this.formulario.invalid){
+      return;
+    }else{
+      alert("Funciono");
+    }
+  }
+
 }
