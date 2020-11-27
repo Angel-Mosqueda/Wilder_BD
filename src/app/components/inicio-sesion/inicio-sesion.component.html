@@ -17,7 +17,7 @@
                 <div class="form-group">
                     <label for="contrasena">Contraseña</label>
                     <div class="input-group">
-                        <input ID="txtPassword" [type]="globals.passwordLogin" [(ngModel)]="password" formControlName="contrasena" class="form-control" [ngClass]="{'is invalid': submitted && f.contrasena.errors}">
+                        <input ID="txtPassword" [type]="globals.passwordLogin" [(ngModel)]="password" formControlName="contrasena" class="form-control" [ngClass]="{'is-invalid': submitted && f.contrasena.errors}">
                         <!--<input type="password" fromControl="contrasena" class="form-control" [ngClass]="{'is-invalid': submitted && f.contrasena.errors }">-->
                         <div *ngIf="submitted && f.contrasena.errors" class="invalid-feedback">
                             <div *ngIf="f.contrasena.required">Por favor, ingrese su contrasena</div>
