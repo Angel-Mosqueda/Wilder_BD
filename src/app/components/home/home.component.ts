@@ -16,11 +16,8 @@ export class HomeComponent implements OnInit {
     this._requests.getOKServer().subscribe(
       (response: any) => {
         debugger;
-        alert(response.status);
       },
       (error) => {
-        debugger;
-        alert(error);
       }
     )
   }

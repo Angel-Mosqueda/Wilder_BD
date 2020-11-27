@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class InicioSesionComponent implements OnInit {
   globals: Globals;
-  email: string;
+  correo: string;
   password: string;
 
   formulario: FormGroup;
@@ -50,7 +50,7 @@ export class InicioSesionComponent implements OnInit {
       return;
     } else {
       let payload = {
-        EMAIL: this.email,
+        EMAIL: this.correo,
         PASSWORD: this.password
       };
       this._requestService.login(payload).subscribe(
@@ -68,7 +68,7 @@ export class InicioSesionComponent implements OnInit {
       );
     }
 
-    console.log(this.email + " " + this.password);
+    console.log(this.correo + " " + this.password);
   }
 
 }

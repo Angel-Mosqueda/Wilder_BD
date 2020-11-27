@@ -7,7 +7,7 @@
             <form [formGroup]="formulario" (ngSubmit)="login()">
                 <div class="from-group">
                     <label>Correo Electrónico</label>
-                    <input type="text" formControlName="email" class="form-control"
+                    <input type="text" formControlName="email" [(ngModel)]="correo" class="form-control"
                         [ngClass]="{'is-invalid': f.email.touched && f.email.errors }">
                     <div class="invalid-feedback">
                         <div *ngIf="f.email.errors.required">El email es obligatorio</div>
@@ -17,12 +17,16 @@
 
                 <div class="form-group">
                     <label for="contrasena">Contraseña</label>
-
-                    <input type="password" formControlName="contrasena"
-                        class="form-control" [ngClass]="{'is-invalid': f.contrasena.touched && f.contrasena.errors}">
-                    <!--<input type="password" fromControl="contrasena" class="form-control" [ngClass]="{'is-invalid': submitted && f.contrasena.errors }">-->
-                    <div class="invalid-feedback">
-                        <div>Por favor, ingrese su contrasena</div>
+                    <div class="input-group">
+                        <input ID="txtPassword" [type]="globals.passwordLogin" [(ngModel)]="password" formControlName="contrasena" class="form-control" [ngClass]="{'is-invalid': submitted && f.contrasena.errors}">
+                        <!--<input type="password" fromControl="contrasena" class="form-control" [ngClass]="{'is-invalid': submitted && f.contrasena.errors }">-->
+                        <div *ngIf="submitted && f.contrasena.errors" class="invalid-feedback">
+                            <div *ngIf="f.contrasena.required">Por favor, ingrese su contrasena</div>
+                        </div>
+                        <div class="input-group-append">
+                            <button id="show_password" (click)="showPassword()" class="btn btn-primary" type="button"> <span class="fa fa-eye-slash icon"></span> </button>
+                        </div>
+                        
                     </div>
 
 
