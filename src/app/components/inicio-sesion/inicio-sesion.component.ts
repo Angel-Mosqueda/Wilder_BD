@@ -3,6 +3,7 @@ import { Globals } from '../../globals/globals';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RequestsService } from 'src/app/services/requests.service';
 import { Router } from '@angular/router';
+import * as Cookies from 'js-cookie';
 
 @Component({
   selector: 'app-inicio-sesion',
@@ -56,6 +57,7 @@ export class InicioSesionComponent implements OnInit {
       this._requestService.login(payload).subscribe(
         (success: any) => {
           if (success.exito) {
+            Cookies.set('usrinfo', JSON.stringify(success.usrinfo));
             alert(success.desc);
             this._router.navigate(['/']);
           }

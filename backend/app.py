@@ -24,7 +24,7 @@ def iniciar_sesion():
     cur = mysql.connection.cursor()
     data = json.loads(request.data)
     query = (
-        "SELECT NOMBRE, EMPRESA_ID, ID FROM USUARIO WHERE CORREO = '"
+        "SELECT * FROM USUARIO WHERE CORREO = '"
         + data["EMAIL"] +
         "' AND PASSWORD = sha2('"
         + data["PASSWORD"] + "', 512);"
@@ -36,7 +36,17 @@ def iniciar_sesion():
         response = make_response(json.dumps(
             {
                 'exito': True,
-                'desc': 'Bienvenido ' + row[0]
+                'desc': 'Bienvenido ' + row[1],
+                'usrinfo': {
+                    "id": row[0],
+                    "nombre": row[1],
+                    "apepat": row[2],
+                    "apemat": row[3],
+                    "rol": row[4],
+                    "activo": ord(row[6]),
+                    "empresa_id": row[7],
+                    "correo": row[8]
+                }
             }
         ))
         response.set_cookie('logged', 'true')
@@ -117,7 +127,6 @@ def crear_usuario():
     + "'" + data['CORREO'] + "', "
     + "sha2('" + data['PASSWORD'] + "', 512));"
     )
-    import pdb; pdb.set_trace()
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()
