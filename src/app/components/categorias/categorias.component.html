@@ -1,6 +1,6 @@
 <div class="p-3">
     <h3>Gestión de categorías</h3>
-    <button class="float-right btn btn-primary">Añadir categoría nueva</button>
+    <button class="float-right btn btn-primary" (click)="this.create = !this.create;">Añadir categoría nueva</button>
     <br><br>
     <table *ngIf="this.categorias; else nohay" class="table table-hover">
         <tr>
@@ -11,13 +11,23 @@
         </tr>
         <!--  Arreglo que corresponda a cada formulario -->
         <tr *ngFor="let cat of this.categorias; let idx = index">
-            <td><input id="id-{{ idx }}" type="text" value="{{ cat.id }}" disabled></td>
-            <td><input id="nombre-{{ idx }}" type="text" value="{{ cat.nombre }}" [disabled]="!this.editable[idx]"></td>
-            <td><button class="btn btn-secondary" (click)="toggleEdicion(idx)">{{ this.editable[idx] ? 'Terminar' : 'Editar' }}</button></td>
-            <td><button class="btn btn-danger" onclick="eliminar(idx)">Eliminar</button></td>
+            <td><input class="form-control" id="id-{{ idx }}" type="text" value="{{ cat.id }}" disabled></td>
+            <td><input class="form-control" id="nombre-{{ idx }}" type="text" value="{{ cat.nombre }}" [disabled]="!this.editable[idx]"></td>
+            <td><button class="btn btn-secondary"
+                    (click)="toggleEdicion(idx)">{{ this.editable[idx] ? 'Terminar' : 'Editar' }}</button></td>
+            <td><button class="btn btn-danger" (click)="eliminarCategoria(cat.id)">Eliminar</button></td>
         </tr>
     </table>
     <ng-template #nohay>
         <h3>No tienes registradas categorias</h3>
     </ng-template>
+    <div class="row" *ngIf="this.create">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <h3>Crea una nueva categoría</h3>
+            <input type="text" id="new-nombre" class="form-control">
+            <button class="text-center btn btn-primary mt-3 text-center" (click)="enviarNuevaCategoria()">Enviar</button>
+        </div>
+        <div class="col-3"></div>
+    </div>
 </div>

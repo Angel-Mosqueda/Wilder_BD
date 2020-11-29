@@ -2,7 +2,7 @@
 
 
 <div class="container-md pt-5" id="contenedor" style="margin-bottom: 45px;">
-  
+
   <div class="starter-template">
 
     <div class="card">
@@ -20,7 +20,8 @@
 
           <div class="form-group">
             <label for="nombre">Nombre del producto</label>
-            <input type="text" formControlName="nombre" class="form-control" [ngClass]="{'is-invalid': submitted && f.nombre.errors}">
+            <input type="text" formControlName="nombre" class="form-control"
+              [ngClass]="{'is-invalid': submitted && f.nombre.errors}">
             <div *ngIf="submitted && f.nombre.errors" class="invalid-feedback">
               <div *ngIf="f.nombre.errors.required">Por favor ingrese el nombre del producto</div>
             </div>
@@ -79,10 +80,11 @@
               </div>
             </div> -->
           </div>
-          
+
           <div class="form-group">
             <label for="descripcion">Descripción</label>
-            <textarea formControlName="descripcion" class="form-control" [ngClass]="{'is-invalid': submitted && f.descripcion.errors}"></textarea>
+            <textarea formControlName="descripcion" class="form-control"
+              [ngClass]="{'is-invalid': submitted && f.descripcion.errors}"></textarea>
             <div *ngIf="submitted && f.descripcion.errors" class="invalid-feedback">
               <div *ngIf="f.descripcion.errors.required">Por favor ingrese una descripcion</div>
             </div>
@@ -96,10 +98,23 @@
             </div>
           </div>-->
 
+          <div class="row">
+            <div class="col">
+              <h4>Selecciona las categorías del producto</h4>
+              <div class="form-check ml-4" *ngFor="let categ of this.categorias">
+                <input (change)="onCheckboxChange($event)" class="form-check-input" type="checkbox" [value]="categ.id">
+                <label class="form-check-label">
+                  {{ categ.nombre }}
+                </label>
+              </div>
+            </div>
+          </div>
+
           <div class="form-row row justify-content-md-center">
             <div class="col mt-3">
-              <input type="file" class="custom-file-input" id="customFileLang" lang="es" formControlName="select_img" class="form-control" [ngClass]="{'is-invalid': submitted && f.select_img.errors}">
-              <label class="custom-file-label" for="customFileLang">Seleccionar Imagen</label>
+              <input type="file" class="custom-file-input" id="customFileLang" lang="es" formControlName="select_img"
+                class="form-control" [ngClass]="{'is-invalid': submitted && f.select_img.errors}"
+                accept="image/x-png,image/gif,image/jpeg" (change)="fileChange($event)">
               <div *ngIf="submitted && f.select_img.errors" class="invalid-feedback">
                 <div *ngIf="f.select_img.errors.required">Por favor ingrese una imagen</div>
               </div>
@@ -237,9 +252,7 @@
         </form>-->
       </div>
     </div>
-  
+
   </div>
 
 </div>
-
-

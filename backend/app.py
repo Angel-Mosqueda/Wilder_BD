@@ -1,7 +1,14 @@
 from flask import (Flask, jsonify, request, render_template, \
-make_response)
+make_response, flash, url_for)
 from flask_mysqldb import MySQL
-import hashlib, json
+from werkzeug.utils import secure_filename
+from utils import allowed_file
+import hashlib, json, os
+from datetime import datetime
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_FOLER = os.path.join(BASE_DIR, "assets")
+print(os.getcwd())
 
 app = Flask(
     __name__,
@@ -14,6 +21,7 @@ app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'password'
 app.config['MYSQL_DB'] = 'wilder'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLER
 
 mysql = MySQL(app)
 
@@ -123,7 +131,7 @@ def obtener_categorias():
     for categoria in rows:
         response["categorias"].append({
             "id": categoria[0],
-            "razon_social": categoria[1]
+            "nombre": categoria[1]
         })
     if len(response['categorias']) == 0:
         response['exito'] = False
@@ -131,6 +139,88 @@ def obtener_categorias():
         response['exito'] = True
     cur.close()
     return response
+
+
+@app.route('/update_categoria/', methods=['POST'])
+def actualizar_categorias():
+    response = {}
+    response["categorias"] = []
+    cur = mysql.connection.cursor()
+    data = json.loads(request.data)
+    query = ("UPDATE CATEGORIA SET NOMBRE = '" + data['NOMBRE'] +
+    "' WHERE ID = " + data['ID'] + ";")
+    
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response['exito'] = isinstance(last_id, int)
+
+    empresa_id = int(request.cookies.get('empresa'))
+    cur.callproc('GET_CATEGORIAS', [empresa_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for categoria in rows:
+        response["categorias"].append({
+            "id": categoria[0],
+            "nombre": categoria[1]
+        })
+    cur.close()
+    return response
+
+
+@app.route('/delete_categoria/<id>', methods=['GET'])
+def eliminar_categorias(id):
+    response = {}
+    response["categorias"] = []
+    cur = mysql.connection.cursor()
+    query = "DELETE FROM CATEGORIA WHERE ID = " + str(id) + ";"
+    
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+
+    empresa_id = int(request.cookies.get('empresa'))
+    cur.callproc('GET_CATEGORIAS', [empresa_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for categoria in rows:
+        response["categorias"].append({
+            "id": categoria[0],
+            "nombre": categoria[1]
+        })
+    cur.close()
+    return response
+
+
+@app.route('/create_categoria/', methods=['POST'])
+def crear_categorias():
+    response = {}
+    response["categorias"] = []
+    empresa_id = int(request.cookies.get('empresa'))
+
+    cur = mysql.connection.cursor()
+    data = json.loads(request.data)
+    query = ("INSERT INTO CATEGORIA (NOMBRE, EMPRESA_ID) VALUES ('" + data['NOMBRE'] +
+    "', " + str(empresa_id) + ")")
+    
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response['exito'] = isinstance(last_id, int)
+
+    cur.callproc('GET_CATEGORIAS', [empresa_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for categoria in rows:
+        response["categorias"].append({
+            "id": categoria[0],
+            "nombre": categoria[1]
+        })
+    cur.close()
+    return response
+
 
 
 @app.route('/add_user/', methods=['POST'])
@@ -186,19 +276,28 @@ def crear_categoria():
 @app.route('/add_producto/', methods=['POST'])
 def crear_producto():
     response = {}
+    import pdb; pdb.set_trace()
     cur = mysql.connection.cursor()
-    data = json.loads(request.data)
+    data = json.loads(request.form['datos'])
+    arch = request.files['file']
+    if not allowed_file(arch.filename):
+        response['exito'] = False
+        response['desc'] = "Sube un archivo de los permitidos"
+        return response
+    filename = secure_filename(str(int(datetime.now().timestamp())) + arch.filename)
+    # filename = (str(int(datetime.now().timestamp())) + filename)
+    arch.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     query = ("INSERT INTO PRODUCTO (USUARIO_ID, EMPRESA_ID, NOMBRE, DESCRPCION,"
     "IMAGEN_REFERENCIA) VALUES ("
     + data['USUARIO_ID'] + ", "
     + data['EMPRESA_ID'] + ", "
     + "'" + data['NOMBRE'] + "', "
-    + "'" + data['DESCRPCION'] + "', '');"
+    + "'" + data['DESCRPCION'] + "', '" + filename + "');"
     )
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()
-    # last_id = cur.lastrowid
+    last_id = cur.lastrowid
     # for categoria in request.form['CATEGORIAS']:
     #     query = ("INSERT INTO CATEGORIA_ACTIVO (ACTIVO_ID, CATEGORIA_ID)"
     #     " VALUES ("

@@ -9,6 +9,7 @@ import { RequestsService } from 'src/app/services/requests.service';
 export class CategoriasComponent implements OnInit {
   public categorias;
   public editable = [];
+  public create = false;
 
   constructor(
     private _requests: RequestsService
@@ -59,5 +60,39 @@ export class CategoriasComponent implements OnInit {
       );
     }
     this.editable[index] = !this.editable[index];
+  }
+
+  eliminarCategoria(index: any) {
+    // Mandar update
+    this._requests.eliminarCategoria(index).subscribe(
+      (success: any) => {
+        this.categorias = success.categorias;
+      },
+      (error) => {
+        this.categorias = null;
+        alert('Error en el servicio, contacta con un administrador,');
+      }
+    );
+  }
+
+  enviarNuevaCategoria() {
+    let nombre = (<HTMLInputElement>document.getElementById("new-nombre")).value;
+    this._requests.crearCategoria({
+      NOMBRE: nombre
+    }).subscribe(
+      (success: any) => {
+        if (success.exito) {
+          this.categorias = success.categorias;
+          this.create = false;
+        } else {
+          this.categorias = null;
+          alert('Error en el servidor. Mensaje: ' + success.desc);
+        }
+      },
+      (error) => {
+        this.categorias = null;
+        alert('Error en el servicio, contacta con un administrador,');
+      }
+    );
   }
 }
