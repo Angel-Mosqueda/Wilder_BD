@@ -12,5 +12,10 @@ export class AuthService {
     const galleta = Cookies.get('logged');
     return galleta != null && galleta == 'true';
   }
+
+  public getInfo() {
+    var info = Cookies.get('usrinfo');
+    return JSON.parse(info);
+  }
 }
 

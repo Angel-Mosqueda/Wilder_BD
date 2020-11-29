@@ -2,7 +2,7 @@
     
     <div class="contenedor-imagenes">
         
-        <div class="imagen">
+        <div *ngIf="!this.autenticado" class="imagen">
             <img src="../../../assets/images/iniciar_sesion3.png" alt="Option 1">
             <a [routerLink]="['/inicio-sesion']"><div class="overlay">
                 <h2>Iniciar Sesion</h2>
@@ -14,7 +14,7 @@
                 </div> 
             </a>-->
         </div>
-        <div class="imagen">
+        <div *ngIf="this.autenticado" class="imagen">
             <img src="../../../assets/images/revisar2.png" alt="Option 2">
             <a [routerLink]="['/revisar-producto']">
                 <div class="overlay">
@@ -22,20 +22,20 @@
                 </div>
             </a>
         </div>
-        <div class="imagen">
+        <div *ngIf="this.autenticado" class="imagen">
             <img src="../../../assets/images/mantenimiento.png" alt="Option 3">
             <a [routerLink]="['/mantenimiento']">
                 <div class="overlay">
                     <h2>Revisar Mantenimiento</h2>
                 </div></a>
         </div>
-        <div class="imagen">
+        <div *ngIf="this.autenticado" class="imagen">
             <img src="../../../assets/images/solicitar.jpg" alt="Option 4">
             <a [routerLink]="['/solicitud']"><div class="overlay">
                 <h2>Solicitar Prestamo <br>De Inventario</h2>
             </div></a>
         </div>
-        <div class="imagen">
+        <div *ngIf="this.autenticado" class="imagen">
             <img src="../../../assets/images/configuracion.png" alt="Option 5">
             <a [routerLink]="['/']"><div class="overlay">
                 <h2>Configuracion</h2>
