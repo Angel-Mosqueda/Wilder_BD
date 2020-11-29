@@ -50,7 +50,7 @@ def iniciar_sesion():
             }
         ))
         response.set_cookie('logged', 'true')
-        response.set_cookie('empresa', str(row[1]))
+        response.set_cookie('empresa', str(row[7]))
         response.set_cookie('usario', str(row[2]))
     else:
         response = make_response(json.dumps(
@@ -59,7 +59,7 @@ def iniciar_sesion():
                 'desc': 'Error en usuario o contraseña.'
             }
         ))
-    
+    cur.close()
     return response
 
 
@@ -107,6 +107,29 @@ def obtener_empresas():
             "id": empresa[0],
             "razon_social": empresa[1]
         })
+    cur.close()
+    return response
+
+
+@app.route('/get_categorias/', methods=['GET'])
+def obtener_categorias():
+    response = {}
+    response["categorias"] = []
+    cur = mysql.connection.cursor()
+    empresa_id = int(request.cookies.get('empresa'))
+    cur.callproc('GET_CATEGORIAS', [empresa_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for categoria in rows:
+        response["categorias"].append({
+            "id": categoria[0],
+            "razon_social": categoria[1]
+        })
+    if len(response['categorias']) == 0:
+        response['exito'] = False
+    else:
+        response['exito'] = True
+    cur.close()
     return response
 
 
@@ -164,27 +187,28 @@ def crear_categoria():
 def crear_producto():
     response = {}
     cur = mysql.connection.cursor()
+    data = json.loads(request.data)
     query = ("INSERT INTO PRODUCTO (USUARIO_ID, EMPRESA_ID, NOMBRE, DESCRPCION,"
     "IMAGEN_REFERENCIA) VALUES ("
-    + request.form['USUARIO_ID'] + ", "
-    + request.form['EMPRESA_ID'] + ", "
-    + "'" + request.form['NOMBRE'] + "', "
-    + "'" + request.form['DESCRPCION'] + "', '');"
+    + data['USUARIO_ID'] + ", "
+    + data['EMPRESA_ID'] + ", "
+    + "'" + data['NOMBRE'] + "', "
+    + "'" + data['DESCRPCION'] + "', '');"
     )
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()
-    last_id = cur.lastrowid
-    for categoria in request.form['CATEGORIAS']:
-        query = ("INSERT INTO CATEGORIA_ACTIVO (ACTIVO_ID, CATEGORIA_ID)"
-        " VALUES ("
-        + last_id + " "
-        + categoria + " "
-        ");"
-        )
-        cur.execute(query)
-        mysql.connection.commit()
-        rows = cur.fetchall()
+    # last_id = cur.lastrowid
+    # for categoria in request.form['CATEGORIAS']:
+    #     query = ("INSERT INTO CATEGORIA_ACTIVO (ACTIVO_ID, CATEGORIA_ID)"
+    #     " VALUES ("
+    #     + last_id + " "
+    #     + categoria + " "
+    #     ");"
+    #     )
+    #     cur.execute(query)
+    #     mysql.connection.commit()
+    #     rows = cur.fetchall()
     cur.close()
     return jsonify(response)
 

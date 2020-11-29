@@ -26,6 +26,18 @@ export class RequestsService {
     return this.http.post('/add_empresa/', payload);
   }
 
+  createProducto(payload: any) {
+    return this.http.post('/add_producto/', payload);
+  }
+
+  getCategorias() {
+    return this.http.get('/get_categorias/');
+  }
+
+  updateCategoria(payload: any) {
+    return this.http.post('/update_categoria/', payload);
+  }
+
   login(payload: any) {
     return this.http.post('/iniciar/', payload);
   }

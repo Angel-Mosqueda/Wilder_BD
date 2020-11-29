@@ -28,6 +28,7 @@ import { Globals } from './globals/globals';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CategoriasComponent } from './components/categorias/categorias.component';
 
 
 @NgModule({
@@ -50,7 +51,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ConsultarUsuarioComponent,
     ModificarUsuarioComponent,
     RevisarproductoComponent,
-    ConsumibleInventarioComponent
+    ConsumibleInventarioComponent,
+    CategoriasComponent
   ],
   imports: [
     BrowserModule,
