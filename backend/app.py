@@ -1,5 +1,5 @@
 from flask import (Flask, jsonify, request, render_template, \
-make_response, flash, url_for)
+make_response, flash, url_for, send_from_directory)
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
 from utils import allowed_file
@@ -7,7 +7,7 @@ import hashlib, json, os
 from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-UPLOAD_FOLER = os.path.join(BASE_DIR, "assets")
+UPLOAD_FOLER = os.path.join(BASE_DIR, "static")
 print(os.getcwd())
 
 app = Flask(
@@ -25,6 +25,10 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLER
 
 mysql = MySQL(app)
 
+
+@app.route('/static/<path:filename>') 
+def send_file(filename): 
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 @app.route('/iniciar/', methods=['POST'])
 def iniciar_sesion():
@@ -59,7 +63,7 @@ def iniciar_sesion():
         ))
         response.set_cookie('logged', 'true')
         response.set_cookie('empresa', str(row[7]))
-        response.set_cookie('usario', str(row[2]))
+        response.set_cookie('usuario', str(row[0]))
     else:
         response = make_response(json.dumps(
             {
@@ -276,7 +280,6 @@ def crear_categoria():
 @app.route('/add_producto/', methods=['POST'])
 def crear_producto():
     response = {}
-    import pdb; pdb.set_trace()
     cur = mysql.connection.cursor()
     data = json.loads(request.form['datos'])
     arch = request.files['file']
@@ -287,27 +290,29 @@ def crear_producto():
     filename = secure_filename(str(int(datetime.now().timestamp())) + arch.filename)
     # filename = (str(int(datetime.now().timestamp())) + filename)
     arch.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    query = ("INSERT INTO PRODUCTO (USUARIO_ID, EMPRESA_ID, NOMBRE, DESCRPCION,"
+    empresa_id = request.cookies.get('empresa')
+    usuario_id = request.cookies.get('usuario')
+    query = ("INSERT INTO PRODUCTO (USUARIO_ID, EMPRESA_ID, NOMBRE, DESCRIPCION,"
     "IMAGEN_REFERENCIA) VALUES ("
-    + data['USUARIO_ID'] + ", "
-    + data['EMPRESA_ID'] + ", "
-    + "'" + data['NOMBRE'] + "', "
-    + "'" + data['DESCRPCION'] + "', '" + filename + "');"
+    + str(usuario_id) + ", "
+    + str(empresa_id) + ", "
+    + "\"" + data['NOMBRE'] + "\", "
+    + "'" + data['DESCRIPCION'] + "', '" + filename + "');"
     )
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()
     last_id = cur.lastrowid
-    # for categoria in request.form['CATEGORIAS']:
-    #     query = ("INSERT INTO CATEGORIA_ACTIVO (ACTIVO_ID, CATEGORIA_ID)"
-    #     " VALUES ("
-    #     + last_id + " "
-    #     + categoria + " "
-    #     ");"
-    #     )
-    #     cur.execute(query)
-    #     mysql.connection.commit()
-    #     rows = cur.fetchall()
+    for categoria in data['CATEGORIAS'][-3:]:
+        query = ("INSERT INTO categoria_producto (PRODUCTO_ID, CATEGORIA_ID)"
+        " VALUES ("
+        + str(last_id) + ","
+        + categoria +
+        ");"
+        )
+        cur.execute(query)
+        mysql.connection.commit()
+        rows = cur.fetchall()
     cur.close()
     return jsonify(response)
 
