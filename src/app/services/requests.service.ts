@@ -33,6 +33,7 @@ export class RequestsService {
     return this.http.post('/add_producto/', fd);
   }
 
+  ///////////// CRUD Categorias
   getCategorias() {
     return this.http.get('/get_categorias/');
   }
@@ -49,6 +50,23 @@ export class RequestsService {
     return this.http.get('/delete_categoria/' + id);
   }
 
+  ///////////// CRUD Proveedores
+  getProveedores() {
+    return this.http.get('/get_proveedores/');
+  }
+  
+  updateProveedor(payload: any) {
+    return this.http.post('/update_proveedor/', payload);
+  }
+  
+  crearProveedor(payload: any) {
+    return this.http.post('/create_proveedor/', payload)
+  }
+  
+  eliminarProveedor(id: any) {
+    return this.http.get('/delete_proveedor/' + id);
+  }
+  
   login(payload: any) {
     return this.http.post('/iniciar/', payload);
   }

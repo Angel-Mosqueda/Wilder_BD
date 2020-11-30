@@ -44,6 +44,15 @@
                 <h2>Fanning Secondary School <br>Lima - Peru</h2>
             </div></a>-->
         </div>
+        <div *ngIf="this.autenticado" class="imagen">
+            <img src="../../../assets/images/proveedor.jpg" alt="Option 7">
+            <a [routerLink]="['/proveedores']"><div class="overlay">
+                <h2>Proveedores</h2>
+            </div></a>
+            <!--<a href="projects/#img5"><div class="overlay">
+                <h2>Fanning Secondary School <br>Lima - Peru</h2>
+            </div></a>-->
+        </div>
         <div class="imagen">
             <img src="../../../assets/images/ayuda.jpg" alt="Option 6">
             <a [routerLink]="['/']"><div class="overlay">

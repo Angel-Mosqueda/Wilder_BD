@@ -122,6 +122,113 @@ def obtener_empresas():
     cur.close()
     return response
 
+################ CRUD PROVEEDORES ######################
+@app.route('/get_proveedores/', methods=['GET'])
+def obtener_proveedores():
+    response = {}
+    response["proveedores"] = []
+    cur = mysql.connection.cursor()
+    empresa_id = int(request.cookies.get('empresa'))
+    cur.callproc('GET_PROVEEDORES', [empresa_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for proveedor in rows:
+        response["proveedores"].append({
+            "id": proveedor[0],
+            "razsoc": proveedor[1],
+            "nombre": proveedor[2]
+        })
+    if len(response['proveedores']) == 0:
+        response['exito'] = False
+        response['desc'] = "No existen proveedores, intenta crear uno."
+    else:
+        response['exito'] = True
+    cur.close()
+    return response
+
+
+@app.route('/update_proveedor/', methods=['POST'])
+def actualizar_proveedores():
+    response = {}
+    response["proveedores"] = []
+    cur = mysql.connection.cursor()
+    data = json.loads(request.data)
+    query = ("UPDATE EMPRESA SET NOMBRE = '" + data['NOMBRE'] +
+    "', RAZSOC = '" + data['RAZSOC'] + "' WHERE ID = " + data['ID'] + ";")
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response['exito'] = isinstance(last_id, int)
+
+    empresa_id = int(request.cookies.get('empresa'))
+    cur.callproc('GET_PROVEEDORES', [empresa_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for proveedor in rows:
+        response["proveedores"].append({
+            "id": proveedor[0],
+            "razsoc": proveedor[1],
+            "nombre": proveedor[2]
+        })
+    cur.close()
+    return response
+
+
+@app.route('/delete_proveedor/<id>', methods=['GET'])
+def eliminar_proveedores(id):
+    response = {}
+    response["proveedores"] = []
+    cur = mysql.connection.cursor()
+    query = "DELETE FROM EMPRESA WHERE ID = " + str(id) + ";"
+    
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+
+    empresa_id = int(request.cookies.get('empresa'))
+    cur.callproc('GET_PROVEEDORES', [empresa_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for proveedor in rows:
+        response["proveedores"].append({
+            "id": proveedor[0],
+            "razsoc": proveedor[1],
+            "nombre": proveedor[2]
+        })
+    cur.close()
+    return response
+
+
+@app.route('/create_proveedor/', methods=['POST'])
+def crear_proveedores():
+    response = {}
+    response["proveedores"] = []
+    empresa_id = int(request.cookies.get('empresa'))
+
+    cur = mysql.connection.cursor()
+    data = json.loads(request.data)
+    query = ("INSERT INTO EMPRESA (NOMBRE, RAZSOC, TIPO, EMPRESA_ID) VALUES ('" + data['NOMBRE'] +
+    "', '" + data['RAZSOC'] + "', 'PROVEEDOR', " + str(empresa_id) + ")")
+    
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response['exito'] = isinstance(last_id, int)
+
+    cur.callproc('GET_PROVEEDORES', [empresa_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for proveedor in rows:
+        response["proveedores"].append({
+            "id": proveedor[0],
+            "razsoc": proveedor[1],
+            "nombre": proveedor[2]
+        })
+    cur.close()
+    return response
+################ FIN CRUD PROVEEDORES ##################
 
 @app.route('/get_categorias/', methods=['GET'])
 def obtener_categorias():

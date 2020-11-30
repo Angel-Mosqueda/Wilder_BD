@@ -1,0 +1,45 @@
+<div class="p-3">
+    <h3>Gestión de proveedores</h3>
+    <button class="float-right btn btn-primary" (click)="this.create = !this.create;">Añadir proveedor nuevo</button>
+    <br><br>
+    <table *ngIf="this.proveedores; else nohay" class="table table-hover">
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Razón Social</th>
+            <th>Editar</th>
+            <th>Eliminar</th>
+        </tr>
+        <!--  Arreglo que corresponda a cada formulario -->
+        <tr *ngFor="let prov of this.proveedores; let idx = index">
+            <td><input class="form-control" id="id-{{ idx }}" type="text" value="{{ prov.id }}" disabled></td>
+            <td><input class="form-control" id="nombre-{{ idx }}" type="text" value="{{ prov.nombre }}"
+                    [disabled]="!this.editable[idx]"></td>
+            <td><input class="form-control" id="razsoc-{{ idx }}" type="text" value="{{ prov.razsoc }}"
+                    [disabled]="!this.editable[idx]"></td>
+            <td><button class="btn btn-secondary"
+                    (click)="toggleEdicion(idx)">{{ this.editable[idx] ? 'Terminar' : 'Editar' }}</button></td>
+            <td><button class="btn btn-danger" (click)="eliminarProveedor(prov.id)">Eliminar</button></td>
+        </tr>
+    </table>
+    <ng-template #nohay>
+        <h3>No tienes registrados proveedores</h3>
+    </ng-template>
+    <div class="row" *ngIf="this.create">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <h3>Crea un nuevo proveedor</h3>
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="new-nombre" name="nombre" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="razsoc">Razón Social</label>
+                <input type="text" id="new-razsoc" name="razsoc" class="form-control">
+            </div>
+            <button class="text-center btn btn-primary mt-3 text-center"
+                (click)="enviarNuevoProveedor()">Enviar</button>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
