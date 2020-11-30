@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +24,29 @@ export class RequestsService {
 
   createEmpresa(payload: any) {
     return this.http.post('/add_empresa/', payload);
+  }
+
+  createProducto(payload: any, file: File) {
+    let fd = new FormData();
+    fd.append('file', file, file.name);
+    fd.append('datos', JSON.stringify(payload));
+    return this.http.post('/add_producto/', fd);
+  }
+
+  getCategorias() {
+    return this.http.get('/get_categorias/');
+  }
+
+  updateCategoria(payload: any) {
+    return this.http.post('/update_categoria/', payload);
+  }
+
+  crearCategoria(payload: any) {
+    return this.http.post('/create_categoria/', payload)
+  }
+
+  eliminarCategoria(id: any) {
+    return this.http.get('/delete_categoria/' + id);
   }
 
   login(payload: any) {

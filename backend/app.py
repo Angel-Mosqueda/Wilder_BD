@@ -1,7 +1,14 @@
 from flask import (Flask, jsonify, request, render_template, \
-make_response)
+make_response, flash, url_for, send_from_directory)
 from flask_mysqldb import MySQL
-import hashlib, json
+from werkzeug.utils import secure_filename
+from utils import allowed_file
+import hashlib, json, os
+from datetime import datetime
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_FOLER = os.path.join(BASE_DIR, "static")
+print(os.getcwd())
 
 app = Flask(
     __name__,
@@ -14,9 +21,14 @@ app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'password'
 app.config['MYSQL_DB'] = 'wilder'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLER
 
 mysql = MySQL(app)
 
+
+@app.route('/static/<path:filename>') 
+def send_file(filename): 
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 @app.route('/iniciar/', methods=['POST'])
 def iniciar_sesion():
@@ -50,8 +62,8 @@ def iniciar_sesion():
             }
         ))
         response.set_cookie('logged', 'true')
-        response.set_cookie('empresa', str(row[1]))
-        response.set_cookie('usario', str(row[2]))
+        response.set_cookie('empresa', str(row[7]))
+        response.set_cookie('usuario', str(row[0]))
     else:
         response = make_response(json.dumps(
             {
@@ -59,7 +71,7 @@ def iniciar_sesion():
                 'desc': 'Error en usuario o contraseña.'
             }
         ))
-    
+    cur.close()
     return response
 
 
@@ -107,7 +119,112 @@ def obtener_empresas():
             "id": empresa[0],
             "razon_social": empresa[1]
         })
+    cur.close()
     return response
+
+
+@app.route('/get_categorias/', methods=['GET'])
+def obtener_categorias():
+    response = {}
+    response["categorias"] = []
+    cur = mysql.connection.cursor()
+    empresa_id = int(request.cookies.get('empresa'))
+    cur.callproc('GET_CATEGORIAS', [empresa_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for categoria in rows:
+        response["categorias"].append({
+            "id": categoria[0],
+            "nombre": categoria[1]
+        })
+    if len(response['categorias']) == 0:
+        response['exito'] = False
+    else:
+        response['exito'] = True
+    cur.close()
+    return response
+
+
+@app.route('/update_categoria/', methods=['POST'])
+def actualizar_categorias():
+    response = {}
+    response["categorias"] = []
+    cur = mysql.connection.cursor()
+    data = json.loads(request.data)
+    query = ("UPDATE CATEGORIA SET NOMBRE = '" + data['NOMBRE'] +
+    "' WHERE ID = " + data['ID'] + ";")
+    
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response['exito'] = isinstance(last_id, int)
+
+    empresa_id = int(request.cookies.get('empresa'))
+    cur.callproc('GET_CATEGORIAS', [empresa_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for categoria in rows:
+        response["categorias"].append({
+            "id": categoria[0],
+            "nombre": categoria[1]
+        })
+    cur.close()
+    return response
+
+
+@app.route('/delete_categoria/<id>', methods=['GET'])
+def eliminar_categorias(id):
+    response = {}
+    response["categorias"] = []
+    cur = mysql.connection.cursor()
+    query = "DELETE FROM CATEGORIA WHERE ID = " + str(id) + ";"
+    
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+
+    empresa_id = int(request.cookies.get('empresa'))
+    cur.callproc('GET_CATEGORIAS', [empresa_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for categoria in rows:
+        response["categorias"].append({
+            "id": categoria[0],
+            "nombre": categoria[1]
+        })
+    cur.close()
+    return response
+
+
+@app.route('/create_categoria/', methods=['POST'])
+def crear_categorias():
+    response = {}
+    response["categorias"] = []
+    empresa_id = int(request.cookies.get('empresa'))
+
+    cur = mysql.connection.cursor()
+    data = json.loads(request.data)
+    query = ("INSERT INTO CATEGORIA (NOMBRE, EMPRESA_ID) VALUES ('" + data['NOMBRE'] +
+    "', " + str(empresa_id) + ")")
+    
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response['exito'] = isinstance(last_id, int)
+
+    cur.callproc('GET_CATEGORIAS', [empresa_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for categoria in rows:
+        response["categorias"].append({
+            "id": categoria[0],
+            "nombre": categoria[1]
+        })
+    cur.close()
+    return response
+
 
 
 @app.route('/add_user/', methods=['POST'])
@@ -164,22 +281,33 @@ def crear_categoria():
 def crear_producto():
     response = {}
     cur = mysql.connection.cursor()
-    query = ("INSERT INTO PRODUCTO (USUARIO_ID, EMPRESA_ID, NOMBRE, DESCRPCION,"
+    data = json.loads(request.form['datos'])
+    arch = request.files['file']
+    if not allowed_file(arch.filename):
+        response['exito'] = False
+        response['desc'] = "Sube un archivo de los permitidos"
+        return response
+    filename = secure_filename(str(int(datetime.now().timestamp())) + arch.filename)
+    # filename = (str(int(datetime.now().timestamp())) + filename)
+    arch.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    empresa_id = request.cookies.get('empresa')
+    usuario_id = request.cookies.get('usuario')
+    query = ("INSERT INTO PRODUCTO (USUARIO_ID, EMPRESA_ID, NOMBRE, DESCRIPCION,"
     "IMAGEN_REFERENCIA) VALUES ("
-    + request.form['USUARIO_ID'] + ", "
-    + request.form['EMPRESA_ID'] + ", "
-    + "'" + request.form['NOMBRE'] + "', "
-    + "'" + request.form['DESCRPCION'] + "', '');"
+    + str(usuario_id) + ", "
+    + str(empresa_id) + ", "
+    + "\"" + data['NOMBRE'] + "\", "
+    + "'" + data['DESCRIPCION'] + "', '" + filename + "');"
     )
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()
     last_id = cur.lastrowid
-    for categoria in request.form['CATEGORIAS']:
-        query = ("INSERT INTO CATEGORIA_ACTIVO (ACTIVO_ID, CATEGORIA_ID)"
+    for categoria in data['CATEGORIAS'][-3:]:
+        query = ("INSERT INTO categoria_producto (PRODUCTO_ID, CATEGORIA_ID)"
         " VALUES ("
-        + last_id + " "
-        + categoria + " "
+        + str(last_id) + ","
+        + categoria +
         ");"
         )
         cur.execute(query)
