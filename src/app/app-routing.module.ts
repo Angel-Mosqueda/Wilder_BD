@@ -19,6 +19,7 @@ import { RevisarproductoComponent } from './components/revisarproducto/revisarpr
 import { ConsumibleInventarioComponent } from './components/consumible-inventario/consumible-inventario.component';
 import { AuthGuardService } from './services/auth-guard.service'
 import { CategoriasComponent } from './components/categorias/categorias.component';
+import { ProveedoresComponent } from './components/proveedores/proveedores.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -38,6 +39,7 @@ const routes: Routes = [
   { path: 'solicitud', component: SolicitudComponent },
   { path: 'revisar-producto', component: RevisarproductoComponent },
   { path: 'categorias', component: CategoriasComponent },
+  { path: 'proveedores', component: ProveedoresComponent },
   { path: 'consumible-inventario', component: ConsumibleInventarioComponent, canActivate: [AuthGuardService] },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];

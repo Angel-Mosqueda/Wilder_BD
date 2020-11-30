@@ -29,6 +29,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CategoriasComponent } from './components/categorias/categorias.component';
+import { ProveedoresComponent } from './components/proveedores/proveedores.component';
 
 
 @NgModule({
@@ -52,7 +53,8 @@ import { CategoriasComponent } from './components/categorias/categorias.componen
     ModificarUsuarioComponent,
     RevisarproductoComponent,
     ConsumibleInventarioComponent,
-    CategoriasComponent
+    CategoriasComponent,
+    ProveedoresComponent
   ],
   imports: [
     BrowserModule,
