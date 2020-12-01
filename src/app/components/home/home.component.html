@@ -11,6 +11,8 @@
             <!--<a href="../../../assets/Projects/Project Intro_Page_1.png" data-lightbox="image-1" data-title="Project 1">
                 <div class="overlay">
                     <h2>Villegas STEAM Academy <br> Riverside, CA</h2>
+
+                    *ngIf="globals.rol === 'admin' || globals.rol === 'encargado' " 
                 </div> 
             </a>-->
         </div>
@@ -26,7 +28,18 @@
             <img src="../../../assets/images/mantenimiento.png" alt="Option 3">
             <a [routerLink]="['/mantenimiento']">
                 <div class="overlay">
-                    <h2>Revisar Mantenimiento</h2>
+
+                    <div *ngIf="globals.rol === 'admin' || globals.rol === 'encargado' else otro" >
+                        <h2>Revisar Mantenimiento</h2>
+                        <!-- Falta agregar metodos diferentes, uno para revisar los mantenimientos y otro para generarlos, de 
+                        acuerdo añ usuario -->
+                    </div>
+
+                    <ng-template #otro>
+                        <h2>Solicitar Mantenimiento</h2>
+                    </ng-template>
+                    
+                    
                 </div></a>
         </div>
         <div *ngIf="this.autenticado" class="imagen">
@@ -44,7 +57,7 @@
                 <h2>Fanning Secondary School <br>Lima - Peru</h2>
             </div></a>-->
         </div>
-        <div *ngIf="this.autenticado" class="imagen">
+        <div *ngIf="this.autenticado && globals.rol === 'admin' || globals.rol === 'encargado'" class="imagen">
             <img src="../../../assets/images/proveedor.jpg" alt="Option 7">
             <a [routerLink]="['/proveedores']"><div class="overlay">
                 <h2>Proveedores</h2>

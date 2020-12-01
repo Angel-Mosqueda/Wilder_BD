@@ -12,4 +12,5 @@ export class Globals {
   passwordLogin: string = "Password";
   passwordNueva1: string = "Password";
   passwordNueva2: string = "Password";
+  rol:string = ""; 
 }

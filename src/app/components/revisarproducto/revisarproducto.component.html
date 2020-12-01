@@ -2,13 +2,13 @@
 <div class="galeria">
     <div class="contenedor-imagenes">
         
-        <div class="imagen">
+        <div *ngIf="globals.rol === 'admin' || globals.rol === 'encargado' " class="imagen">
             <img src="../../../assets/images/altas.jpg" alt="Option 1">
             <a [routerLink]="['/consumible-inventario']" (click) ="esAlta()"><div class="overlay">
                 <h2>Altas</h2>
             </div></a>
         </div>
-        <div class="imagen">
+        <div *ngIf="globals.rol === 'admin' || globals.rol === 'encargado' " class="imagen">
             <img src="../../../assets/images/bajas.png" alt="Option 2">
             <a [routerLink]="['/consumible-inventario']" (click) ="esBaja()">
                 <div class="overlay">
@@ -16,7 +16,7 @@
                 </div>
             </a>
         </div>
-        <div class="imagen">
+        <div *ngIf="globals.rol === 'admin' || globals.rol === 'encargado' " class="imagen">
             <img src="../../../assets/images/cambios2.jpg" alt="Option 3">
             <a [routerLink]="['/consumible-inventario']" (click) ="esCambio()">
                 <div class="overlay">
@@ -30,7 +30,7 @@
             </div></a>
         </div>
         
-        <div class="imagen">
+        <div *ngIf="globals.rol === 'admin'" class="imagen">
             <img src="../../../assets/images/categorias.jpg" alt="Option 7">
             <a [routerLink]="['/categorias']">
                 <div class="overlay">

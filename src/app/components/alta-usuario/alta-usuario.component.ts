@@ -56,6 +56,7 @@ export class AltaUsuarioComponent implements OnInit {
   agregarEmpresa() {
     this.globals.nuevaEmpresa = true;
     this.globals.deshabilitar = true;
+    
   }
 
   showPassword1() {
