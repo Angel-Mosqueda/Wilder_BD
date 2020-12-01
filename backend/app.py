@@ -230,6 +230,39 @@ def crear_proveedores():
     return response
 ################ FIN CRUD PROVEEDORES ##################
 
+################### INICIO FILTRO ######################
+@app.route('/filtro_productos', methods=['GET'])
+def obtener_productos():
+    response = {}
+    response["productos"] = []
+    cur = mysql.connection.cursor()
+    empresa_id = int(request.cookies.get('empresa'))
+
+    categorias = request.args.get('categorias')
+    filtro = request.args.get('filtro')
+    categorias = categorias if categorias is not None else ''
+    filtro = filtro if filtro is not None else ''
+
+    cur.callproc('FILTRO_PRODUCTOS', [categorias, filtro, empresa_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for producto in rows:
+        response["productos"].append({
+            "id": producto[0],
+            "usuario_id": producto[1],
+            "nombre": producto[2],
+            "descripcion": producto[3],
+            "imagen_referencia": producto[4]
+        })
+    if len(response['productos']) == 0:
+        response['exito'] = False
+        response['desc'] = "No existen productos, intenta crear uno."
+    else:
+        response['exito'] = True
+    cur.close()
+    return response
+###################### FIN FILTRO ######################
+
 @app.route('/get_categorias/', methods=['GET'])
 def obtener_categorias():
     response = {}

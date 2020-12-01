@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Globals } from '../../globals/globals';
 import { Router } from '@angular/router';
 import { Options } from '@angular-slider/ngx-slider';
+import { RequestsService } from 'src/app/services/requests.service';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-reporte-producto',
@@ -9,300 +11,97 @@ import { Options } from '@angular-slider/ngx-slider';
   styleUrls: ['./reporte-producto.component.css']
 })
 export class ReporteProductoComponent implements OnInit {
-  array = []; //Arreglo para almacenar info de base de datos
-
-  minValue: number = 0;
-  maxValue: number = 500;
-  options: Options = {
-    floor: 0,
-    ceil: 500,
-    translate: (value: number): string => {
-      return '$' + value;
-    }
-  };
-  
   globals: Globals;
+  filter: any = {};
+  public categorias: any;
+  public form: FormGroup
+  public productos: any;
 
-  constructor(globals: Globals, private router: Router) { 
+  constructor(
+    globals: Globals,
+    private router: Router,
+    private _requests: RequestsService,
+    private _fb: FormBuilder
+  ) {
     this.globals = globals;
-   }
+    this.form = this._fb.group({
+      categorias: this._fb.array(['', Validators.required]),
+      busqueda: ['', [Validators.required]]
+    });
+    this.addCheckboxes();
+  }
+
+  onCheckboxChange(e) {
+    const checkArray: FormArray = this.form.get('categorias') as FormArray;
+
+    if (e.target.checked) {
+      checkArray.push(new FormControl(e.target.value));
+    } else {
+      let i: number = 0;
+      checkArray.controls.forEach((item: FormControl) => {
+        if (item.value == e.target.value) {
+          checkArray.removeAt(i);
+          return;
+        }
+        i++;
+      });
+    }
+  }
 
   ngOnInit(): void {
-    if(this.globals.producto === null){
+    if (this.globals.producto === null) {
       this.router.navigate(['/']);
     }
-
-    this.prestamoInventario = false;
-    this.mantenimientoInventario = false;
-    this.almacenInventario = false;
-    this.computacionInventario = false;
-    this.herramientasInventario = false;
-    this.maquinariaInventario = false;
-    this.muebleriaInventario = false;
-    this.vehiculosInventario = false;
-    this.disponibleConsumible = false;
-    this.agotadoConsumible = false;
-    this.automotrizConsumible = false;
-    this.herramientasConsumible = false;
-    this.limpiezaConsumible = false;
-    this.maquinariaConsumible = false;
-    this.papeleriaConsumible = false;
-    this.sliderCostoMin = 0;
-    this.sliderCostoMax = 0;
-    this.stringConsumible = "";
-    this.stringInventario = "";
-
+    this._requests.obtenerProductos(null, null).subscribe(
+      (success: any) => {
+        if (success.exito) {
+          this.productos = success.productos;
+        } else {
+          this.productos = null;
+          alert('Error en el servidor. Mensaje: ' + success.desc);
+        }
+      },
+      (error) => {
+        this.productos = null;
+        alert('Error en el servicio, contacta con un administrador,');
+      }
+    );
   }
 
-  isnull(){
-    this.globals.producto = null;
-    this.globals.consultas = null;
-  }
-  
-  prestamoInventario: boolean = null;
-  mantenimientoInventario: boolean = null;
-  almacenInventario: boolean = null;
-  computacionInventario: boolean = null;
-  herramientasInventario: boolean = null;
-  maquinariaInventario: boolean = null;
-  muebleriaInventario: boolean = null;
-  vehiculosInventario: boolean = null;
-  disponibleConsumible: boolean = null;
-  agotadoConsumible: boolean = null;
-  automotrizConsumible: boolean = null;
-  herramientasConsumible: boolean = null;
-  limpiezaConsumible: boolean = null;
-  maquinariaConsumible: boolean = null;
-  papeleriaConsumible: boolean = null;
-  sliderCostoMin:  number = 0;
-  sliderCostoMax: number = 0;
-  stringConsumible: string;
-  stringInventario: string;
-
-  checkPrestamoInventarioFunction(){
-    if(this.prestamoInventario == false){
-      this.prestamoInventario = true;
-      this.concatenacionInventario();
-    }else{
-      this.prestamoInventario = false;
-      this.concatenacionInventario();
-    }
+  public buscarQuery() {
+    let nombre = this.form.controls["busqueda"].value;
+    let checks = this.form.controls.categorias.value;
+    checks.splice(0,2);
+    this._requests.obtenerProductos(checks, nombre).subscribe(
+      (success: any) => {
+        if (success.exito) {
+          this.productos = success.productos;
+        } else {
+          this.productos = null;
+          alert('Error en el servidor. Mensaje: ' + success.desc);
+        }
+      },
+      (error) => {
+        this.productos = null;
+        alert('Error en el servicio, contacta con un administrador,');
+      }
+    );
   }
 
-  checkMantenimientoInventarioFunction(){
-    if(this.mantenimientoInventario == false){
-      this.mantenimientoInventario = true;
-      this.concatenacionInventario();
-    }else{
-      this.mantenimientoInventario = false;
-      this.concatenacionInventario();
-    }
+  private addCheckboxes() {
+    this._requests.getCategorias().subscribe(
+      (success: any) => {
+        if (success.exito) {
+          this.categorias = success.categorias;
+        } else {
+          this.categorias = null;
+          alert('Error en el servidor. Mensaje: ' + success.desc);
+        }
+      },
+      (error) => {
+        this.categorias = null;
+        alert('Error en el servicio, contacta con un administrador,');
+      }
+    )
   }
-
-  checkAlmacenInventarioFunction(){
-    if(this.almacenInventario == false){
-      this.almacenInventario = true;
-      this.concatenacionInventario();
-    }else{
-      this.almacenInventario = false;
-      this.concatenacionInventario();
-    }
-  }
-
-  checkComputacionInventarioFunction(){
-    if(this.computacionInventario == false){
-      this.computacionInventario = true;
-      this.concatenacionInventario();
-    }else{
-      this.computacionInventario = false;
-      this.concatenacionInventario();
-    }
-  }
-
-  checkHerramientasInventarioFuntion(){
-    if(this.herramientasInventario == false){
-      this.herramientasInventario = true;
-      this.concatenacionInventario();
-    }else{
-      this.herramientasInventario = false;
-      this.concatenacionInventario();
-    }
-  }
-
-  checkMaquinariaInventarioFunction(){
-    if(this.maquinariaInventario == false){
-      this.maquinariaInventario = true;
-      this.concatenacionInventario();
-    }else{
-      this.maquinariaInventario = false;
-      this.concatenacionInventario();
-    }
-  }
-
-  checkMuebleriaInventarioFunction(){
-    if(this.muebleriaInventario == false){
-      this.muebleriaInventario = true;
-      this.concatenacionInventario();
-    }else{
-      this.muebleriaInventario = false;
-      this.concatenacionInventario();
-    }
-  }
-
-  checkVehiculosInventarioFunction(){
-    if(this.vehiculosInventario == false){
-      this.vehiculosInventario = true;
-      this.concatenacionInventario();
-    }else{
-      this.vehiculosInventario = false;
-      this.concatenacionInventario();
-    }
-  }
-
-  checkDisponibleConsumibleFunction(){
-    if(this.disponibleConsumible == false){
-      this.disponibleConsumible = true;
-      this.concatenacionConsumible();
-    }else{
-      this.disponibleConsumible = false;
-      this.concatenacionConsumible();
-    }
-  }
-
-  checkAgotadoConsumibleFunction(){
-    if(this.agotadoConsumible == false){
-      this.agotadoConsumible = true;
-      this.concatenacionConsumible();
-    }else{
-      this.agotadoConsumible = false;
-      this.concatenacionConsumible();
-    }
-  }
-
-  checkAutomotrizConsumibleFunction(){
-    if(this.automotrizConsumible == false){
-      this.automotrizConsumible = true;
-      this.concatenacionConsumible();
-    }else{
-      this.automotrizConsumible = false;
-      this.concatenacionConsumible();
-    }
-  }
-
-  checkHerramientasConsumibleFunction(){
-    if(this.herramientasConsumible == false){
-      this.herramientasConsumible = true;
-      this.concatenacionConsumible();
-    }else{
-      this.herramientasConsumible = false;
-      this.concatenacionConsumible();
-    }
-  }
-
-  checkLimpiezaConsumibleFunction(){
-    if(this.limpiezaConsumible == false){
-      this.limpiezaConsumible = true;
-      this.concatenacionConsumible();
-    }else{
-      this.limpiezaConsumible = false;
-      this.concatenacionConsumible();
-    }
-  }
-
-  checkMaquinariaConsumibleFunction(){
-    if(this.maquinariaConsumible == false){
-      this.maquinariaConsumible = true;
-      this.concatenacionConsumible();
-    }else{
-      this.maquinariaConsumible = false;
-      this.concatenacionConsumible();
-    }
-  }
-  checkPapeleriaConsumibleFunction(){
-    if(this.papeleriaConsumible == false){
-      this.papeleriaConsumible = true;
-      this.concatenacionConsumible();
-    }else{
-      this.papeleriaConsumible = false;
-      this.concatenacionConsumible();
-    }
-  }
-
-  sliderCosto(){
-    this.sliderCostoMin = this.minValue;
-    this.sliderCostoMax = this.maxValue;
-    if(this.globals.producto){
-      this.concatenacionInventario();
-    }else{
-      this.concatenacionConsumible();
-    }
-    
-
-  }
-
-  concatenacionInventario(){
-    this.stringInventario = "";
-    if(this.prestamoInventario == true){
-      this.stringInventario += "prestInv=true&";
-    }
-    if(this.mantenimientoInventario == true){
-      this.stringInventario += "mantInv=true&";
-    }
-    if(this.almacenInventario == true){
-      this.stringInventario += "almInv=true&";
-    }
-    
-    if(this.computacionInventario == true){
-      this.stringInventario += "compInv=true&";
-    }
-    if(this.herramientasInventario == true){
-      this.stringInventario += "herInv=true&";
-    }
-    if(this.maquinariaInventario == true){
-      this.stringInventario += "maqInv=true&";
-    }
-    if(this.muebleriaInventario == true){
-      this.stringInventario += "muebInv=true&";
-    }
-    if(this.vehiculosInventario == true){
-      this.stringInventario += "vehiInv=true&";
-    }
-    
-    this.stringInventario += "min=" + this.sliderCostoMin + "&";
-    this.stringInventario += "max=" + this.sliderCostoMax;
-    console.log(this.stringInventario);
-  }
-
-  concatenacionConsumible(){ 
-    this.stringInventario = "";
-    if(this.disponibleConsumible == true){
-      this.stringInventario += "dispCons=true&";
-    }
-    if(this.agotadoConsumible == true){
-      this.stringInventario += "agotCons=true&";
-    }
-    if(this.automotrizConsumible == true){
-      this.stringInventario += "autoCons=true&";
-    }
-    
-    if(this.herramientasConsumible == true){
-      this.stringInventario += "herCons=true&";
-    }
-    if(this.limpiezaConsumible == true){
-      this.stringInventario += "limpCons=true&";
-    }
-    if(this.maquinariaConsumible == true){
-      this.stringInventario += "maqCons=true&";
-    }
-    if(this.papeleriaConsumible == true){
-      this.stringInventario += "papCons=true&";
-    }
-    
-    this.stringInventario += "min=" + this.sliderCostoMin + "&";
-    this.stringInventario += "max=" + this.sliderCostoMax;
-    console.log(this.stringInventario);
-  }
-
-
-
 }
