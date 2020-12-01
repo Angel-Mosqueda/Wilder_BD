@@ -2,13 +2,16 @@
     <!-- Sidebar -->
     <div class="bg-light border-right" id="sidebar-wrapper">
       <div class="sidebar-heading row justify-content-center"><img src="../assets/images/logo.png"></div>
-      <div class="list-group list-group-flush">
+      <div *ngIf="logged" class="list-group list-group-flush">
         <a [routerLink]="['/revisar-producto']" class="list-group-item list-group-item-action bg-light">Gestion De Productos</a>
-        <a [routerLink]="['/mantenimiento']" class="list-group-item list-group-item-action bg-light">Solicitud De Mantenimiento</a>
+        <a  [routerLink]="['/mantenimiento']" class="list-group-item list-group-item-action bg-light">Solicitud De Mantenimiento</a>
         <a [routerLink]="['/solicitud']" class="list-group-item list-group-item-action bg-light">Solicitud De Productos</a>
-        <a [routerLink]="['/prestamo-producto']" class="list-group-item list-group-item-action bg-light">Prestamo de Productos</a>
+        <a *ngIf="rol === 'admin' || rol === 'encargado' " [routerLink]="['/prestamo-producto']" 
+        class="list-group-item list-group-item-action bg-light">Prestamo de Productos</a>
         <a [routerLink]="['/contacto']" class="list-group-item list-group-item-action bg-light">Contacto</a>
         <a [routerLink]="['/acerca-de']" class="list-group-item list-group-item-action bg-light">Acerca De</a>
+
+        <!-- *ngIf="rol === 1 | async as usrinfo"    *ngIf="usrinfo['rol'] === 1 | async as usrinfo" -->
       </div>
     </div>
     <!-- /#sidebar-wrapper -->
@@ -38,7 +41,7 @@
               
             </li>
             <!-- Incluir en opciones de cuenta para usuarios -->
-            <li class="nav-item dropdown" style="vertical-align:bottom;">
+            <li *ngIf="logged" class="nav-item dropdown" style="vertical-align:bottom;">
               <a class="nav-link " id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img src="../assets/images/prueba.jpg" class="border border-dark rounded-circle " width="40px" height="40px">
               </a>

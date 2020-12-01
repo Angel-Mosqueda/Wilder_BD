@@ -14,6 +14,10 @@ export class RevisarproductoComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this.globals.altas = false;
+    this.globals.bajas = false;
+    this.globals.cambios = false;
+    this.globals.consultas = false;
   }
 
   esAlta(){
