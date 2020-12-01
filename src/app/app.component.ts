@@ -10,31 +10,35 @@ import { Globals } from './globals/globals';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  globals: Globals;
   title = 'angularbootstrap';
   _authService = new AuthService;
   logged = false;
   usrinfo = null;
-  rol:string = "";
+  
+
+  constructor(globals: Globals){
+    this.globals = globals;
+  }
 
   ngOnInit() {
     //Toggle Click Function
-    this.rol="";
     this.logged = this._authService.isAuthenticated();
     console.log(this.logged + "el logged");
 
     if (this.logged === true) {
+ 
       this.usrinfo = this._authService.getInfo();
       if(this.usrinfo['rol'] == 0){
-        this.rol = "admin";
+        this.globals.rol = "admin";
       }
       if(this.usrinfo['rol'] == 1){
-        this.rol = "encargado";
+        this.globals.rol = "encargado";
       }
       if(this.usrinfo['rol'] == 2){
-        this.rol = "normal";
+        this.globals.rol = "normal";
       }
-      console.log(this.rol);
-
+      console.log(this.globals.rol);
     }
 
     $("#menu-toggle").click(function (e) {

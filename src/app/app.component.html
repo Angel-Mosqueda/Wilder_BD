@@ -6,7 +6,7 @@
         <a [routerLink]="['/revisar-producto']" class="list-group-item list-group-item-action bg-light">Gestion De Productos</a>
         <a  [routerLink]="['/mantenimiento']" class="list-group-item list-group-item-action bg-light">Solicitud De Mantenimiento</a>
         <a [routerLink]="['/solicitud']" class="list-group-item list-group-item-action bg-light">Solicitud De Productos</a>
-        <a *ngIf="rol === 'admin' || rol === 'encargado' " [routerLink]="['/prestamo-producto']" 
+        <a *ngIf="globals.rol === 'admin' || globals.rol === 'encargado' " [routerLink]="['/prestamo-producto']" 
         class="list-group-item list-group-item-action bg-light">Prestamo de Productos</a>
         <a [routerLink]="['/contacto']" class="list-group-item list-group-item-action bg-light">Contacto</a>
         <a [routerLink]="['/acerca-de']" class="list-group-item list-group-item-action bg-light">Acerca De</a>
