@@ -43,10 +43,11 @@
     <div class="row">
         <div class="col-12">
             <h4>Existencias de inventario para este producto:</h4>
-            <button class="float-right btn btn-success" (click)="this.modo_creacion = !this.modo_creacion;">Añade una nueva existencia de este producto</button>
+            <button class="float-right btn btn-success" (click)="this.modo_creacion = !this.modo_creacion;">Añade una
+                nueva existencia de este producto</button>
         </div>
-        <div class="col-12">
-            <table class="table table-dark text-center" *ngIf="this.inventario; else noInventario">
+        <div class="col-12 mt-3">
+            <table class="table table-dark text-center" *ngIf="this.inventario.length > 0; else noInventario">
                 <tr>
                     <th rowspan="2">ID</th>
                     <th rowspan="2">Número de Serie</th>
@@ -62,6 +63,7 @@
                     <th>
                 </tr>
                 <tr>
+                    <th>Nombre</th>
                     <th>Latitud</th>
                     <th>Longitud</th>
                 </tr>
@@ -84,8 +86,97 @@
             <ng-template #noInventario>
                 <h5>No hay existencias para mostrar, intenta creando una.</h5>
             </ng-template>
-            <div *ngIf="this.modo_creacion">
-                form
+            <div *ngIf="this.modo_creacion" class="mt-5">
+                <h3>Crea una nueva existencia.</h3>
+                <form [formGroup]="this.formulario" (ngSubmit)="crearInventario()">
+                    <div class="from-group">
+                        <label>Número de Serie</label>
+                        <input type="text" formControlName="nserie" class="form-control"
+                            [ngClass]="{'is-invalid': f.nserie.touched && f.nserie.errors }">
+                        <div class="invalid-feedback">
+                            <div *ngIf="f.nserie.errors.required">El número de serie es obligatorio</div>
+                        </div>
+                    </div>
+                    <div class="from-group">
+                        <label>Número de factura</label>
+                        <input type="text" formControlName="nfactura" class="form-control"
+                            [ngClass]="{'is-invalid': f.nfactura.touched && f.nfactura.errors }">
+                        <div class="invalid-feedback">
+                            <div *ngIf="f.nfactura.errors.required">El número de factura es obligatorio</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col mt-3">
+                            <label for="ubicacionSelect">Ubicación</label>
+                            <select class="custom-select" formControlName="ubicacion" id="ubicacionSelect">
+                                <option *ngFor="let ubicacion of this.ubicaciones;" [value]="ubicacion.id">
+                                    {{ ubicacion.nombre }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col mt-3">
+                            <label for="proveedorSelect">Proveedor</label>
+                            <select class="custom-select" formControlName="proveedor" id="proveedorSelect">
+                                <option *ngFor="let proveedor of this.proveedores;" [value]="proveedor.id">
+                                    {{ proveedor.razsoc }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="from-group">
+                        <label>Costo</label>
+                        <input type="number" min="0.00" formControlName="costo" class="form-control"
+                            [ngClass]="{'is-invalid': f.costo.touched && f.costo.errors }">
+                        <div class="invalid-feedback">
+                            <div *ngIf="f.costo.errors.required">El costo es obligatorio</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col mt-3">
+                            <label for="estadoSelect">Estado</label>
+                            <select class="custom-select" formControlName="estado" id="estadoSelect">
+                                <!-- Disponible, solicitado, prestado, en mtto, descompuesto -->
+                                <option value="1">Disponible</option>
+                                <!-- <option value="2">Solicitado</option> -->
+                                <!-- <option value="3">Prestado</option> -->
+                                <option value="4">Mantenimiento</option>
+                                <option value="5">Fuera de servicio</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="from-group">
+                        <label>Observaciones</label>
+                        <input type="text" formControlName="observaciones" class="form-control"
+                            [ngClass]="{'is-invalid': f.observaciones.touched && f.observaciones.errors }">
+                        <div class="invalid-feedback">
+                            <div *ngIf="f.observaciones.errors.required">Introduce al menos un caracter.</div>
+                        </div>
+                    </div>
+                    <div class="from-group">
+                        <label>Fecha de Compra</label>
+                        <input type="date" max="{{ this.fecha | date:'yyyy-MM-dd'}}" formControlName="fecha_compra"
+                            class="form-control"
+                            [ngClass]="{'is-invalid': f.fecha_compra.touched && f.fecha_compra.errors }">
+                        <div class="invalid-feedback">
+                            <div *ngIf="f.fecha_compra.errors.required">La fecha de adquisicion es obligatoria</div>
+                        </div>
+                    </div>
+                    <div class="form-row row justify-content-md-center">
+                        <div class="col mt-3">
+                          <input type="file" class="custom-file-input" id="customFileLang" lang="es" formControlName="factura"
+                            class="form-control" [ngClass]="{'is-invalid': submitted && f.factura.errors}"
+                            accept="application/pdf" (change)="fileChange($event)">
+                          <div *ngIf="submitted && f.factura.errors" class="invalid-feedback">
+                            <div *ngIf="f.factura.errors.required">Por favor ingrese un PDF de la factura</div>
+                          </div>
+                        </div>
+                      </div>
+                    <br>
+                    <div class="card-footer text-center form-group">
+                        <button type="submit" class="btn btn-primary mr-3">Enviar</button>
+                    </div>
+                </form>
+                <br><br><br>
             </div>
         </div>
     </div>

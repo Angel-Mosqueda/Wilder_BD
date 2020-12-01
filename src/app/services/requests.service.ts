@@ -89,6 +89,14 @@ export class RequestsService {
     return this.http.get('/delete_ubicacion/' + id);
   }
 
+  ///////////// CRUD Inventario
+  createInventario(payload: any, file: File, id_producto: Number) {
+    let fd = new FormData();
+    fd.append('file', file, file.name);
+    fd.append('datos', JSON.stringify(payload));
+    return this.http.post('/add_inventario/' + id_producto, fd);
+  }
+
   ///////////// Filtro Inventario Proveedores
   obtenerProductos(checks: any, filtro: any) {
     console.log(checks);

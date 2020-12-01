@@ -17,6 +17,11 @@ export class DetalleProductoComponent implements OnInit {
   inventario: any;
   modo_creacion: boolean = false;
   formulario: FormGroup;
+  ubicaciones: any;
+  proveedores: any;
+  fecha: Date = new Date();
+  submitted: boolean = false;
+  file: File;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,10 +33,46 @@ export class DetalleProductoComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id');
     console.log(this.id);
 
+    this._requests.getUbicaciones().subscribe(
+      (success: any) => {
+        if (success.exito) {
+          this.ubicaciones = success.ubicaciones;
+        } else {
+          this.ubicaciones = null;
+          alert('Error en el servidor. Mensaje: ' + success.desc);
+        }
+      },
+      (error) => {
+        this.ubicaciones = null;
+        alert('Error en el servicio, contacta con un administrador,');
+      }
+    )
+
+    this._requests.getProveedores().subscribe(
+      (success: any) => {
+        if (success.exito) {
+          this.proveedores = success.proveedores;
+        } else {
+          this.proveedores = null;
+          alert('Error en el servidor. Mensaje: ' + success.desc);
+        }
+      },
+      (error) => {
+        this.proveedores = null;
+        alert('Error en el servicio, contacta con un administrador,');
+      }
+    )
+
     this.formulario = this._fb.group({
-      nserie: ['', [Validators.required, Validators.email]],
+      nserie: ['', [Validators.required]],
       nfactura: ['', [Validators.required]],
-      
+      ubicacion: ['', [Validators.required]],
+      costo: ['', [Validators.required]],
+      estado: ['', [Validators.required]],
+      observaciones: ['', [Validators.required]],
+      proveedor: ['', [Validators.required]],
+      fecha_compra: ['', [Validators.required]],
+      factura: ['', [Validators.required]],
     });
 
     this._requests.getProductoInfo(this.id).subscribe(
@@ -40,6 +81,7 @@ export class DetalleProductoComponent implements OnInit {
           this.categorias = success.categorias;
           this.producto_info = success.producto;
           this.inventario = success.inventario;
+          console.log(this.inventario);
         } else {
           this.categorias = null;
           alert('Error en el servidor. Mensaje: ' + success.desc);
@@ -50,5 +92,45 @@ export class DetalleProductoComponent implements OnInit {
         alert('Error en el servicio, contacta con un administrador.');
       }
     )
+  }
+
+  get f() { return this.formulario.controls; }
+
+  crearInventario() {
+    this.submitted = true;
+    if (this.formulario.invalid) {
+      return;
+    } else {
+      let payload = {
+        NSERIE: this.formulario.get('nserie').value,
+        NFACTURA: this.formulario.get('nfactura').value,
+        UBICACION_ID: this.formulario.get('ubicacion').value,
+        COSTO: this.formulario.get('costo').value,
+        ESTADO: this.formulario.get('estado').value,
+        OBSERVACIONES: this.formulario.get('observaciones').value,
+        PROVEEDOR: this.formulario.get('proveedor').value,
+        FECHA_COMPRA: this.formulario.get('fecha_compra').value,
+        FACTURA: this.formulario.get('factura').value
+      };
+      this._requests.createInventario(payload, this.file, this.id).subscribe(
+        (success: any) => {
+          if (success.exito) {
+            this.inventario = success.inventario;
+            console.log(this.inventario);
+          } else {
+            this.categorias = null;
+            alert('Error en el servidor. Mensaje: ' + success.desc);
+          }
+        },
+        (error) => {
+          alert("Error en el servidor. Intente más tarde.");
+        }
+      );
+    }
+    this.modo_creacion = !this.modo_creacion;
+  }
+
+  fileChange(event) {
+    this.file = event.target.files.item(0);
   }
 }

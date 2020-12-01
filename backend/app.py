@@ -541,6 +541,7 @@ def crear_producto():
         return response
     filename = secure_filename(str(int(datetime.now().timestamp())) + arch.filename)
     # filename = (str(int(datetime.now().timestamp())) + filename)
+    import pdb; pdb.set_trace()
     arch.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     empresa_id = request.cookies.get('empresa')
     usuario_id = request.cookies.get('usuario')
@@ -597,26 +598,27 @@ def obtener_producto(producto_id):
             })
         cur.close()
         cur = mysql.connection.cursor()
-        query = ("SELECT * FROM ARMAR_INVENTARIO WHERE ID = " + str(producto_id))
+        query = ("SELECT * FROM ARMAR_INVENTARIO WHERE PRODUCTO_ID = " + str(producto_id))
         cur.execute(query)
         mysql.connection.commit()
         rows = cur.fetchall()
         response['inventario'] = []
-        for inv in rows:
-            response['inventario'].append({
-                'id': row[0],
-                'serie': row[1],
-                'folio': row[2],
-                'unombre': row[3],
-                'lat': row[4],
-                'lon': row[5],
-                'costo': row[6],
-                'estado': row[7],
-                'observaciones': row[8],
-                'proveedor': row[9],
-                'f_compra': row[10],
-                'archivo_fac': row[11]
-            })
+        if len(rows) > 0:
+            for inv in rows:
+                response['inventario'].append({
+                    'id': inv[1],
+                    'serie': inv[2],
+                    'folio': inv[3],
+                    'unombre': inv[4],
+                    'lat': inv[5],
+                    'lon': inv[6],
+                    'costo': inv[7],
+                    'estado': inv[8],
+                    'observaciones': inv[9],
+                    'proveedor': inv[10],
+                    'f_compra': inv[11],
+                    'archivo_fac': inv[12]
+                })
         cur.close()
     else:
         response['exito'] = False
@@ -624,7 +626,66 @@ def obtener_producto(producto_id):
     return jsonify(response)
 
 ################### FIN PROD ######################
-
+################### INICIO INV ####################
+@app.route('/add_inventario/<id_producto>', methods=['POST'])
+def crear_inventario(id_producto):
+    response = {}
+    cur = mysql.connection.cursor()
+    data = json.loads(request.form['datos'])
+    arch = request.files['file']
+    if not allowed_file(arch.filename):
+        response['exito'] = False
+        response['desc'] = "Sube un archivo de los permitidos"
+        return response
+    filename = secure_filename(str(int(datetime.now().timestamp())) + arch.filename)
+    # filename = (str(int(datetime.now().timestamp())) + filename)
+    arch.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    empresa_id = request.cookies.get('empresa')
+    query = ("INSERT INTO INVENTARIO (PRODUCTO_ID, NSERIE, NFACTURA, UBICACION_ID, COSTO,"
+    "ESTADO, OBSERVACIONES, PROVEEDOR, FECHA_COMPRA, FACTURA) VALUES ("
+    + str(id_producto) + ", "
+    "'"+ data['NSERIE'] + "', "
+    "'"+ data['NFACTURA'] + "', "
+    + data['UBICACION_ID'] + ", "
+    + str(data['COSTO']) + ", "
+    + data['ESTADO'] + ", "
+    "'"+ data['OBSERVACIONES'] + "', "
+    + data['PROVEEDOR'] + ", "
+    "'"+ data['FECHA_COMPRA'] + "', "
+    "'"+ filename + "'"
+    ");"
+    )
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response['exito'] = isinstance(last_id, int)
+    cur.close()
+    cur = mysql.connection.cursor()
+    query = ("SELECT * FROM ARMAR_INVENTARIO WHERE PRODUCTO_ID = " + str(id_producto))
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    response['inventario'] = []
+    if len(rows) > 0:
+        for inv in rows:
+            response['inventario'].append({
+                'id': inv[1],
+                'serie': inv[2],
+                'folio': inv[3],
+                'unombre': inv[4],
+                'lat': inv[5],
+                'lon': inv[6],
+                'costo': inv[7],
+                'estado': inv[8],
+                'observaciones': inv[9],
+                'proveedor': inv[10],
+                'f_compra': inv[11],
+                'archivo_fac': inv[12]
+            })
+    cur.close()
+    return jsonify(response)
+################### FIN INV #######################
 def count_pedidos_solcitudes():
     response = {}
     response["categorias"] = {}
