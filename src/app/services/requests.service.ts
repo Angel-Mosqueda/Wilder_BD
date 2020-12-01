@@ -26,11 +26,16 @@ export class RequestsService {
     return this.http.post('/add_empresa/', payload);
   }
 
+  ////////////////// CRUD Producto
   createProducto(payload: any, file: File) {
     let fd = new FormData();
     fd.append('file', file, file.name);
     fd.append('datos', JSON.stringify(payload));
     return this.http.post('/add_producto/', fd);
+  }
+
+  getProductoInfo(id_producto: any) {
+    return this.http.get('/get_producto/' + id_producto);
   }
 
   ///////////// CRUD Categorias
@@ -65,6 +70,23 @@ export class RequestsService {
 
   eliminarProveedor(id: any) {
     return this.http.get('/delete_proveedor/' + id);
+  }
+
+  ///////////// CRUD Ubicaciones
+  getUbicaciones() {
+    return this.http.get('/get_ubicaciones/');
+  }
+
+  updateUbicacion(payload: any) {
+    return this.http.post('/update_ubicacion/', payload);
+  }
+
+  crearUbicacion(payload: any) {
+    return this.http.post('/create_ubicacion/', payload)
+  }
+
+  eliminarUbicacion(id: any) {
+    return this.http.get('/delete_ubicacion/' + id);
   }
 
   ///////////// Filtro Inventario Proveedores

@@ -122,6 +122,118 @@ def obtener_empresas():
     cur.close()
     return response
 
+
+################ CRUD UBICACION ######################
+@app.route('/get_ubicaciones/', methods=['GET'])
+def obtener_ubicaciones():
+    response = {}
+    response["ubicaciones"] = []
+    cur = mysql.connection.cursor()
+    empresa_id = int(request.cookies.get('empresa'))
+    cur.callproc('GET_UBICACIONES', [empresa_id])
+    rows = cur.fetchall()
+    for ubicacion in rows:
+        response["ubicaciones"].append({
+            "id": ubicacion[0],
+            "nombre": ubicacion[1],
+            "latitud": ubicacion[2],
+            "longitud": ubicacion[3]
+        })
+    if len(response['ubicaciones']) == 0:
+        response['exito'] = False
+        response['desc'] = "No existen ubicaciones, intenta crear una."
+    else:
+        response['exito'] = True
+    cur.close()
+    return response
+
+
+@app.route('/update_ubicacion/', methods=['POST'])
+def actualizar_ubicaciones():
+    response = {}
+    response["ubicaciones"] = []
+    cur = mysql.connection.cursor()
+    data = json.loads(request.data)
+    query = ("UPDATE UBICACION SET NOMBRE = '" + data['NOMBRE'] +
+    "', LATITUD = " + data['LATITUD'] + ", LONGITUD = " + data['LONGITUD'] +
+    " WHERE ID = " + data['ID'] + ";")
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response['exito'] = isinstance(last_id, int)
+    empresa_id = int(request.cookies.get('empresa'))
+    cur.callproc('GET_UBICACIONES', [empresa_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for ubicacion in rows:
+        response["ubicaciones"].append({
+            "id": ubicacion[0],
+            "nombre": ubicacion[1],
+            "latitud": ubicacion[2],
+            "longitud": ubicacion[3]
+        })
+    cur.close()
+    return response
+
+
+@app.route('/delete_ubicacion/<id>', methods=['GET'])
+def eliminar_ubicaciones(id):
+    response = {}
+    response["ubicaciones"] = []
+    cur = mysql.connection.cursor()
+    query = "DELETE FROM UBICACION WHERE ID = " + str(id) + ";"
+    
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+
+    empresa_id = int(request.cookies.get('empresa'))
+    cur.callproc('GET_UBICACIONES', [empresa_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for ubicacion in rows:
+        response["ubicaciones"].append({
+            "id": ubicacion[0],
+            "nombre": ubicacion[1],
+            "latitud": ubicacion[2],
+            "longitud": ubicacion[3]
+        })
+    cur.close()
+    return response
+
+
+@app.route('/create_ubicacion/', methods=['POST'])
+def crear_ubicaciones():
+    response = {}
+    response["ubicaciones"] = []
+    empresa_id = int(request.cookies.get('empresa'))
+
+    cur = mysql.connection.cursor()
+    data = json.loads(request.data)
+    query = ("INSERT INTO UBICACION (NOMBRE, LATITUD, LONGITUD, EMPRESA_ID) VALUES ('" + data['NOMBRE'] +
+    "', " + data['LATITUD'] + ", "+ data['LONGITUD'] +", " + str(empresa_id) + ")")
+    
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response['exito'] = isinstance(last_id, int)
+
+    cur.callproc('GET_UBICACIONES', [empresa_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for ubicacion in rows:
+        response["ubicaciones"].append({
+            "id": ubicacion[0],
+            "nombre": ubicacion[1],
+            "latitud": ubicacion[2],
+            "longitud": ubicacion[3]
+        })
+    cur.close()
+    return response
+################ FIN CRUD UBICACION ##################
+
 ################ CRUD PROVEEDORES ######################
 @app.route('/get_proveedores/', methods=['GET'])
 def obtener_proveedores():
@@ -416,7 +528,7 @@ def crear_categoria():
     cur.close()
     return jsonify(response)
 
-
+################### INICIO PROD ######################
 @app.route('/add_producto/', methods=['POST'])
 def crear_producto():
     response = {}
@@ -443,6 +555,7 @@ def crear_producto():
     mysql.connection.commit()
     rows = cur.fetchall()
     last_id = cur.lastrowid
+    response['exito'] = isinstance(last_id, int)
     for categoria in data['CATEGORIAS'][-3:]:
         query = ("INSERT INTO categoria_producto (PRODUCTO_ID, CATEGORIA_ID)"
         " VALUES ("
@@ -456,6 +569,61 @@ def crear_producto():
     cur.close()
     return jsonify(response)
 
+
+@app.route('/get_producto/<producto_id>', methods=['GET'])
+def obtener_producto(producto_id):
+    response = {}
+    cur = mysql.connection.cursor()
+    empresa_id = request.cookies.get('empresa')
+    cur.callproc('GET_PRODUCTO', [producto_id, empresa_id])
+    row = cur.fetchone()
+    cur.close()
+    if row:
+        cur = mysql.connection.cursor()
+        response['exito'] = True
+        response['producto'] = {
+            'id': row[0],
+            'usr': row[1],
+            'nombre': row[2],
+            'desc': row[3],
+            'imagen_referencia': row[4]
+        }
+        cur.callproc('GET_PRODUCTO_CATEG', [producto_id])
+        rows = cur.fetchall()
+        response['categorias'] = []
+        for categ in rows:
+            response['categorias'].append({
+                'nombre': categ[0]
+            })
+        cur.close()
+        cur = mysql.connection.cursor()
+        query = ("SELECT * FROM ARMAR_INVENTARIO WHERE ID = " + str(producto_id))
+        cur.execute(query)
+        mysql.connection.commit()
+        rows = cur.fetchall()
+        response['inventario'] = []
+        for inv in rows:
+            response['inventario'].append({
+                'id': row[0],
+                'serie': row[1],
+                'folio': row[2],
+                'unombre': row[3],
+                'lat': row[4],
+                'lon': row[5],
+                'costo': row[6],
+                'estado': row[7],
+                'observaciones': row[8],
+                'proveedor': row[9],
+                'f_compra': row[10],
+                'archivo_fac': row[11]
+            })
+        cur.close()
+    else:
+        response['exito'] = False
+        response['desc'] = "Dicho producto no existe."
+    return jsonify(response)
+
+################### FIN PROD ######################
 
 def count_pedidos_solcitudes():
     response = {}

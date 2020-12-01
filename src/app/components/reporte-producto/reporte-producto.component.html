@@ -79,8 +79,7 @@
             </td>
             <td>{{ producto.descripcion }}</td>
             <td>{{ producto.usuario_id }}</td>
-            <td><button type="button" class="btn btn-outline-info" data-toggle="modal"
-                data-target="#modalConsulta">Ver</button></td>
+            <td><button type="button" class="btn btn-outline-info" [routerLink]="['/detalle-producto', producto.id]">Ver</button></td>
           </tr>
         </tbody>
       </table>

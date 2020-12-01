@@ -4,6 +4,7 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AgmCoreModule } from '@agm/core';
 import { HomeComponent } from './components/home/home.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { AltaProductoComponent } from './components/alta-producto/alta-producto.component';
@@ -30,6 +31,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CategoriasComponent } from './components/categorias/categorias.component';
 import { ProveedoresComponent } from './components/proveedores/proveedores.component';
+import { DetalleProductoComponent } from './components/detalle-producto/detalle-producto.component';
+import { UbicacionComponent } from './components/ubicacion/ubicacion.component';
 
 
 @NgModule({
@@ -54,7 +57,9 @@ import { ProveedoresComponent } from './components/proveedores/proveedores.compo
     RevisarproductoComponent,
     ConsumibleInventarioComponent,
     CategoriasComponent,
-    ProveedoresComponent
+    ProveedoresComponent,
+    DetalleProductoComponent,
+    UbicacionComponent
   ],
   imports: [
     BrowserModule,
@@ -63,7 +68,10 @@ import { ProveedoresComponent } from './components/proveedores/proveedores.compo
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    NgbModule
+    NgbModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyA5XCX6GS2djp8PyY6XY8z7VeziV1DxyQU'
+    })
   ],
   providers: [
     Globals,

@@ -1,0 +1,93 @@
+<div class="p-5">
+    <h3>Detalle general del producto</h3>
+    <div class="row">
+        <div class="col-6">
+            <table class="table table-dark text-center">
+                <tr>
+                    <th colspan="2">Datos</th>
+                </tr>
+                <tr>
+                    <th>ID</th>
+                    <td>{{ this.producto_info.id }}</td>
+                </tr>
+                <tr>
+                    <th>Registrado por</th>
+                    <td>{{ this.producto_info.usr }}</td>
+                </tr>
+                <tr>
+                    <th>Nombre</th>
+                    <td>{{ this.producto_info.nombre }}</td>
+                </tr>
+                <tr>
+                    <th>Descripcion</th>
+                    <td>{{ this.producto_info.desc }}</td>
+                </tr>
+                <tr>
+                    <th>Categorias a las que pertenece</th>
+                    <td>
+                        <ul *ngIf="this.categorias, else noCategorias">
+                            <li *ngFor="let cat of this.categorias">{{ cat.nombre }}</li>
+                        </ul>
+                        <ng-template #noCategorias>
+                            <p>Actualmente este producto no cuenta con categorias</p>
+                        </ng-template>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-6">
+            <img class="w-100" src="/static/{{ this.producto_info.imagen_referencia }}"
+                alt="{{ this.producto_info.nombre }}">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h4>Existencias de inventario para este producto:</h4>
+            <button class="float-right btn btn-success" (click)="this.modo_creacion = !this.modo_creacion;">Añade una nueva existencia de este producto</button>
+        </div>
+        <div class="col-12">
+            <table class="table table-dark text-center" *ngIf="this.inventario; else noInventario">
+                <tr>
+                    <th rowspan="2">ID</th>
+                    <th rowspan="2">Número de Serie</th>
+                    <th rowspan="2">No. Factura</th>
+                    <th colspan="3">Ubicación</th>
+                    <th rowspan="2">Costo</th>
+                    <th rowspan="2">Estado</th>
+                    <th rowspan="2">Observaciones</th>
+                    <th rowspan="2">Proveedor</th>
+                    <th rowspan="2">Fecha de Compra</th>
+                    <th rowspan="2">Mostrar Factura</th>
+                    <th rowspan="2">Mostrar Ubicación
+                    <th>
+                </tr>
+                <tr>
+                    <th>Latitud</th>
+                    <th>Longitud</th>
+                </tr>
+                <tr *ngFor="let inv of this.inventario; let idx = index">
+                    <td>{{ inv.id}}</td>
+                    <td>{{ inv.serie }}</td>
+                    <td>{{ inv.folio }}</td>
+                    <td>{{ inv.unombre }}</td>
+                    <td>{{ inv.lat }}</td>
+                    <td>{{ inv.lon }}</td>
+                    <td>{{ inv.costo }}</td>
+                    <td>{{ inv.estado }}</td>
+                    <td>{{ inv.observaciones }}</td>
+                    <td>{{ inv.proveedor }}</td>
+                    <td>{{ inv.f_compra }}</td>
+                    <td><button class="btn btn-secondary">Factura</button></td>
+                    <td><button class="btn btn-secondary">Ubicación</button></td>
+                </tr>
+            </table>
+            <ng-template #noInventario>
+                <h5>No hay existencias para mostrar, intenta creando una.</h5>
+            </ng-template>
+            <div *ngIf="this.modo_creacion">
+                form
+            </div>
+        </div>
+    </div>
+    <br><br><br>
+</div>
