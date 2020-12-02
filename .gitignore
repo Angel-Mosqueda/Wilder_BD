@@ -46,7 +46,6 @@ testem.log
 Thumbs.db
 
 # Build path
-files/*
 static/*
 __pycache__/*
 nosecomo
