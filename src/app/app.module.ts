@@ -33,6 +33,14 @@ import { CategoriasComponent } from './components/categorias/categorias.componen
 import { ProveedoresComponent } from './components/proveedores/proveedores.component';
 import { DetalleProductoComponent } from './components/detalle-producto/detalle-producto.component';
 import { UbicacionComponent } from './components/ubicacion/ubicacion.component';
+import { AltaConsumbibleComponent } from './components/alta-consumbible/alta-consumbible.component';
+import { AltaInventarioComponent } from './components/alta-inventario/alta-inventario.component';
+import { EliminarConsumibleComponent } from './components/eliminar-consumible/eliminar-consumible.component';
+import { EliminarInventarioComponent } from './components/eliminar-inventario/eliminar-inventario.component';
+import { ModificarConsumibleComponent } from './components/modificar-consumible/modificar-consumible.component';
+import { ModificarInventarioComponent } from './components/modificar-inventario/modificar-inventario.component';
+import { ReporteConsumibleComponent } from './components/reporte-consumible/reporte-consumible.component';
+import { ReporteInventarioComponent } from './components/reporte-inventario/reporte-inventario.component';
 
 
 @NgModule({
@@ -59,7 +67,15 @@ import { UbicacionComponent } from './components/ubicacion/ubicacion.component';
     CategoriasComponent,
     ProveedoresComponent,
     DetalleProductoComponent,
-    UbicacionComponent
+    UbicacionComponent,
+    AltaConsumbibleComponent,
+    AltaInventarioComponent,
+    EliminarConsumibleComponent,
+    EliminarInventarioComponent,
+    ModificarConsumibleComponent,
+    ModificarInventarioComponent,
+    ReporteConsumibleComponent,
+    ReporteInventarioComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,299 @@
+
+<form class="mt-4 mr-2 mb-3">
+    <div class="row">
+      <div class="col-md-8">
+        <button class="btn btn-dark mb-3" (click)="isnull()" [routerLink]="['/revisar-producto']">Atrás</button>
+      </div>
+      <div class="col-md-4 mb-3" >
+        <input type="text"  class="form-control align-bottom" placeholder="¿Qué Producto Estás Buscando?">
+      </div>
+    </div>
+  </form>
+  
+  <div>
+    <h3 class="row-md-12 text-center">CAMBIOS CONSUMIBLE</h3>
+  </div>
+  
+  
+  <div class="container-fluid" style="margin-bottom: 45px;">
+    <div class="row">
+      
+      <div class="col-4 col-xl-2 mt-5">
+        <div class="card border-dark mb-3 bg-dark text-white text-align-center">
+          <form>
+            <div class="card-header">
+              <h5>Filtros</h5>
+            </div>
+            <div class="card-body">
+  
+              <div *ngIf="globals.producto === true else filtroConsumible" id="separacion">
+                <div id="statusProducto">
+                  <h6 class="card-title">Status</h6>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkPrestamo" (click)="checkPrestamoInventarioFunction()">
+                    <label class="custom-control-label" for="checkPrestamo">
+                      <p><small class="align-text-top">En Préstamo</small></p>
+                    </label>
+                  </div>
+  
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkMantenimiento" (click)="checkMantenimientoInventarioFunction()">
+                    <label class="custom-control-label" for="checkMantenimiento">
+                      <p><small class="align-text-top">En Mantenimiento</small></p>
+                    </label>
+                  </div>
+  
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkAlmacen" (click)="checkAlmacenInventarioFunction()">
+                    <label class="custom-control-label" for="checkAlmacen">
+                      <p><small class="align-text-top">En Almacén</small></p>
+                    </label>
+                  </div>
+                </div>
+  
+                <div id="categoriaProducto">
+                  <h6 class="card-title">Categoria</h6>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkComputacionInventario" (click)="checkComputacionInventarioFunction()">
+                    <label class="custom-control-label" for="checkComputacionInventario">
+                      <p><small class="align-text-top">Computación</small></p>
+                    </label>
+                  </div>
+  
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkHerramientasInventario" (click)="checkHerramientasInventarioFuntion()">
+                    <label class="custom-control-label" for="checkHerramientasInventario">
+                      <p><small class="align-text-top">Herramientas</small></p>
+                    </label>
+                  </div>
+  
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkMaquinariaInventario" (click)="checkMaquinariaInventarioFunction()">
+                    <label class="custom-control-label" for="checkMaquinariaInventario">
+                      <p><small class="align-text-top">Maquinaria</small></p>
+                    </label>
+                  </div>
+  
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkMuebleriaInventario" (click)="checkMuebleriaInventarioFunction()">
+                    <label class="custom-control-label" for="checkMuebleriaInventario">
+                      <p><small class="align-text-top">Muebleria</small></p>
+                    </label>
+                  </div>
+  
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkVehiculosInventario" (click)="checkVehiculosInventarioFunction()">
+                    <label class="custom-control-label" for="checkVehiculosInventario">
+                      <p><small class="align-text-top">Vehículos</small></p>
+                    </label>
+                  </div>
+                </div>
+              </div>
+  
+  
+              <ng-template #filtroConsumible>
+                <div id="statusConsumible">
+                  <h6 class="card-title">Status</h6>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkDisponible" (click)="checkDisponibleConsumibleFunction()">
+                    <label class="custom-control-label" for="checkDisponible">
+                      <p><small class="align-text-top">Disponible</small></p>
+                    </label>
+                  </div>
+  
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkAgotado" (click)="checkAgotadoConsumibleFunction()">
+                    <label class="custom-control-label" for="checkAgotado">
+                      <p><small class="align-text-top">Agotado</small></p>
+                    </label>
+                  </div>
+                </div>
+  
+                <div id="categoriaConsumible">
+                  <h6 class="card-title">Categoria</h6>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkAutomotriz" (click)="checkAutomotrizConsumibleFunction()">
+                    <label class="custom-control-label" for="checkAutomotriz">
+                      <p><small class="align-text-top">Automotriz</small></p>
+                    </label>
+                  </div>
+  
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkHerramientasConsumible" (click)="checkHerramientasConsumibleFunction()">
+                    <label class="custom-control-label" for="checkHerramientasConsumible">
+                      <p><small class="align-text-top">Herramientas</small></p>
+                    </label>
+                  </div>
+  
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkLimpieza" (click)="checkLimpiezaConsumibleFunction()">
+                    <label class="custom-control-label" for="checkLimpieza">
+                      <p><small class="align-text-top">Limpieza</small></p>
+                    </label>
+                  </div>
+  
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkMaquinariaConsumible" (click)="checkMaquinariaConsumibleFunction()">
+                    <label class="custom-control-label" for="checkMaquinariaConsumible">
+                      <p><small class="align-text-top">Maquinaria</small></p>
+                    </label>
+                  </div>
+  
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkPapeleria" (click)="checkPapeleriaConsumibleFunction()">
+                    <label class="custom-control-label" for="checkPapeleria">
+                      <p><small class="align-text-top">Papeleria</small></p>
+                    </label>
+                  </div>
+                </div>
+              </ng-template>
+              <div id="sliderCosto">
+                <h6 class="card-title">Costo</h6>
+                <div class="custom-slider">
+                  <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options" (click)="sliderCosto()">
+                  </ngx-slider>
+                </div>
+              </div>
+  
+            </div>
+          </form>
+        </div>
+      </div>
+  
+  
+  
+  
+      <div class="col-xl-10">
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Imagen de Referencia</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Modificar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@mdo</td>
+              <td><button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#modalCambios">Cambiar</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal fade" id="modalCambios" tabindex="-1" role="dialog" aria-labelledby="cambiosModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
+  
+            <div *ngIf="globals.producto === true else tituloConsumible">
+              <h3 class="row justify-content-md-center">CAMBIOS INVENTARIO</h3>
+            </div>
+  
+            <ng-template #tituloConsumible>
+              <h3 class="row justify-content-md-center">CAMBIOS CONSUMIBLE</h3>
+            </ng-template>
+  
+            <div class="form-group">
+              <label for="nombre">Nombre del producto</label>
+              <input type="text" formControlName="nombre" class="form-control" [ngClass]="{'is-invalid': submitted && f.nombre.errors}">
+              <div *ngIf="submitted && f.nombre.errors" class="invalid-feedback">
+                <div *ngIf="f.nombre.errors.required">Por favor ingrese el nombre del producto</div>
+              </div>
+            </div>
+  
+            <div class="form-row row justify-content-md-center">
+              <div class="form-group col mt-3">
+                <label for="num_serie">Número de Serie</label>
+                <input type="text" formControlName="num_serie" class="form-control" [ngClass]="{'is-invalid': submitted && f.num_serie.errors}">
+                <div *ngIf="submitted && f.num_serie.errors" class="invalid-feedback">
+                  <div *ngIf="f.num_serie.errors.required">Por favor ingrese el numero de serie</div>
+                </div>
+              </div>
+  
+              <div class="form-group col mt-3">
+                <label for="num_factura">Número de Factura</label>
+                <input type="text" formControlName="num_factura" class="form-control" [ngClass]="{'is-invalid': submitted && f.num_factura.errors}">
+                <div *ngIf="submitted && f.num_factura.errors" class="invalid-feedback">
+                  <div *ngIf="f.num_factura.errors.required">Por favor ingrese el numero de factura</div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="form-row row justify-content-md-center">
+              <div class="form-group col mt-3">
+                <label for="proveedor">Proveedor</label>
+                <input type="text" formControlName="proveedor" class="form-control" [ngClass]="{'is-invalid': submitted && f.proveedor.errors}">
+                <div *ngIf="submitted && f.proveedor.errors" class="invalid-feedback">
+                  <div *ngIf="f.proveedor.errors.required">Por favor ingrese el nombre del proveedor</div>
+                </div>
+              </div>
+  
+              <div class="form-group col mt-3">
+                <label for="factura">Factura</label>
+                <input type="text" formControlName="factura" class="form-control" [ngClass]="{'is-invalid': submitted && f.factura.errors}">
+                <div *ngIf="submitted && f.factura.errors" class="invalid-feedback">
+                  <div *ngIf="f.factura.errors.required">Por favor ingrese la Factura</div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="form-row row justify-content-md-center">
+              <div class="form-group col mt-3">
+                <label for="fecha_compra">Fecha de Compra</label>
+                <input type="date" formControlName="fecha_compra" class="form-control" [ngClass]="{'is-invalid': submitted && f.fecha_compra.errors}">
+                <div *ngIf="submitted && f.fecha_compra.errors" class="invalid-feedback">
+                  <div *ngIf="f.fecha_compra.errors.required">Por favor ingrese la Fecha de Compra</div>
+                </div>
+              </div>
+  
+              <div class="form-group col mt-3">
+                <label for="costo_producto">Costo del Producto</label>
+                <input type="number" formControlName="costo_producto" class="form-control" [ngClass]="{'is-invalid': submitted && f.costo_producto.errors}">
+                <div *ngIf="submitted && f.costo_producto.errors" class="invalid-feedback">
+                  <div *ngIf="f.costo_producto.errors.required">Por favor ingrese el Costo del Producto</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="descripcion">Descripción</label>
+              <textarea formControlName="descripcion" class="form-control" [ngClass]="{'is-invalid': submitted && f.descripcion.errors}"></textarea>
+              <div *ngIf="submitted && f.descripcion.errors" class="invalid-feedback">
+                <div *ngIf="f.descripcion.errors.required">Por favor ingrese una descripcion</div>
+              </div>
+            </div>
+  
+            <div class="form-row row justify-content-md-center">
+              <div class="col mt-3">
+                <input type="file" class="custom-file-input" id="customFileLang" lang="es" formControlName="select_img" class="form-control" [ngClass]="{'is-invalid': submitted && f.select_img.errors}">
+                <label class="custom-file-label" for="customFileLang">Seleccionar Imagen</label>
+                <div *ngIf="submitted && f.select_img.errors" class="invalid-feedback">
+                  <div *ngIf="f.select_img.errors.required">Por favor ingrese una imagen</div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="form-group" style="text-align: center; margin-top: 20px;">
+              <button class="btn btn-primary">Enviar</button>
+            </div>
+  
+          </form>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>

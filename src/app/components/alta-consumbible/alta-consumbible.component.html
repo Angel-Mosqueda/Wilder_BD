@@ -1,0 +1,111 @@
+<button class="btn btn-dark mt-2 mr-2" (click)="isnull()" [routerLink]="['/revisar-producto']">Atrás</button>
+
+
+<div class="container-md pt-5" id="contenedor" style="margin-bottom: 45px;">
+  
+  <div class="starter-template">
+
+    <div class="card">
+      <div class="card-body">
+
+        <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
+
+          <div>
+            <h3 class="row justify-content-md-center">AGREGAR CONSUMIBLE</h3>
+          </div>
+
+          <div class="form-group">
+            <label for="nombre">Nombre del producto</label>
+            <input type="text" formControlName="nombre" class="form-control" [ngClass]="{'is-invalid': submitted && f.nombre.errors}">
+            <div *ngIf="submitted && f.nombre.errors" class="invalid-feedback">
+              <div *ngIf="f.nombre.errors.required">Por favor ingrese el nombre del producto</div>
+            </div>
+          </div>
+
+          <div class="form-row row justify-content-md-center">
+            <div class="form-group col mt-3">
+              <label for="num_serie">Número de Serie</label>
+              <input type="text" formControlName="num_serie" class="form-control" [ngClass]="{'is-invalid': submitted && f.num_serie.errors}">
+              <div *ngIf="submitted && f.num_serie.errors" class="invalid-feedback">
+                <div *ngIf="f.num_serie.errors.required">Por favor ingrese el numero de serie</div>
+              </div>
+            </div>
+
+            <div class="form-group col mt-3">
+              <label for="num_factura">Número de Factura</label>
+              <input type="text" formControlName="num_factura" class="form-control" [ngClass]="{'is-invalid': submitted && f.num_factura.errors}">
+              <div *ngIf="submitted && f.num_factura.errors" class="invalid-feedback">
+                <div *ngIf="f.num_factura.errors.required">Por favor ingrese el numero de factura</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row row justify-content-md-center">
+            <div class="form-group col mt-3">
+              <label for="proveedor">Proveedor</label>
+              <input type="text" formControlName="proveedor" class="form-control" [ngClass]="{'is-invalid': submitted && f.proveedor.errors}">
+              <div *ngIf="submitted && f.proveedor.errors" class="invalid-feedback">
+                <div *ngIf="f.proveedor.errors.required">Por favor ingrese el nombre del proveedor</div>
+              </div>
+            </div>
+
+            <div class="form-group col mt-3">
+              <label for="factura">Factura</label>
+              <input type="text" formControlName="factura" class="form-control" [ngClass]="{'is-invalid': submitted && f.factura.errors}">
+              <div *ngIf="submitted && f.factura.errors" class="invalid-feedback">
+                <div *ngIf="f.factura.errors.required">Por favor ingrese la Factura</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row row justify-content-md-center">
+            <div class="form-group col mt-3">
+              <label for="fecha_compra">Fecha de Compra</label>
+              <input type="date" formControlName="fecha_compra" class="form-control" [ngClass]="{'is-invalid': submitted && f.fecha_compra.errors}">
+              <div *ngIf="submitted && f.fecha_compra.errors" class="invalid-feedback">
+                <div *ngIf="f.fecha_compra.errors.required">Por favor ingrese la Fecha de Compra</div>
+              </div>
+            </div>
+
+            <div class="form-group col mt-3">
+              <label for="costo_producto">Costo del Producto</label>
+              <input type="number" formControlName="costo_producto" class="form-control" [ngClass]="{'is-invalid': submitted && f.costo_producto.errors}">
+              <div *ngIf="submitted && f.costo_producto.errors" class="invalid-feedback">
+                <div *ngIf="f.costo_producto.errors.required">Por favor ingrese el Costo del Producto</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <textarea formControlName="descripcion" class="form-control" [ngClass]="{'is-invalid': submitted && f.descripcion.errors}"></textarea>
+            <div *ngIf="submitted && f.descripcion.errors" class="invalid-feedback">
+              <div *ngIf="f.descripcion.errors.required">Por favor ingrese una descripcion</div>
+            </div>
+          </div>
+
+
+          <div class="form-row row justify-content-md-center">
+            <div class="col mt-3">
+              <input type="file" class="custom-file-input" id="customFileLang" lang="es" formControlName="select_img" class="form-control" [ngClass]="{'is-invalid': submitted && f.select_img.errors}">
+              <label class="custom-file-label" for="customFileLang">Seleccionar Imagen</label>
+              <div *ngIf="submitted && f.select_img.errors" class="invalid-feedback">
+                <div *ngIf="f.select_img.errors.required">Por favor ingrese una imagen</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group" style="text-align: center; margin-top: 20px;">
+            <button class="btn btn-primary">Enviar</button>
+          </div>
+
+        </form>
+
+
+       
+      </div>
+    </div>
+  
+  </div>
+
+</div>

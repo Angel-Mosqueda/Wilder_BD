@@ -21,32 +21,32 @@ export class ConsumibleInventarioComponent implements OnInit {
   istrue(){
     this.globals.producto = true;
     if(this.globals.altas === true){
-      this.router.navigate(['/alta-producto']);
+      this.router.navigate(['/alta-inventario']);
     }
     if(this.globals.bajas === true){
-      this.router.navigate(['/eliminar-producto']);
+      this.router.navigate(['/eliminar-inventario']);
     }
     if(this.globals.cambios === true){
-      this.router.navigate(['/modificar-producto']);
+      this.router.navigate(['/modificar-inventario']);
     }
     if(this.globals.consultas === true){
-      this.router.navigate(['/reporte-producto']);
+      this.router.navigate(['/reporte-inventario']);
     }
   }
 
   isfalse(){
     this.globals.producto = false;
     if(this.globals.altas === true){
-      this.router.navigate(['/alta-producto']);
+      this.router.navigate(['/alta-consumible']);
     }
     if(this.globals.bajas === true){
-      this.router.navigate(['/eliminar-producto']);
+      this.router.navigate(['/eliminar-consumible']);
     }
     if(this.globals.cambios === true){
-      this.router.navigate(['/modificar-producto']);
+      this.router.navigate(['/modificar-consumible']);
     }
     if(this.globals.consultas === true){
-      this.router.navigate(['/reporte-producto']);
+      this.router.navigate(['/reporte-consumible']);
     }
   }
 
