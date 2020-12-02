@@ -13,20 +13,6 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLER = os.path.join(BASE_DIR, "static")
 print(os.getcwd())
 
-app = Flask(
-    __name__,
-    template_folder='files',
-    static_url_path='',
-    static_folder='files'
-)
-
-app.config['MYSQL_HOST'] = os.getenv('BD_SERVER')
-app.config['MYSQL_USER'] = os.getenv('BD_USER')
-app.config['MYSQL_PASSWORD'] = os.getenv('BD_PASSWORD')
-app.config['MYSQL_DB'] = os.getenv('BD_BD')
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLER
-
-mysql = MySQL(app)
 
 
 @app.route('/static/<path:filename>') 
@@ -1006,6 +992,24 @@ def get_mantenimientos():
 def angular_root():
     return render_template('index.html')
 
+def create_app():
+    app = Flask(
+    __name__,
+    template_folder='files',
+    static_url_path='',
+    static_folder='files'
+    )
+
+    app.config['MYSQL_HOST'] = os.getenv('BD_SERVER')
+    app.config['MYSQL_USER'] = os.getenv('BD_USER')
+    app.config['MYSQL_PASSWORD'] = os.getenv('BD_PASSWORD')
+    app.config['MYSQL_DB'] = os.getenv('BD_BD')
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLER
+
+    mysql = MySQL(app)
+    return app
+
+app = create_app()
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8888)
+    app.run(debug=False, port=80)
