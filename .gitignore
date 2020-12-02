@@ -48,4 +48,4 @@ Thumbs.db
 # Build path
 /backend/files/*
 /backend/static/*
-/backend/
+/backend/__pycache__/*

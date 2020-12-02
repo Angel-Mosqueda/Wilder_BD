@@ -21,7 +21,7 @@ export class ConsumibleInventarioComponent implements OnInit {
   istrue(){
     this.globals.producto = true;
     if(this.globals.altas === true){
-      this.router.navigate(['/alta-inventario']);
+      this.router.navigate(['/alta-producto']);
     }
     if(this.globals.bajas === true){
       this.router.navigate(['/eliminar-inventario']);

@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class AltaConsumbibleComponent implements OnInit {
   globals: Globals;
   formulario: FormGroup;
-  submitted=false;
+  submitted = false;
 
   //variables compatibles
   nombre: string;
@@ -20,7 +20,7 @@ export class AltaConsumbibleComponent implements OnInit {
   numfactura: string;
   proveedor: string;
   /*imagen: ImageData;*/
-  
+
   //variables para inventario
   numserie: string;
   factura: string;
@@ -31,33 +31,66 @@ export class AltaConsumbibleComponent implements OnInit {
   cantidad: Int16Array;
   sku: string;
 
+  empresas: any;
+  consumibles: any;
+  editable: any;
+  create: boolean = false;
 
 
-  constructor(globals: Globals, 
+  constructor(globals: Globals,
     private formBuilder: FormBuilder,
     private _requestService: RequestsService,
-    private router: Router) { 
+    private router: Router) {
     this.globals = globals;
-   }
+  }
 
   ngOnInit(): void {
 
     this.formulario = this.formBuilder.group({
-      nombre: ['',Validators.required],
-      num_serie: ['',Validators.required],
-      num_factura: ['',Validators.required],
-      proveedor: ['',Validators.required],
-      factura: ['',Validators.required],
-      fecha_compra: ['',Validators.required],
-      costo_producto: ['',Validators.required],
-      descripcion: ['',Validators.required],
-      select_img: ['',Validators.required]
+      nombre: ['', Validators.required],
+      num_serie: ['', Validators.required],
+      proveedor: ['', Validators.required],
+      descripcion: ['', Validators.required],
+      cantidad: ['', Validators.required]
     });
 
 
-    if(this.globals.producto === null){
+    if (this.globals.producto === null) {
       this.router.navigate(['/']);
     }
+
+    this._requestService.getProveedores().subscribe(
+      (success: any) => {
+        if (success.exito) {
+          this.empresas = success.proveedores;
+        } else {
+          this.empresas = null;
+          alert('Error en el servidor. Mensaje: ' + success.desc);
+        }
+      },
+      (error) => {
+        this.empresas = null;
+        alert('Error en el servicio, contacta con un administrador,');
+      }
+    )
+
+    this._requestService.getConsumibles().subscribe(
+      (success: any) => {
+        if (success.exito) {
+          this.consumibles = success.consumibles;
+          this.editable = this.consumibles.map(a => false);
+          console.log(this.editable);
+        } else {
+          this.consumibles = null;
+          alert('Error en el servidor. Mensaje: ' + success.desc);
+        }
+      },
+      (error) => {
+        this.consumibles = null;
+        alert('Error en el servicio, contacta con un administrador,');
+      }
+    )
+
     /*
     if(this.globals.producto === true){
       this.formulario = this.formBuilder.group({
@@ -81,32 +114,110 @@ export class AltaConsumbibleComponent implements OnInit {
       });
     }*/
 
-    
+
 
   }
 
-  get f(){ return this.formulario.controls;}
+  toggleEdicion(index: any) {
+    if (this.editable[index]) {
+      // Mandar update
+      let nombre = (<HTMLInputElement>document.getElementById("nombre-" + index)).value;
+      let id = (<HTMLInputElement>document.getElementById("id-" + index)).value;
+      let sku = (<HTMLInputElement>document.getElementById("sku-" + index)).value;
+      let cantidad = (<HTMLInputElement>document.getElementById("cantidad-" + index)).value;
+      let descripcion = (<HTMLInputElement>document.getElementById("descripcion-" + index)).value;
+      this._requestService.updateConsumible({
+        NOMBRE: nombre,
+        SKU: sku,
+        CANTIDAD: cantidad,
+        DESCRIPCION: descripcion,
+        ID: id
+      }).subscribe(
+        (success: any) => {
+          if (success.exito) {
+            this.consumibles = success.consumibles;
+          } else {
+            this.consumibles = null;
+            alert('Error en el servidor. Mensaje: ' + success.desc);
+          }
+        },
+        (error) => {
+          this.consumibles = null;
+          alert('Error en el servicio, contacta con un administrador,');
+        }
+      );
+    }
+    this.editable[index] = !this.editable[index];
+  }
 
-  isnull(){
+  eliminarConsumible(index: any) {
+    // Mandar update
+    this._requestService.eliminarConsumible(index).subscribe(
+      (success: any) => {
+        this.consumibles = success.consumibles;
+      },
+      (error) => {
+        this.consumibles = null;
+        alert('Error en el servicio, contacta con un administrador,');
+      }
+    );
+  }
+
+  get f() { return this.formulario.controls; }
+
+  isnull() {
     this.globals.producto = null;
     this.globals.altas = null;
   }
 
-  enviarFormulario(){
-
-    this.submitted=true;
-    if(this.formulario.invalid){
+  enviarFormulario() {
+    this.submitted = true;
+    if (this.formulario.invalid) {
       return;
-    }else{
-      alert("Funciono");
+    } else {
+      this._requestService.crearConsumible({
+        'CANTIDAD': this.formulario.controls['cantidad'].value,
+        'SKU': this.formulario.controls['num_serie'].value,
+        'NOMBRE': this.formulario.controls['nombre'].value,
+        'DESCRIPCION': this.formulario.controls['descripcion'].value,
+        'PROVEEDOR': this.formulario.controls['proveedor'].value
+      }).subscribe(
+        (success: any) => {
+          this.create = !this.create;
+          if (success.exito) {
+            alert("Consumible registrado exitosamente.");
+            this._requestService.getConsumibles().subscribe(
+              (success: any) => {
+                if (success.exito) {
+                  this.consumibles = success.consumibles;
+                  this.editable = this.consumibles.map(a => false);
+                  console.log(this.editable);
+                } else {
+                  this.consumibles = null;
+                  alert('Error en el servidor. Mensaje: ' + success.desc);
+                }
+              },
+              (error) => {
+                this.consumibles = null;
+                alert('Error en el servicio, contacta con un administrador,');
+              }
+            )
+          } else {
+            alert('error en el registro, mensaje del server: ' + success.desc);
+          }
+        },
+        (error) => {
+          alert("Error en el servidor.")
+        }
+      );
     }
 
-    if(this.globals.producto === true){
-      console.log(this.nombre+" "+this.numserie+" "+this.numfactura+" "+this.proveedor+" "+this.factura+" "+this.fecha+" "+this.costo+" "+this.descripcion);
-    }else{
-      console.log(this.nombre+" "+this.cantidad+" "+this.sku+" "+this.proveedor+" "+this.descripcion);
+    if (this.globals.producto === true) {
+      console.log(this.nombre + " " + this.numserie + " " + this.numfactura + " " + this.proveedor + " " + this.factura + " " + this.fecha + " " + this.costo + " " + this.descripcion);
+    } else {
+      console.log(this.nombre + " " + this.cantidad + " " + this.sku + " " + this.proveedor + " " + this.descripcion);
     }
-    
+
   }
 
 }

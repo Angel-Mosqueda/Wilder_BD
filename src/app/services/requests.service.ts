@@ -97,6 +97,23 @@ export class RequestsService {
     return this.http.post('/add_inventario/' + id_producto, fd);
   }
 
+  ///////////// CRUD Consumibles
+  getConsumibles() {
+    return this.http.get('/get_consumibles/');
+  }
+
+  updateConsumible(payload: any) {
+    return this.http.post('/update_consumible/', payload);
+  }
+
+  crearConsumible(payload: any) {
+    return this.http.post('/create_consumible/', payload)
+  }
+
+  eliminarConsumible(id: any) {
+    return this.http.get('/delete_consumible/' + id);
+  }
+
   ///////////// Filtro Inventario Proveedores
   obtenerProductos(checks: any, filtro: any) {
     console.log(checks);

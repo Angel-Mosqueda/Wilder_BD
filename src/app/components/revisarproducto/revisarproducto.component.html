@@ -30,7 +30,7 @@
             </div></a>
         </div>
         
-        <div *ngIf="globals.rol === 'admin'" class="imagen">
+        <div *ngIf="globals.rol === 'admin' || globals.rol === 'encargado'" class="imagen">
             <img src="../../../assets/images/categorias.jpg" alt="Option 7">
             <a [routerLink]="['/categorias']">
                 <div class="overlay">

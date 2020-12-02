@@ -391,6 +391,7 @@ def obtener_categorias():
         })
     if len(response['categorias']) == 0:
         response['exito'] = False
+        response['desc'] = "No existen categorias, intenta creando unas."
     else:
         response['exito'] = True
     cur.close()
@@ -477,7 +478,119 @@ def crear_categorias():
     cur.close()
     return response
 
+######################### INICIO CONSUMIBLE #####################
+@app.route('/get_consumibles/', methods=['GET'])
+def obtener_consumibles():
+    response = {}
+    response["consumibles"] = []
+    cur = mysql.connection.cursor()
+    empresa_id = int(request.cookies.get('empresa'))
+    cur.callproc('GET_CONSUMIBLES', [empresa_id])
+    rows = cur.fetchall()
+    for consumible in rows:
+        response["consumibles"].append({
+            "id": consumible[0],
+            "nombre": consumible[1],
+            "sku": consumible[2],
+            "cantidad": consumible[3],
+            "descripcion": consumible[4],
+            "proveedor": consumible[5],
+            "empresa_id": consumible[6]
+        })
+    if len(response['consumibles']) == 0:
+        response['exito'] = False
+        response['desc'] = "No existen consumibles, intenta crear alguno."
+    else:
+        response['exito'] = True
+    cur.close()
+    return response
 
+
+@app.route('/update_consumible/', methods=['POST'])
+def actualizar_consumibles():
+    response = {}
+    response["consumibles"] = []
+    cur = mysql.connection.cursor()
+    data = json.loads(request.data)
+    query = ("UPDATE CONSUMIBLE SET NOMBRE = '" + data['NOMBRE'] +
+    "', cantidad = "+ data["CANTIDAD"] +", sku = '" + data["SKU"] + "',"
+    " descripcion = '" + data["DESCRIPCION"] + "'"
+    " WHERE ID = " + data['ID'] + ";")
+    
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response['exito'] = isinstance(last_id, int)
+
+    empresa_id = int(request.cookies.get('empresa'))
+    cur.callproc('GET_CONSUMIBLES', [empresa_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for consumible in rows:
+        response["consumibles"].append({
+            "id": consumible[0],
+            "nombre": consumible[1],
+            "sku": consumible[2],
+            "cantidad": consumible[3],
+            "descripcion": consumible[4],
+            "proveedor": consumible[5],
+            "empresa_id": consumible[6]
+        })
+    cur.close()
+    return response
+
+
+@app.route('/delete_consumible/<id>', methods=['GET'])
+def eliminar_consumibles(id):
+    response = {}
+    response["consumibles"] = []
+    cur = mysql.connection.cursor()
+    query = "DELETE FROM CONSUMIBLE WHERE ID = " + str(id) + ";"
+    
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+
+    empresa_id = int(request.cookies.get('empresa'))
+    cur.callproc('GET_CONSUMIBLES', [empresa_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for consumible in rows:
+        response["consumibles"].append({
+            "id": consumible[0],
+            "nombre": consumible[1],
+            "sku": consumible[2],
+            "cantidad": consumible[3],
+            "descripcion": consumible[4],
+            "proveedor": consumible[5],
+            "empresa_id": consumible[6]
+        })
+    cur.close()
+    return response
+
+
+@app.route('/create_consumible/', methods=['POST'])
+def crear_consumibles():
+    response = {}
+    response["consumibles"] = []
+    empresa_id = int(request.cookies.get('empresa'))
+
+    cur = mysql.connection.cursor()
+    data = json.loads(request.data)
+    query = ("INSERT INTO CONSUMIBLE (CANTIDAD, SKU, NOMBRE, DESCRIPCION, EMPRESA_ID, PROVEEDOR) VALUES"
+    " ('" + str(data['CANTIDAD']) + "', '" + data['SKU'] + "', '" + data['NOMBRE'] + "', '" + str(data['DESCRIPCION']) + "', " + str(empresa_id) +
+    ", " + str(data['PROVEEDOR']) + ")")
+    
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response['exito'] = isinstance(last_id, int)
+
+    cur.close()
+    return response
+######################### FIN CONSUMIBLE #####################
 
 @app.route('/add_user/', methods=['POST'])
 def crear_usuario():
@@ -491,7 +604,7 @@ def crear_usuario():
     + "'" + data['APEMAT'] + "', "
     + "" + str(data['ROL']) + ", "
     + "'" + data['FOTO'] + "', "
-    + "1, "
+    + "0, "
     + "'" + data['EMPRESA_ID'] + "', "
     + "'" + data['CORREO'] + "', "
     + "sha2('" + data['PASSWORD'] + "', 512));"
@@ -541,7 +654,6 @@ def crear_producto():
         return response
     filename = secure_filename(str(int(datetime.now().timestamp())) + arch.filename)
     # filename = (str(int(datetime.now().timestamp())) + filename)
-    import pdb; pdb.set_trace()
     arch.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     empresa_id = request.cookies.get('empresa')
     usuario_id = request.cookies.get('usuario')
@@ -550,14 +662,14 @@ def crear_producto():
     + str(usuario_id) + ", "
     + str(empresa_id) + ", "
     + "\"" + data['NOMBRE'] + "\", "
-    + "'" + data['DESCRIPCION'] + "', '" + filename + "');"
+    + "'" + data['DESCRIPCION'] + "', '" + filename + "')"
     )
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()
     last_id = cur.lastrowid
     response['exito'] = isinstance(last_id, int)
-    for categoria in data['CATEGORIAS'][-3:]:
+    for categoria in data['CATEGORIAS'][2:]:
         query = ("INSERT INTO categoria_producto (PRODUCTO_ID, CATEGORIA_ID)"
         " VALUES ("
         + str(last_id) + ","
