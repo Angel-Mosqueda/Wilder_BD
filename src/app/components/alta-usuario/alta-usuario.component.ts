@@ -19,6 +19,7 @@ export class AltaUsuarioComponent implements OnInit {
   pwd2: String;
   empresa: String;
   empresas: any;
+  file: any;
 
   formulario: FormGroup;
 
@@ -49,8 +50,15 @@ export class AltaUsuarioComponent implements OnInit {
       correo: ['', Validators.required],
       cont1: ['', Validators.required],
       cont2: ['', Validators.required],
-      company: ['', Validators.required]
+      company: ['', Validators.required],
+      select_img: ['', Validators.required]
     });
+  }
+
+  get f() { return this.formulario.controls; }
+
+  fileChange(event) {
+    this.file = event.target.files.item(0);
   }
 
   agregarEmpresa() {
@@ -76,20 +84,19 @@ export class AltaUsuarioComponent implements OnInit {
   }
 
   enviarFormulario() {
-    debugger;
     console.log(this.empresa);
     if (this.formulario.valid && this.pwd1 == this.pwd2) {
       this._requestService.createUser({
         NOMBRE: this.name,
         APEPAT: this.apepat,
         APEMAT: this.apemat,
-        ROL: 1,
+        ROL: 0,
         FOTO: '',
         ACTIVO: '',
         EMPRESA_ID: this.empresa,
         CORREO: this.email,
         PASSWORD: this.pwd1
-      }).subscribe(
+      }, this.file).subscribe(
         (success: any) => {
           if (success.exito) {
             alert("Usuario creado con éxito");

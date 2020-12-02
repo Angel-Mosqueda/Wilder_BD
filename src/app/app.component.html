@@ -1,71 +1,83 @@
 <div class="d-flex" id="wrapper">
-    <!-- Sidebar -->
-    <div class="bg-light border-right" id="sidebar-wrapper">
-      <div class="sidebar-heading row justify-content-center"><img src="../assets/images/logo.png"></div>
-      <div *ngIf="logged" class="list-group list-group-flush">
-        <a [routerLink]="['/revisar-producto']" class="list-group-item list-group-item-action bg-light">Gestion De Productos</a>
-        <a  [routerLink]="['/mantenimiento']" class="list-group-item list-group-item-action bg-light">Solicitud De Mantenimiento</a>
-        <a [routerLink]="['/solicitud']" class="list-group-item list-group-item-action bg-light">Solicitud De Productos</a>
-        <a *ngIf="globals.rol === 'admin' || globals.rol === 'encargado' " [routerLink]="['/prestamo-producto']" 
+  <!-- Sidebar -->
+  <div class="bg-light border-right" id="sidebar-wrapper">
+    <div class="sidebar-heading row justify-content-center"><img src="../assets/images/logo.png"></div>
+    <div *ngIf="logged" class="list-group list-group-flush">
+      <a *ngIf="globals.rol === 'admin' || globals.rol === 'encargado' " [routerLink]="['/revisar-producto']"
+        class="list-group-item list-group-item-action bg-light">Gestion De Productos</a>
+      <a *ngIf="globals.rol === 'normal'" [routerLink]="['/mantenimiento']"
+        class="list-group-item list-group-item-action bg-light">Solicitud De
+        Mantenimiento</a>
+      <a *ngIf="globals.rol === 'normal'" [routerLink]="['/solicitud']"
+        class="list-group-item list-group-item-action bg-light">Solicitud De
+        Productos</a>
+      <a *ngIf="globals.rol === 'admin' || globals.rol === 'encargado' " [routerLink]="['/prestamo-producto']"
         class="list-group-item list-group-item-action bg-light">Prestamo de Productos</a>
-        <a [routerLink]="['/contacto']" class="list-group-item list-group-item-action bg-light">Contacto</a>
-        <a [routerLink]="['/acerca-de']" class="list-group-item list-group-item-action bg-light">Acerca De</a>
+      <a *ngIf="globals.rol === 'admin'" [routerLink]="['/usuarios']"
+        class="list-group-item list-group-item-action bg-light">Gestión de Usuarios</a>
+      <!-- <a [routerLink]="['/contacto']" class="list-group-item list-group-item-action bg-light">Contacto</a> -->
+      <a [routerLink]="['/acerca-de']" class="list-group-item list-group-item-action bg-light">Acerca De</a>
 
-        <!-- *ngIf="rol === 1 | async as usrinfo"    *ngIf="usrinfo['rol'] === 1 | async as usrinfo" -->
-      </div>
+      <!-- *ngIf="rol === 1 | async as usrinfo"    *ngIf="usrinfo['rol'] === 1 | async as usrinfo" -->
     </div>
-    <!-- /#sidebar-wrapper -->
-    <!-- Page Content -->
-    <div id="page-content-wrapper">
-      <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-        <button class="btn btn-primary" id="menu-toggle">Menu</button>
-        <a class="nav-link text-decoration-none" [routerLink]="['/']"><h3 class="ml-3 mt-2">WILDER</h3></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
-            <li class="nav-item active">
-              <a class="nav-link mt-2" [routerLink]="['/']">Home <span class="sr-only">(current)</span></a>
-            </li>
-
-            <li *ngIf="!logged" class="nav-item align-middle" >
-              <a class="nav-link mt-2" [routerLink]="['/inicio-sesion']">Iniciar Sesion</a>
-            </li>
-
-            <li *ngIf="logged" class="nav-item align-middle" >
-              <a class="nav-link mt-2">Hola {{ this.usrinfo['nombre'] }}</a>
-            </li>
-
-            <li class="nav-item"> 
-              
-            </li>
-            <!-- Incluir en opciones de cuenta para usuarios -->
-            <li *ngIf="logged" class="nav-item dropdown" style="vertical-align:bottom;">
-              <a class="nav-link " id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <img src="../assets/images/prueba.jpg" class="border border-dark rounded-circle " width="40px" height="40px">
-              </a>
-              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Something else here</a>
-              </div>
-            </li>
-            <!---->
-          </ul>
-        </div>
-      </nav>
-      <div class="container-fluid">
-        <router-outlet></router-outlet>
-        <!--<app-home></app-home>-->
-      </div>
-    </div>
-    <!-- /#page-content-wrapper -->
   </div>
-  <!-- /#wrapper -->
+  <!-- /#sidebar-wrapper -->
+  <!-- Page Content -->
+  <div id="page-content-wrapper">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+      <button class="btn btn-primary" id="menu-toggle">Menu</button>
+      <a class="nav-link text-decoration-none" [routerLink]="['/']">
+        <h3 class="ml-3 mt-2">WILDER</h3>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+          <li class="nav-item active">
+            <a class="nav-link mt-2" [routerLink]="['/']">Home <span class="sr-only">(current)</span></a>
+          </li>
 
-  <app-footer></app-footer>
+          <li *ngIf="!logged" class="nav-item align-middle">
+            <a class="nav-link mt-2" [routerLink]="['/inicio-sesion']">Iniciar Sesion</a>
+          </li>
+
+          <li *ngIf="logged" class="nav-item align-middle">
+            <a class="nav-link mt-2">Hola {{ this.usrinfo['nombre'] }}</a>
+          </li>
+
+          <li class="nav-item">
+
+          </li>
+          <!-- Incluir en opciones de cuenta para usuarios -->
+          <li *ngIf="logged" class="nav-item dropdown" style="vertical-align:bottom;">
+            <a class="nav-link " id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
+              <img src="../assets/images/prueba.jpg" class="border border-dark rounded-circle " width="40px"
+                height="40px">
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">Action</a>
+              <a class="dropdown-item" href="#">Another action</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+          </li>
+          <!---->
+        </ul>
+      </div>
+    </nav>
+    <div class="container-fluid">
+      <router-outlet></router-outlet>
+      <!--<app-home></app-home>-->
+    </div>
+  </div>
+  <!-- /#page-content-wrapper -->
+</div>
+<!-- /#wrapper -->
+
+<app-footer></app-footer>
 <!--<router-outlet></router-outlet>-->
 
 <!--<button class="btn btn-danger">plzfndofnsdopinfiosdbfiosbfiosdb</button>-->

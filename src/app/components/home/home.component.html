@@ -16,7 +16,7 @@
                 </div> 
             </a>-->
         </div>
-        <div *ngIf="this.autenticado" class="imagen">
+        <div *ngIf="this.autenticado && this.globals.rol != 'normal'" class="imagen">
             <img src="../../../assets/images/revisar2.png" alt="Option 2">
             <a [routerLink]="['/revisar-producto']">
                 <div class="overlay">
@@ -24,7 +24,7 @@
                 </div>
             </a>
         </div>
-        <div *ngIf="this.autenticado" class="imagen">
+        <div *ngIf="this.autenticado && this.globals.rol === 'normal'" class="imagen">
             <img src="../../../assets/images/mantenimiento.png" alt="Option 3">
             <a [routerLink]="['/mantenimiento']">
                 <div class="overlay">
@@ -42,16 +42,16 @@
                     
                 </div></a>
         </div>
-        <div *ngIf="this.autenticado" class="imagen">
+        <div *ngIf="this.autenticado && this.globals.rol === 'normal'" class="imagen">
             <img src="../../../assets/images/solicitar.jpg" alt="Option 4">
             <a [routerLink]="['/solicitud']"><div class="overlay">
                 <h2>Solicitar Prestamo <br>De Inventario</h2>
             </div></a>
         </div>
-        <div *ngIf="this.autenticado" class="imagen">
+        <div *ngIf="this.autenticado && this.globals.rol === 'admin'" class="imagen">
             <img src="../../../assets/images/configuracion.png" alt="Option 5">
-            <a [routerLink]="['/']"><div class="overlay">
-                <h2>Configuracion</h2>
+            <a [routerLink]="['/gestion-usuarios']"><div class="overlay">
+                <h2>Gestión de usuarios</h2>
             </div></a>
             <!--<a href="projects/#img5"><div class="overlay">
                 <h2>Fanning Secondary School <br>Lima - Peru</h2>

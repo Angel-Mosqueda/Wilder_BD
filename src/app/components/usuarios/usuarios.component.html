@@ -1,0 +1,146 @@
+<div class="p-3">
+    <h3>Gestión de usuarios</h3>
+    <button class="float-right btn btn-primary" (click)="this.create = !this.create;">Añadir usuario nuevo</button>
+    <br><br>
+    <table *ngIf="this.usuarios; else nohay" class="table table-hover">
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Primer apellido</th>
+            <th>Segundo apellido</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Foto</th>
+            <th>¿Activo?</th>
+            <th>Editar</th>
+        </tr>
+        <!--  Arreglo que corresponda a cada formulario -->
+        <tr *ngFor="let usuario of this.usuarios; let idx = index">
+            <td><input class="form-control" id="id-{{ idx }}" type="text" value="{{ usuario.id }}" disabled></td>
+            <td><input class="form-control" id="nombre-{{ idx }}" type="text" value="{{ usuario.nombre }}"
+                    [disabled]="!this.editable[idx]"></td>
+            <td><input class="form-control" id="apepat-{{ idx }}" type="text" value="{{ usuario.apepat }}"
+                    [disabled]="!this.editable[idx]"></td>
+            <td><input class="form-control" id="apemat-{{ idx }}" type="text" value="{{ usuario.apemat }}"
+                    [disabled]="!this.editable[idx]"></td>
+            <td><input class="form-control" id="correo-{{ idx }}" type="text" value="{{ usuario.correo }}"
+                    [disabled]="!this.editable[idx]" disabled></td>
+            <td>
+                <select id="rol-{{ idx }}" [(ngModel)]="rol[idx]" class="custom-select"
+                    [disabled]="!this.editable[idx]">
+                    <option value="1">
+                        Normal
+                    </option>
+                    <option value="2">
+                        Encargado de almacén
+                    </option>
+                </select>
+            </td>
+            <td>
+                <img [src]="'/static/' + usuario.foto" alt="" class="avatar">
+            </td>
+            <td>
+                <select id="activo-{{ idx }}" [(ngModel)]="activo[idx]" class="custom-select"
+                    [disabled]="!this.editable[idx]">
+                    <option value="0">
+                        Activo
+                    </option>
+                    <option value="1">
+                        Inactivo
+                    </option>
+                </select>
+            </td>
+            <td><button class="btn btn-secondary"
+                    (click)="toggleEdicion(idx)">{{ this.editable[idx] ? 'Terminar' : 'Editar' }}</button></td>
+        </tr>
+    </table>
+    <ng-template #nohay>
+        <h3>No tienes registrados usuarios</h3>
+    </ng-template>
+    <div class="row" *ngIf="this.create">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <h3>Crea un nuevo usuario</h3>
+            <form [formGroup]="formulario" (ngSubmit)="enviarNuevoUsuario()">
+                <div class="form-row row justify-content-md-center">
+                    <div class="col mt-3">
+                        <label for="nombres">Nombre(s)</label>
+                        <input type="text" formControlName="nombre" class="form-control" id="nombres" />
+                    </div>
+                </div>
+
+                <div class="form-row row justify-content-md-center">
+                    <div class="col mt-3">
+                        <label for="apepat">Apellido Paterno</label>
+                        <input type="text" formControlName="apepat" class="form-control" id="apepat" />
+                    </div>
+                    <div class="col mt-3">
+                        <label for="apemat">Apellido Materno</label>
+                        <input type="text" formControlName="apemat" class="form-control" id="apemat" />
+                    </div>
+                </div>
+
+                <div class="form-row row justify-content-md-center">
+                    <label for="rol">Rol del Usuario</label>
+                    <select class="custom-select" formControlName="rol" name="rol">
+                        <option value="0">
+                            Administrador
+                        </option>
+                        <option value="1">
+                            Normal
+                        </option>
+                        <option value="2">
+                            Encargado de almacén
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-row row justify-content-md-center">
+                    <div class="col mt-3">
+                        <label for="correo">Correo Electrónico</label>
+                        <input type="email" formControlName="correo" class="form-control" id="correo"
+                            placeholder="nombre@ejemplo.com" />
+                    </div>
+                </div>
+
+                <div class="form-row row justify-content-md-center">
+                    <div class="col mt-3">
+                        <label for="customFileLang">Inserta una Fotografía</label>
+                        <input type="file" class="custom-file-input" id="customFileLang" lang="es"
+                            formControlName="select_img" class="form-control"
+                            [ngClass]="{'is-invalid': f.select_img.errors}" accept="image/x-png,image/gif,image/jpeg"
+                            (change)="fileChange($event)">
+                        <div *ngIf="f.select_img.errors" class="invalid-feedback">
+                            <div *ngIf="f.select_img.errors.required">Por favor ingrese una imagen</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row row justify-content-md-center">
+                    <div class="col mt-3">
+                        <label for="inputPassword1">Nueva Contraseña</label>
+                        <div class="input-group">
+                            <input ID="txtPassword1" formControlName="password1" type="password" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row row justify-content-md-center">
+                    <div class="col mt-3">
+                        <label for="inputPassword2">Ingrese De Nuevo Su Contraseña</label>
+                        <div class="input-group">
+                            <input ID="inputPassword2" formControlName="password2" type="password" class="form-control">
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card-footer text-center mt-3">
+                    <button [disabled]="!this.formulario.valid" type="submit" class="btn btn-primary mr-3">Terminar
+                        Registro</button>
+                </div>
+            </form>
+            <br><br><br>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>

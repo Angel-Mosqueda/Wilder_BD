@@ -110,7 +110,7 @@ def obtener_empresas():
     response = {}
     response["empresas"] = []
     cur = mysql.connection.cursor()
-    query = ("SELECT ID, RAZSOC FROM EMPRESA;")
+    query = ("SELECT ID, RAZSOC FROM EMPRESA WHERE TIPO IS NULL;")
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()
@@ -592,20 +592,139 @@ def crear_consumibles():
     return response
 ######################### FIN CONSUMIBLE #####################
 
+######################### INICIO USUARIO #####################
+@app.route('/get_usuarios/', methods=['GET'])
+def obtener_usuarios():
+    response = {}
+    response["usuarios"] = []
+    cur = mysql.connection.cursor()
+    empresa_id = int(request.cookies.get('empresa'))
+    usuario_id = request.cookies.get('usuario')
+
+    cur.callproc('GET_USUARIOS', [empresa_id, usuario_id])
+    rows = cur.fetchall()
+    for usuario in rows:
+        response["usuarios"].append({
+            "id": usuario[0],
+            "nombre": usuario[1],
+            "apepat": usuario[2],
+            "apemat": usuario[3],
+            "correo": usuario[4],
+            "rol": usuario[5],
+            "foto": usuario[6],
+            "activo": ord(usuario[7])
+        })
+    if len(response['usuarios']) == 0:
+        response['exito'] = False
+        response['desc'] = "No existen usuarios, intenta crear alguno."
+    else:
+        response['exito'] = True
+    cur.close()
+    return response
+
+
+@app.route('/update_usuario/', methods=['POST'])
+def actualizar_usuarios():
+    response = {}
+    response["usuarios"] = []
+    cur = mysql.connection.cursor()
+    data = json.loads(request.data)
+    empresa_id = int(request.cookies.get('empresa'))
+    usuario_id = request.cookies.get('usuario')
+    query = (
+        "UPDATE USUARIO SET "
+        "NOMBRE ='" + data['NOMBRE'] + "',"
+        "APEPAT ='" + data['APEPAT'] + "',"
+        "APEMAT ='" + data['APEMAT'] + "',"
+        # "CORREO =" + data['NOMBRE'] + ","
+        "ROL =" + str(data['ROL']) + ","
+        "ACTIVO =" + str(data['ACTIVO']) + " WHERE "
+        "ID = " + data['ID'] + " AND "
+        "EMPRESA_ID = " + str(empresa_id)
+    )
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response['exito'] = isinstance(last_id, int)
+    cur.callproc('GET_USUARIOS', [empresa_id, usuario_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for usuario in rows:
+        response["usuarios"].append({
+            "id": usuario[0],
+            "nombre": usuario[1],
+            "apepat": usuario[2],
+            "apemat": usuario[3],
+            "correo": usuario[4],
+            "rol": usuario[5],
+            "foto": usuario[6],
+            "activo": ord(usuario[7])
+        })
+    cur.close()
+    return response
+
+
+@app.route('/delete_usuario/<id>', methods=['GET'])
+def eliminar_usuarios(id):
+    response = {}
+    response["usuarios"] = []
+    cur = mysql.connection.cursor()
+    query = "DELETE FROM USUARIO WHERE ID = " + str(id) + ";"
+    
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+
+    empresa_id = int(request.cookies.get('empresa'))
+    usuario_id = request.cookies.get('usuario')
+    
+    cur.callproc('GET_USUARIOS', [empresa_id, usuario_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for usuario in rows:
+        response["usuarios"].append({
+            "id": usuario[0],
+            "nombre": usuario[1],
+            "apepat": usuario[2],
+            "apemat": usuario[3],
+            "correo": usuario[4],
+            "rol": usuario[5],
+            "foto": usuario[6],
+            "activo": ord(usuario[7])
+        })
+    cur.close()
+    return response
+
 @app.route('/add_user/', methods=['POST'])
 def crear_usuario():
     response = {}
     cur = mysql.connection.cursor()
-    data = json.loads(request.data)
+    try:
+        empresa_id = request.cookies.get('empresa')
+    except:
+        empresa_id = data['EMPRESA_ID']
+    try:
+        data = json.loads(request.data)
+    except:
+        data = json.loads(request.form['datos'])
+    arch = request.files['file']
+    if not allowed_file(arch.filename):
+        response['exito'] = False
+        response['desc'] = "Sube un archivo de los permitidos"
+        return response
+    filename = secure_filename(str(int(datetime.now().timestamp())) + arch.filename)
+
+    arch.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     query = ("INSERT INTO USUARIO (NOMBRE, APEPAT, APEMAT, ROL,"
     "FOTO, ACTIVO, EMPRESA_ID, CORREO, PASSWORD) VALUES ("
     + "'" + data['NOMBRE'] + "', "
     + "'" + data['APEPAT'] + "', "
     + "'" + data['APEMAT'] + "', "
     + "" + str(data['ROL']) + ", "
-    + "'" + data['FOTO'] + "', "
-    + "0, "
-    + "'" + data['EMPRESA_ID'] + "', "
+    + "'" + filename + "', "
+    + "1, "
+    + "'" + str(empresa_id) + "', "
     + "'" + data['CORREO'] + "', "
     + "sha2('" + data['PASSWORD'] + "', 512));"
     )
@@ -620,6 +739,7 @@ def crear_usuario():
     cur.close()
     return jsonify(response)
 
+######################### INICIO USUARIO #####################
 
 @app.route('/add_categoria/', methods=['POST'])
 def crear_categoria():

@@ -18,8 +18,15 @@ export class RequestsService {
     return this.http.get('/get_empresas/');
   }
 
-  createUser(payload: any) {
-    return this.http.post('/add_user/', payload);
+  createUser(payload: any, file?: File) {
+    if (file) {
+      let fd = new FormData();
+      fd.append('file', file, file.name);
+      fd.append('datos', JSON.stringify(payload));
+      return this.http.post('/add_user/', fd);
+    } else {
+      return this.http.post('/add_user/', payload);
+    }
   }
 
   createEmpresa(payload: any) {
@@ -87,6 +94,23 @@ export class RequestsService {
 
   eliminarUbicacion(id: any) {
     return this.http.get('/delete_ubicacion/' + id);
+  }
+
+  ///////////// CRUD Usuarios
+  getUsuarios() {
+    return this.http.get('/get_usuarios/');
+  }
+
+  updateUsuario(payload: any) {
+    return this.http.post('/update_usuario/', payload);
+  }
+
+  crearUsuario(payload: any) {
+    return this.http.post('/create_usuario/', payload)
+  }
+
+  eliminarUsuario(id: any) {
+    return this.http.get('/delete_usuario/' + id);
   }
 
   ///////////// CRUD Inventario

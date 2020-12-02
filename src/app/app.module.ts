@@ -41,6 +41,7 @@ import { ModificarConsumibleComponent } from './components/modificar-consumible/
 import { ModificarInventarioComponent } from './components/modificar-inventario/modificar-inventario.component';
 import { ReporteConsumibleComponent } from './components/reporte-consumible/reporte-consumible.component';
 import { ReporteInventarioComponent } from './components/reporte-inventario/reporte-inventario.component';
+import { UsuariosComponent } from './components/usuarios/usuarios.component';
 
 
 @NgModule({
@@ -75,7 +76,8 @@ import { ReporteInventarioComponent } from './components/reporte-inventario/repo
     ModificarConsumibleComponent,
     ModificarInventarioComponent,
     ReporteConsumibleComponent,
-    ReporteInventarioComponent
+    ReporteInventarioComponent,
+    UsuariosComponent
   ],
   imports: [
     BrowserModule,

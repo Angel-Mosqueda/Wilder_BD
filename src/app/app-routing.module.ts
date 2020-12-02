@@ -30,10 +30,12 @@ import { ModificarConsumibleComponent } from './components/modificar-consumible/
 import { ModificarInventarioComponent } from './components/modificar-inventario/modificar-inventario.component';
 import { ReporteConsumibleComponent } from './components/reporte-consumible/reporte-consumible.component';
 import { ReporteInventarioComponent } from './components/reporte-inventario/reporte-inventario.component';
+import { UsuariosComponent } from './components/usuarios/usuarios.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'acerca-de', component: AcercaDeComponent },
+  { path: 'usuarios', component: UsuariosComponent },
   { path: 'alta-producto', component: AltaProductoComponent },
   { path: 'alta-usuario', component: AltaUsuarioComponent },
   { path: 'baja-usuario', component: BajaUsuarioComponent },
@@ -54,13 +56,13 @@ const routes: Routes = [
   { path: 'proveedores', component: ProveedoresComponent },
   { path: 'consumible-inventario', component: ConsumibleInventarioComponent, canActivate: [AuthGuardService] },
   { path: 'alta-consumible', component: AltaConsumbibleComponent },
-  { path:'alta-inventario', component:AltaInventarioComponent },
-  { path:'eliminar-consumible', component:EliminarConsumibleComponent },
-  { path:'eliminar-inventario', component:EliminarInventarioComponent },
-  { path:'modificar-consumible', component:ModificarConsumibleComponent },
-  { path:'modificar-inventario', component:ModificarInventarioComponent },
-  { path:'reporte-consumible', component:ReporteConsumibleComponent},
-  { path:'reporte-inventario', component:ReporteInventarioComponent },
+  { path: 'alta-inventario', component: AltaInventarioComponent },
+  { path: 'eliminar-consumible', component: EliminarConsumibleComponent },
+  { path: 'eliminar-inventario', component: EliminarInventarioComponent },
+  { path: 'modificar-consumible', component: ModificarConsumibleComponent },
+  { path: 'modificar-inventario', component: ModificarInventarioComponent },
+  { path: 'reporte-consumible', component: ReporteConsumibleComponent },
+  { path: 'reporte-inventario', component: ReporteInventarioComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 
@@ -68,4 +70,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

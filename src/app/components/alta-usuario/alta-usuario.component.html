@@ -9,26 +9,42 @@
                     <div class="form-row row justify-content-md-center">
                         <div class="col mt-3">
                             <label for="nombres">Nombre(s)</label>
-                            <input type="text" [(ngModel)]="name" formControlName="nombre" class="form-control" id="nombres" />
+                            <input type="text" [(ngModel)]="name" formControlName="nombre" class="form-control"
+                                id="nombres" />
                         </div>
                     </div>
 
                     <div class="form-row row justify-content-md-center">
                         <div class="col mt-3">
                             <label for="apepat">Apellido Paterno</label>
-                            <input type="text" [(ngModel)]="apepat" formControlName="appat" class="form-control" id="apepat" />
+                            <input type="text" [(ngModel)]="apepat" formControlName="appat" class="form-control"
+                                id="apepat" />
                         </div>
                         <div class="col mt-3">
                             <label for="apemat">Apellido Materno</label>
-                            <input type="text" [(ngModel)]="apemat" formControlName="apmat" class="form-control" id="apemat" />
+                            <input type="text" [(ngModel)]="apemat" formControlName="apmat" class="form-control"
+                                id="apemat" />
                         </div>
                     </div>
 
                     <div class="form-row row justify-content-md-center">
                         <div class="col mt-3">
                             <label for="correo">Correo Electrónico</label>
-                            <input type="email" [(ngModel)]="email" formControlName="correo" class="form-control" id="correo"
-                                placeholder="nombre@ejemplo.com" />
+                            <input type="email" [(ngModel)]="email" formControlName="correo" class="form-control"
+                                id="correo" placeholder="nombre@ejemplo.com" />
+                        </div>
+                    </div>
+
+                    <div class="form-row row justify-content-md-center">
+                        <div class="col mt-3">
+                            <label for="customFileLang">Inserta una Fotografía</label>
+                            <input type="file" class="custom-file-input" id="customFileLang" lang="es"
+                                formControlName="select_img" class="form-control"
+                                [ngClass]="{'is-invalid': f.select_img.errors}"
+                                accept="image/x-png,image/gif,image/jpeg" (change)="fileChange($event)">
+                            <div *ngIf="f.select_img.errors" class="invalid-feedback">
+                                <div *ngIf="f.select_img.errors.required">Por favor ingrese una imagen</div>
+                            </div>
                         </div>
                     </div>
 
@@ -36,8 +52,8 @@
                         <div class="col mt-3">
                             <label for="inputPassword1">Nueva Contraseña</label>
                             <div class="input-group">
-                                <input ID="txtPassword1" [(ngModel)]="pwd1" formControlName="cont1" [type]="globals.passwordNueva1"
-                                    Class="form-control">
+                                <input ID="txtPassword1" [(ngModel)]="pwd1" formControlName="cont1"
+                                    [type]="globals.passwordNueva1" Class="form-control">
                                 <div class="input-group-append">
                                     <button type="button" id="show_password1" (click)="showPassword1()"
                                         class="btn btn-primary"> <span class="fa fa-eye-slash icon"></span> </button>
@@ -50,8 +66,8 @@
                         <div class="col mt-3">
                             <label for="inputPassword2">Ingrese De Nuevo Su Contraseña</label>
                             <div class="input-group">
-                                <input ID="inputPassword2" [(ngModel)]="pwd2" formControlName="cont2" [type]="globals.passwordNueva2"
-                                    Class="form-control">
+                                <input ID="inputPassword2" [(ngModel)]="pwd2" formControlName="cont2"
+                                    [type]="globals.passwordNueva2" Class="form-control">
                                 <div class="input-group-append">
                                     <button type="button" id="show_password2" (click)="showPassword2()"
                                         class="btn btn-primary"> <span class="fa fa-eye-slash icon"></span> </button>
@@ -64,8 +80,10 @@
                     <div class="form-row row justify-content-md-center">
                         <div class="col mt-3">
                             <label for="empresaSelect"></label>
-                            <select [(ngModel)]="empresa" formControlName="company" class="custom-select" id="empresaSelect">
-                                <option *ngFor="let comp of empresas;" [value]="comp.id">{{ comp.razon_social }}</option>
+                            <select [(ngModel)]="empresa" formControlName="company" class="custom-select"
+                                id="empresaSelect">
+                                <option *ngFor="let comp of empresas;" [value]="comp.id">{{ comp.razon_social }}
+                                </option>
                             </select>
                         </div>
                         <div class="col mt-3 text-center">
@@ -108,7 +126,8 @@
 
                 </ng-template>
                 <div class="card-footer text-center mt-3">
-                    <button [disabled]="!this.formulario.valid" type="submit" class="btn btn-primary mr-3">Terminar Registro</button>
+                    <button [disabled]="!this.formulario.valid" type="submit" class="btn btn-primary mr-3">Terminar
+                        Registro</button>
                 </div>
             </form>
         </div>
