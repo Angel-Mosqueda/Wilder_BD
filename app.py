@@ -1008,3 +1008,6 @@ def get_mantenimientos():
 @app.route('/')
 def angular_root():
     return render_template('index.html')
+
+if __name__ == '__main__':
+    app.run(threaded=True, port=8888)
