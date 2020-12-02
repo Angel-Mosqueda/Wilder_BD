@@ -6,6 +6,9 @@ from utils import allowed_file
 import hashlib, json, os
 from datetime import datetime
 
+from dotenv import load_dotenv
+load_dotenv()
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLER = os.path.join(BASE_DIR, "static")
 print(os.getcwd())
@@ -17,10 +20,10 @@ app = Flask(
     static_folder='files'
 )
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'password'
-app.config['MYSQL_DB'] = 'wilder'
+app.config['MYSQL_HOST'] = os.getenv('BD_SERVER')
+app.config['MYSQL_USER'] = os.getenv('BD_USER')
+app.config['MYSQL_PASSWORD'] = os.getenv('BD_PASSWORD')
+app.config['MYSQL_DB'] = os.getenv('BD_BD')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLER
 
 mysql = MySQL(app)

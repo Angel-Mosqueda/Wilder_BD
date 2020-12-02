@@ -49,3 +49,5 @@ Thumbs.db
 /backend/files/*
 /backend/static/*
 /backend/__pycache__/*
+nosecomo
+.env
