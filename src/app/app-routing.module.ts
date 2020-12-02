@@ -26,6 +26,8 @@ import { AltaConsumbibleComponent } from './components/alta-consumbible/alta-con
 import { AltaInventarioComponent } from './components/alta-inventario/alta-inventario.component';
 import { EliminarConsumibleComponent } from './components/eliminar-consumible/eliminar-consumible.component';
 import { EliminarInventarioComponent } from './components/eliminar-inventario/eliminar-inventario.component';
+import { ModificarConsumibleComponent } from './components/modificar-consumible/modificar-consumible.component';
+import { ModificarInventarioComponent } from './components/modificar-inventario/modificar-inventario.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -53,6 +55,8 @@ const routes: Routes = [
   { path:'alta-inventario', component:AltaInventarioComponent },
   { path:'eliminar-consumible', component:EliminarConsumibleComponent },
   { path:'eliminar-inventario', component:EliminarInventarioComponent },
+  { path:'modificar-consumible', component:ModificarConsumibleComponent },
+  { path:'modificar-inventario', component:ModificarInventarioComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 
