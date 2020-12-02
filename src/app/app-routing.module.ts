@@ -22,6 +22,8 @@ import { CategoriasComponent } from './components/categorias/categorias.componen
 import { ProveedoresComponent } from './components/proveedores/proveedores.component';
 import { DetalleProductoComponent } from './components/detalle-producto/detalle-producto.component';
 import { UbicacionComponent } from './components/ubicacion/ubicacion.component';
+import { AltaConsumbibleComponent } from './components/alta-consumbible/alta-consumbible.component';
+import { AltaInventarioComponent } from './components/alta-inventario/alta-inventario.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -45,6 +47,8 @@ const routes: Routes = [
   { path: 'categorias', component: CategoriasComponent },
   { path: 'proveedores', component: ProveedoresComponent },
   { path: 'consumible-inventario', component: ConsumibleInventarioComponent, canActivate: [AuthGuardService] },
+  { path: 'alta-consumible', component: AltaConsumbibleComponent },
+  { path:'alta-inventario',component:AltaInventarioComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 

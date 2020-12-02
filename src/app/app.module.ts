@@ -33,6 +33,8 @@ import { CategoriasComponent } from './components/categorias/categorias.componen
 import { ProveedoresComponent } from './components/proveedores/proveedores.component';
 import { DetalleProductoComponent } from './components/detalle-producto/detalle-producto.component';
 import { UbicacionComponent } from './components/ubicacion/ubicacion.component';
+import { AltaConsumbibleComponent } from './components/alta-consumbible/alta-consumbible.component';
+import { AltaInventarioComponent } from './components/alta-inventario/alta-inventario.component';
 
 
 @NgModule({
@@ -59,7 +61,9 @@ import { UbicacionComponent } from './components/ubicacion/ubicacion.component';
     CategoriasComponent,
     ProveedoresComponent,
     DetalleProductoComponent,
-    UbicacionComponent
+    UbicacionComponent,
+    AltaConsumbibleComponent,
+    AltaInventarioComponent
   ],
   imports: [
     BrowserModule,
