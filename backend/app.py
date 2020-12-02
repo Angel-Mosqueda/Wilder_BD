@@ -55,6 +55,7 @@ def iniciar_sesion():
                     "apepat": row[2],
                     "apemat": row[3],
                     "rol": row[4],
+                    "foto": row[5],
                     "activo": ord(row[6]),
                     "empresa_id": row[7],
                     "correo": row[8]
