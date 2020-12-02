@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { RequestsService } from 'src/app/services/requests.service';
+import { DomSanitizer } from "@angular/platform-browser"
 
 // API Key: AIzaSyA5XCX6GS2djp8PyY6XY8z7VeziV1DxyQU
 
@@ -11,6 +12,7 @@ import { RequestsService } from 'src/app/services/requests.service';
   styleUrls: ['./detalle-producto.component.css']
 })
 export class DetalleProductoComponent implements OnInit {
+  @ViewChild('embebidoFac', { static: true }) pdf: ElementRef;
   id: any;
   categorias: any;
   producto_info: any;
@@ -26,7 +28,9 @@ export class DetalleProductoComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private _requests: RequestsService,
-    private _fb: FormBuilder
+    private _fb: FormBuilder,
+    public sanitizer: DomSanitizer,
+    private _renderer: Renderer2
   ) { }
 
   ngOnInit(): void {
@@ -132,5 +136,12 @@ export class DetalleProductoComponent implements OnInit {
 
   fileChange(event) {
     this.file = event.target.files.item(0);
+  }
+
+  setpdf(recurso: any) {
+    this._renderer.removeAttribute(this.pdf.nativeElement, "src");
+    setTimeout(() => {
+      this._renderer.setAttribute(this.pdf.nativeElement, "src", recurso)
+    })
   }
 }
