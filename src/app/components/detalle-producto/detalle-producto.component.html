@@ -1,3 +1,21 @@
+<div class="modal fade" id="modalFactura" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalFacturaTitle">Factura</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <embed #embebidoFac [src]="" width="500" height="375">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="p-5">
     <h3>Detalle general del producto</h3>
     <div class="row">
@@ -59,8 +77,6 @@
                     <th rowspan="2">Proveedor</th>
                     <th rowspan="2">Fecha de Compra</th>
                     <th rowspan="2">Mostrar Factura</th>
-                    <th rowspan="2">Mostrar Ubicación
-                    <th>
                 </tr>
                 <tr>
                     <th>Nombre</th>
@@ -79,8 +95,10 @@
                     <td>{{ inv.observaciones }}</td>
                     <td>{{ inv.proveedor }}</td>
                     <td>{{ inv.f_compra }}</td>
-                    <td><button class="btn btn-secondary">Factura</button></td>
-                    <td><button class="btn btn-secondary">Ubicación</button></td>
+                    <td>
+                        <button (click)="this.setpdf('/static/' + inv.archivo_fac);" class="btn btn-secondary"
+                            data-toggle="modal" data-target="#modalFactura">Factura</button>
+                    </td>
                 </tr>
             </table>
             <ng-template #noInventario>
@@ -163,14 +181,15 @@
                     </div>
                     <div class="form-row row justify-content-md-center">
                         <div class="col mt-3">
-                          <input type="file" class="custom-file-input" id="customFileLang" lang="es" formControlName="factura"
-                            class="form-control" [ngClass]="{'is-invalid': submitted && f.factura.errors}"
-                            accept="application/pdf" (change)="fileChange($event)">
-                          <div *ngIf="submitted && f.factura.errors" class="invalid-feedback">
-                            <div *ngIf="f.factura.errors.required">Por favor ingrese un PDF de la factura</div>
-                          </div>
+                            <input type="file" class="custom-file-input" id="customFileLang" lang="es"
+                                formControlName="factura" class="form-control"
+                                [ngClass]="{'is-invalid': submitted && f.factura.errors}" accept="application/pdf"
+                                (change)="fileChange($event)">
+                            <div *ngIf="submitted && f.factura.errors" class="invalid-feedback">
+                                <div *ngIf="f.factura.errors.required">Por favor ingrese un PDF de la factura</div>
+                            </div>
                         </div>
-                      </div>
+                    </div>
                     <br>
                     <div class="card-footer text-center form-group">
                         <button type="submit" class="btn btn-primary mr-3">Enviar</button>
