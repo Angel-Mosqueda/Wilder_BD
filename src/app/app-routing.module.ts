@@ -24,6 +24,8 @@ import { DetalleProductoComponent } from './components/detalle-producto/detalle-
 import { UbicacionComponent } from './components/ubicacion/ubicacion.component';
 import { AltaConsumbibleComponent } from './components/alta-consumbible/alta-consumbible.component';
 import { AltaInventarioComponent } from './components/alta-inventario/alta-inventario.component';
+import { EliminarConsumibleComponent } from './components/eliminar-consumible/eliminar-consumible.component';
+import { EliminarInventarioComponent } from './components/eliminar-inventario/eliminar-inventario.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -48,7 +50,9 @@ const routes: Routes = [
   { path: 'proveedores', component: ProveedoresComponent },
   { path: 'consumible-inventario', component: ConsumibleInventarioComponent, canActivate: [AuthGuardService] },
   { path: 'alta-consumible', component: AltaConsumbibleComponent },
-  { path:'alta-inventario',component:AltaInventarioComponent },
+  { path:'alta-inventario', component:AltaInventarioComponent },
+  { path:'eliminar-consumible', component:EliminarConsumibleComponent },
+  { path:'eliminar-inventario', component:EliminarInventarioComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 
