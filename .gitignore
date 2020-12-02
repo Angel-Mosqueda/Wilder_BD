@@ -8,7 +8,7 @@
 /bazel-out
 
 # dependencies
-/node_modules
+front/node_modules
 
 # profiling files
 chrome-profiler-events*.json
@@ -46,8 +46,9 @@ testem.log
 Thumbs.db
 
 # Build path
-/backend/files/*
-/backend/static/*
-/backend/__pycache__/*
+files/*
+static/*
+__pycache__/*
 nosecomo
 .env
+Wilder_BD.rar
