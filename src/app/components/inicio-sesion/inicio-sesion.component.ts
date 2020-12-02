@@ -59,7 +59,7 @@ export class InicioSesionComponent implements OnInit {
           if (success.exito) {
             Cookies.set('usrinfo', JSON.stringify(success.usrinfo));
             alert(success.desc);
-            this._router.navigate(['/']);
+            window.location.href = '/';
           }
           else
             alert("hubo un error, mensaje del servidor: " + success.desc)
