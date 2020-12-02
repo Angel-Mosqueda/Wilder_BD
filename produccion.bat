@@ -1,1 +1,1 @@
-git add . && git commit -am "Proximo deploy" && git push heroku master
+git add . && git commit -am "Proximo deploy" && git push heroku main
