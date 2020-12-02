@@ -39,6 +39,8 @@ import { EliminarConsumibleComponent } from './components/eliminar-consumible/el
 import { EliminarInventarioComponent } from './components/eliminar-inventario/eliminar-inventario.component';
 import { ModificarConsumibleComponent } from './components/modificar-consumible/modificar-consumible.component';
 import { ModificarInventarioComponent } from './components/modificar-inventario/modificar-inventario.component';
+import { ReporteConsumibleComponent } from './components/reporte-consumible/reporte-consumible.component';
+import { ReporteInventarioComponent } from './components/reporte-inventario/reporte-inventario.component';
 
 
 @NgModule({
@@ -71,7 +73,9 @@ import { ModificarInventarioComponent } from './components/modificar-inventario/
     EliminarConsumibleComponent,
     EliminarInventarioComponent,
     ModificarConsumibleComponent,
-    ModificarInventarioComponent
+    ModificarInventarioComponent,
+    ReporteConsumibleComponent,
+    ReporteInventarioComponent
   ],
   imports: [
     BrowserModule,

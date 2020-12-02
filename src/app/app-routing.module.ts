@@ -28,6 +28,8 @@ import { EliminarConsumibleComponent } from './components/eliminar-consumible/el
 import { EliminarInventarioComponent } from './components/eliminar-inventario/eliminar-inventario.component';
 import { ModificarConsumibleComponent } from './components/modificar-consumible/modificar-consumible.component';
 import { ModificarInventarioComponent } from './components/modificar-inventario/modificar-inventario.component';
+import { ReporteConsumibleComponent } from './components/reporte-consumible/reporte-consumible.component';
+import { ReporteInventarioComponent } from './components/reporte-inventario/reporte-inventario.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -57,6 +59,8 @@ const routes: Routes = [
   { path:'eliminar-inventario', component:EliminarInventarioComponent },
   { path:'modificar-consumible', component:ModificarConsumibleComponent },
   { path:'modificar-inventario', component:ModificarInventarioComponent },
+  { path:'reporte-consumible', component:ReporteConsumibleComponent},
+  { path:'reporte-inventario', component:ReporteInventarioComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 

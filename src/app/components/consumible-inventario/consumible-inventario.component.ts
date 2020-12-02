@@ -30,7 +30,7 @@ export class ConsumibleInventarioComponent implements OnInit {
       this.router.navigate(['/modificar-inventario']);
     }
     if(this.globals.consultas === true){
-      this.router.navigate(['/reporte-producto']);
+      this.router.navigate(['/reporte-inventario']);
     }
   }
 
@@ -46,7 +46,7 @@ export class ConsumibleInventarioComponent implements OnInit {
       this.router.navigate(['/modificar-consumible']);
     }
     if(this.globals.consultas === true){
-      this.router.navigate(['/reporte-producto']);
+      this.router.navigate(['/reporte-consumible']);
     }
   }
 

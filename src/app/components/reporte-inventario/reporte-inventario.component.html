@@ -1,0 +1,117 @@
+<form class="mt-4 mr-2 mb-3">
+    <div class="row">
+        <div class="col-md-8">
+            <button class="btn btn-dark mb-3" [routerLink]="['/revisar-producto']">Atrás</button>
+        </div>
+        <div class="col-md-4 mb-3">
+            <input type="text" class="form-control align-bottom" placeholder="¿Qué Producto Estás Buscando?">
+        </div>
+    </div>
+</form>
+<div class="col mt-5">
+
+    <div>
+        <h3 class="row-md-12 text-center">CONSULTA INVENTARIO</h3>
+    </div>
+
+</div>
+<div class="container-md" style="margin-bottom: 45px;">
+    <div class="row">
+
+        <div class="col-4 col-xl-2 mt-5">
+            <div class="card border-dark mb-3 bg-dark text-white text-align-center">
+                <form [formGroup]="this.form">
+                    <div class="card-header">
+                        <h5>Filtros</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="busqueda">
+                            <div class="form-group">
+                                <h6 class="card-title">Búsqueda directa</h6>
+                                <input type="text" class="form-control" name="busqueda" formControlName="busqueda"
+                                    (change)="buscarQuery()">
+                            </div>
+                        </div>
+
+                        <div id="categoriaConsumible">
+                            <h6 class="card-title">Categoria</h6>
+                            <div class="custom-control custom-checkbox" *ngFor="let categoria of this.categorias">
+                                <input (change)="onCheckboxChange($event); buscarQuery()" class="form-check-input"
+                                    type="checkbox" [value]="categoria.id">
+                                <label class="form-check-label">
+                                    {{ categoria.nombre }}
+                                </label>
+                            </div>
+
+                        </div>
+                        <!-- <div id="sliderCosto">
+                <h6 class="card-title">Costo</h6>
+                <div class="custom-slider">
+                  <input type="number" class="form-control" name="min" value='0.00' step="0.00" min="0.00"><br>
+                  <input type="number" class="form-control" name="max" value='0.00' step="0.00" min="0.00">
+                </div>
+              </div> -->
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <div class="col-xl-10" *ngIf="this.productos; else noproducto">
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Imagen de Referencia</th>
+                        <th scope="col">Descripción</th>
+                        <th scope="col">Registrado por</th>
+                        <th scope="col">Ir a</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let producto of this.productos">
+                        <th scope="row">{{ producto.id }}</th>
+                        <td>{{ producto.nombre }}</td>
+                        <td>
+                            <img class="w-100" src="/static/{{ producto.imagen_referencia }}" alt="" srcset="">
+                        </td>
+                        <td>{{ producto.descripcion }}</td>
+                        <td>{{ producto.usuario_id }}</td>
+                        <td><button type="button" class="btn btn-outline-info"
+                                [routerLink]="['/detalle-producto', producto.id]">Ver</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <ng-template #noproducto>
+            <div>
+                <h3>No existen productos, intenta crear uno.</h3>
+            </div>
+        </ng-template>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="modalConsulta" tabindex="-1" role="dialog" aria-labelledby="consultaModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="consultaModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
