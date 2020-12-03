@@ -117,6 +117,11 @@ export class RequestsService {
     return this.http.post('/add_inventario/' + id_producto, fd);
   }
 
+  /////////// CRUD Mantenimiento
+  createMantenimiento(playload: any, id_producto:Number){
+    return this.http.post('/add_mantenimiento/' + id_producto);
+  }
+
   ///////////// CRUD Consumibles
   getConsumibles() {
     return this.http.get('/get_consumibles/');

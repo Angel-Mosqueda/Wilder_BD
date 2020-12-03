@@ -31,6 +31,7 @@ import { ModificarInventarioComponent } from './components/modificar-inventario/
 import { ReporteConsumibleComponent } from './components/reporte-consumible/reporte-consumible.component';
 import { ReporteInventarioComponent } from './components/reporte-inventario/reporte-inventario.component';
 import { UsuariosComponent } from './components/usuarios/usuarios.component';
+import { MantenimientoProductoComponent } from './components/mantenimiento-producto/mantenimiento-producto.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -63,6 +64,7 @@ const routes: Routes = [
   { path: 'modificar-inventario', component: ModificarInventarioComponent },
   { path: 'reporte-consumible', component: ReporteConsumibleComponent },
   { path: 'reporte-inventario', component: ReporteInventarioComponent },
+  { path: 'mantenimiento-producto/:id', component: MantenimientoProductoComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 
