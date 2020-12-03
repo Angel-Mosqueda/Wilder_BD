@@ -709,13 +709,10 @@ def crear_usuario():
     response = {}
     cur = mysql.connection.cursor()
     try:
-        empresa_id = request.cookies.get('empresa')
-    except:
-        empresa_id = data['EMPRESA_ID']
-    try:
         data = json.loads(request.data)
     except:
         data = json.loads(request.form['datos'])
+    empresa_id = request.cookies.get('empresa') if request.cookies.get('empresa') is not None else data['EMPRESA_ID']
     arch = request.files['file']
     if not allowed_file(arch.filename):
         response['exito'] = False
@@ -736,6 +733,7 @@ def crear_usuario():
     + "'" + data['CORREO'] + "', "
     + "sha2('" + data['PASSWORD'] + "', 512));"
     )
+    import pdb; pdb.set_trace()
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()
