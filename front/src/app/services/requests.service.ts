@@ -37,6 +37,11 @@ export class RequestsService {
     return this.http.post('/add_producto/', fd);
   }
 
+  //Alta solicitud inventario
+  createSolicitud(payload: any) {
+    return this.http.post('/add_solicitud/', payload);
+  }
+
   getProductoInfo(id_producto: any) {
     return this.http.get('/get_producto/' + id_producto);
   }

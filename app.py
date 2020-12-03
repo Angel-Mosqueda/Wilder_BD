@@ -37,18 +37,6 @@ mysql = MySQL(app)
 def send_file(filename): 
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-
-@app.route('/cerrar_sesion/', methods=['GET'])
-def cerrar_sesion():
-    response = {}
-    response = make_response(response)
-    response.delete_cookie('usrinfo')
-    response.delete_cookie('usuario')
-    response.delete_cookie('empresa')
-    response.delete_cookie('logged')
-    return response
-
-
 @app.route('/iniciar/', methods=['POST'])
 def iniciar_sesion():
     response = {}
@@ -104,15 +92,14 @@ def enviar_ok():
     return jsonify(response)
 
 
-################ CRUD EMPRESA ########################
-@app.route('/create_empresa/', methods=['POST'])
+@app.route('/add_empresa/', methods=['POST'])
 def crear_empresa():
     response = {}
     cur = mysql.connection.cursor()
-    data = json.loads(request.data)
-    query = ("INSERT INTO EMPRESA (NOMBRE, RAZSOC) VALUES ('"
-    + data['NOMBRE'] + "', '"
-    + data['RAZSOC'] + "');"
+    query = ("INSERT INTO EMPRESA (NOMBRE,"
+    "RAZSOC) VALUES ("
+    + "'" + request.form['NOMBRE'] + "', "
+    + "'" + request.form['RAZSOC'] + "');"
     )
     cur.execute(query)
     mysql.connection.commit()
@@ -123,21 +110,6 @@ def crear_empresa():
         'id_insertado': last_id
     }
     cur.close()
-
-    response["empresas"] = []
-    cur = mysql.connection.cursor()
-    query = ("SELECT ID, RAZSOC FROM EMPRESA WHERE TIPO IS NULL;")
-    cur.execute(query)
-    mysql.connection.commit()
-    rows = cur.fetchall()
-
-    for empresa in rows:
-        response["empresas"].append({
-            "id": empresa[0],
-            "razon_social": empresa[1]
-        })
-    cur.close()
-    
     return jsonify(response)
 
 
@@ -158,7 +130,6 @@ def obtener_empresas():
     cur.close()
     return response
 
-################ FIN CRUD EMPRESA ####################
 
 ################ CRUD UBICACION ######################
 @app.route('/get_ubicaciones/', methods=['GET'])
@@ -1092,6 +1063,29 @@ def get_mantenimientos():
         counter = counter + 1
     cur.close()
     return jsonify(request)
+
+
+@app.route('/add_solicitud/', methods=['POST'])
+def crear_solicitud():
+    response = {}
+    data = json.loads(request.data)
+    cur = mysql.connection.cursor()
+    query = ("INSERT INTO SOLICITUD (ESTADO,"
+    "SOLICITANTE,INVENTARIO_ID) VALUES ("
+    + "'" + str(data['ESTADO_SOLICITUD']) + "', "
+    + str(data['USUARIO_ID']) + ", "
+    + str(data['INVENTARIO_ID']) + ");"
+    )
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response = {
+        'exito': isinstance(last_id, int),
+        'id_insertado': last_id
+    }
+    cur.close()
+    return jsonify(response)
 
 
 @app.route('/')
