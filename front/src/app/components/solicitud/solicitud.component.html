@@ -20,83 +20,35 @@
   
       <div class="col-4 col-xl-2 mt-5">
         <div class="card border-dark mb-3 bg-dark text-white text-align-center">
-          <form>
+          <form [formGroup]="this.form">
             <div class="card-header">
               <h5>Filtros</h5>
             </div>
             <div class="card-body">
-  
-              <div id="separacion">
-                <div id="statusProducto">
-                  <h6 class="card-title">Status</h6>
-                  <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="checkPrestamo" (click)="checkPrestamoInventarioFunction()">
-                    <label class="custom-control-label" for="checkPrestamo">
-                      <p><small class="align-text-top">En Préstamo</small></p>
-                    </label>
-                  </div>
-  
-                  <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="checkMantenimiento" (click)="checkMantenimientoInventarioFunction()">
-                    <label class="custom-control-label" for="checkMantenimiento">
-                      <p><small class="align-text-top">En Mantenimiento</small></p>
-                    </label>
-                  </div>
-  
-                  <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="checkAlmacen" (click)="checkAlmacenInventarioFunction()">
-                    <label class="custom-control-label" for="checkAlmacen">
-                      <p><small class="align-text-top">En Almacén</small></p>
-                    </label>
-                  </div>
-                </div>
-  
-                <div id="categoriaProducto">
-                  <h6 class="card-title">Categoria</h6>
-                  <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="checkComputacionInventario" (click)="checkComputacionInventarioFunction()">
-                    <label class="custom-control-label" for="checkComputacionInventario">
-                      <p><small class="align-text-top">Computación</small></p>
-                    </label>
-                  </div>
-  
-                  <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="checkHerramientasInventario" (click)="checkHerramientasInventarioFuntion()">
-                    <label class="custom-control-label" for="checkHerramientasInventario">
-                      <p><small class="align-text-top">Herramientas</small></p>
-                    </label>
-                  </div>
-  
-                  <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="checkMaquinariaInventario" (click)="checkMaquinariaInventarioFunction()">
-                    <label class="custom-control-label" for="checkMaquinariaInventario">
-                      <p><small class="align-text-top">Maquinaria</small></p>
-                    </label>
-                  </div>
-  
-                  <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="checkMuebleriaInventario" (click)="checkMuebleriaInventarioFunction()">
-                    <label class="custom-control-label" for="checkMuebleriaInventario">
-                      <p><small class="align-text-top">Muebleria</small></p>
-                    </label>
-                  </div>
-  
-                  <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="checkVehiculosInventario" (click)="checkVehiculosInventarioFunction()">
-                    <label class="custom-control-label" for="checkVehiculosInventario">
-                      <p><small class="align-text-top">Vehículos</small></p>
-                    </label>
-                  </div>
+              <div id="busqueda">
+                <div class="form-group">
+                  <h6 class="card-title">Búsqueda directa</h6>
+                  <input type="text" class="form-control" name="busqueda" formControlName="busqueda" (change)="buscarQuery()">
                 </div>
               </div>
   
-              <div id="sliderCosto">
+              <div id="categoriaConsumible">
+                <h6 class="card-title">Categoria</h6>
+                <div class="custom-control custom-checkbox" *ngFor="let categoria of this.categorias">
+                  <input (change)="onCheckboxChange($event); buscarQuery()" class="form-check-input" type="checkbox" [value]="categoria.id">
+                  <label class="form-check-label">
+                    {{ categoria.nombre }}
+                  </label>
+                </div>
+  
+              </div>
+              <!-- <div id="sliderCosto">
                 <h6 class="card-title">Costo</h6>
                 <div class="custom-slider">
-                  <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options" (click)="sliderCosto()">
-                  </ngx-slider>
+                  <input type="number" class="form-control" name="min" value='0.00' step="0.00" min="0.00"><br>
+                  <input type="number" class="form-control" name="max" value='0.00' step="0.00" min="0.00">
                 </div>
-              </div>
+              </div> -->
   
             </div>
           </form>
@@ -104,29 +56,40 @@
       </div>
   
   
-      <div class="col-xl-10">
+  
+      <div class="col-xl-10" *ngIf="this.productos; else noproducto">
         <table class="table">
           <thead class="thead-dark">
             <tr>
-              <th scope="col">#</th>
+              <th scope="col">ID</th>
               <th scope="col">Nombre</th>
               <th scope="col">Imagen de Referencia</th>
-              <th scope="col">Cantidad</th>
-              <th scope="col">Solicitar</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Registrado por</th>
+              <th scope="col">Ir a</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td><button type="button" class="btn btn-outline-info" data-toggle="modal"
-                  data-target="#modalConsulta">Aceptar</button></td>
+            <tr *ngFor="let producto of this.productos">
+              <th scope="row">{{ producto.id }}</th>
+              <td>{{ producto.nombre }}</td>
+              <td>
+                <img class="w-100" src="/static/{{ producto.imagen_referencia }}" alt="" srcset="">
+              </td>
+              <td>{{ producto.descripcion }}</td>
+              <td>{{ producto.usuario_id }}</td>
+              <td><button type="button" class="btn btn-outline-info" [routerLink]="['/detalle-producto', producto.id]">Ver</button></td>
             </tr>
           </tbody>
         </table>
       </div>
+      <ng-template #noproducto>
+        <div>
+          <h3>No existen productos, intenta crear uno.</h3>
+        </div>
+      </ng-template>
+
+
     </div>
   </div>
   

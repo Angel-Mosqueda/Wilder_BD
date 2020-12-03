@@ -1003,6 +1003,29 @@ def get_mantenimientos():
     return jsonify(request)
 
 
+@app.route('/add_solicitud/', methods=['POST'])
+def crear_solicitud():
+    response = {}
+    data = json.loads(request.data)
+    cur = mysql.connection.cursor()
+    query = ("INSERT INTO SOLICITUD (ESTADO,"
+    "SOLICITANTE,INVENTARIO_ID) VALUES ("
+    + str(data['ESTADO_SOLICITUD']) + ", "
+    + str(data['USUARIO_ID']) + ", "
+    + str(data['INVENTARIO_ID']) + ");"
+    )
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response = {
+        'exito': isinstance(last_id, int),
+        'id_insertado': last_id
+    }
+    cur.close()
+    return jsonify(response)
+
+
 @app.route('/')
 def angular_root():
     return render_template('index.html')
