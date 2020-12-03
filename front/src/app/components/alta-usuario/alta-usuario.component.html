@@ -5,7 +5,7 @@
         <div class="card-body">
             <h3 class="mb-4">Registrarse</h3>
             <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()">
-                <fieldset [disabled]="globals.deshabilitar">
+                <fieldset [disabled]="deshabilitar">
                     <div class="form-row row justify-content-md-center">
                         <div class="col mt-3">
                             <label for="nombres">Nombre(s)</label>
@@ -86,40 +86,30 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="col mt-3 text-center">
-                            <button type="button" class="btn btn-outline-secondary" (click)="agregarEmpresa()">Agregar
-                                Nueva Empresa</button>
-                        </div>
                     </div>
                 </fieldset>
-
-                <div *ngIf="globals.nuevaEmpresa === true else noNuevaEmpresa">
-                    <div class="form-row row justify-content-md-center">
-                        <div class="col mt-3">
-                            <label for="nombreEmpresa">Nombre De La Empresa</label>
-                            <input type="text" class="form-control" id="nombreEmpresa" />
+                <div class="col mt-3 text-center">
+                    <button type="button" class="btn btn-outline-secondary" (click)="agregarEmpresa()">Agregar
+                        Nueva Empresa</button>
+                </div>
+                <div *ngIf="nuevaEmpresa">
+                    <form [formGroup]="this.empresa_form" (submit)="enviarEmpresa()">
+                        <div class="form-row row justify-content-md-center">
+                            <div class="col mt-3">
+                                <label for="nombreEmpresa">Nombre De La Empresa</label>
+                                <input formControlName="nombre" type="text" class="form-control" id="nombreEmpresa" />
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-row row justify-content-md-center">
-                        <div class="col mt-3">
-                            <label for="razSocial">Razon Social</label>
-                            <input type="text" class="form-control" id="razSocial" />
+                        <div class="form-row row justify-content-md-center">
+                            <div class="col mt-3">
+                                <label for="razSocial">Razon Social</label>
+                                <input formControlName="razsoc" type="text" class="form-control" id="razSocial" />
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-row row justify-content-md-center">
-                        <div class="col mt-3">
-                            <label for="razSocial">Razon Social</label>
-                            <input type="text" class="form-control" id="razSocial" />
-                        </div>
-                    </div>
-                    <!--Mapa-->
-                    <section style="text-align: center; margin-top: 20px;">
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m26!1m12!1m3!1d41882.53964366872!2d-102.32721051423955!3d21.898829904203822!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m11!3e6!4m3!3m2!1d21.905959!2d-102.28913209999999!4m5!1s0x8429eef61e160ecb%3A0xfeb58ed8ad121db4!2samerix%20burger!3m2!1d21.9005012!2d-102.3006439!5e0!3m2!1ses-419!2smx!4v1605723665675!5m2!1ses-419!2smx"
-                            width="300" height="250" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
-                    </section>
+                        <button class="btn btn-success mt-3" type="submit">Enviar</button>
+                    </form>
                 </div>
 
                 <ng-template #noNuevaEmpresa>

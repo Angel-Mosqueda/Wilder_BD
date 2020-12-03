@@ -10,12 +10,12 @@ export class RequestsService {
     private http: HttpClient
   ) { }
 
-  getOKServer() {
-    return this.http.get('/get_ok/');
+  cerrarSesion() {
+    return this.http.get('/cerrar_sesion/');
   }
 
-  getEmpresas() {
-    return this.http.get('/get_empresas/');
+  getOKServer() {
+    return this.http.get('/get_ok/');
   }
 
   createUser(payload: any, file?: File) {
@@ -27,10 +27,6 @@ export class RequestsService {
     } else {
       return this.http.post('/add_user/', payload);
     }
-  }
-
-  createEmpresa(payload: any) {
-    return this.http.post('/add_empresa/', payload);
   }
 
   ////////////////// CRUD Producto
@@ -165,5 +161,14 @@ export class RequestsService {
 
   login(payload: any) {
     return this.http.post('/iniciar/', payload);
+  }
+
+  ////////////////// CRUD Empresa
+  crearEmpresa(payload: any) {
+    return this.http.post('/create_empresa/', payload);
+  }
+
+  getEmpresas() {
+    return this.http.get('/get_empresas/');
   }
 }
