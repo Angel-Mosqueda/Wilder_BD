@@ -733,7 +733,6 @@ def crear_usuario():
     + "'" + data['CORREO'] + "', "
     + "sha2('" + data['PASSWORD'] + "', 512));"
     )
-    import pdb; pdb.set_trace()
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()
