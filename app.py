@@ -36,6 +36,18 @@ app = create_app()
 def send_file(filename): 
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+
+@app.route('/cerrar_sesion/', methods=['GET'])
+def cerrar_sesion():
+    response = {}
+    response = make_response(response)
+    response.delete_cookie('usrinfo')
+    response.delete_cookie('usuario')
+    response.delete_cookie('empresa')
+    response.delete_cookie('logged')
+    return response
+
+
 @app.route('/iniciar/', methods=['POST'])
 def iniciar_sesion():
     response = {}
@@ -91,14 +103,15 @@ def enviar_ok():
     return jsonify(response)
 
 
-@app.route('/add_empresa/', methods=['POST'])
+################ CRUD EMPRESA ########################
+@app.route('/create_empresa/', methods=['POST'])
 def crear_empresa():
     response = {}
     cur = mysql.connection.cursor()
-    query = ("INSERT INTO EMPRESA (NOMBRE,"
-    "RAZSOC) VALUES ("
-    + "'" + request.form['NOMBRE'] + "', "
-    + "'" + request.form['RAZSOC'] + "');"
+    data = json.loads(request.data)
+    query = ("INSERT INTO EMPRESA (NOMBRE, RAZSOC) VALUES ('"
+    + data['NOMBRE'] + "', '"
+    + data['RAZSOC'] + "');"
     )
     cur.execute(query)
     mysql.connection.commit()
@@ -109,6 +122,21 @@ def crear_empresa():
         'id_insertado': last_id
     }
     cur.close()
+
+    response["empresas"] = []
+    cur = mysql.connection.cursor()
+    query = ("SELECT ID, RAZSOC FROM EMPRESA WHERE TIPO IS NULL;")
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+
+    for empresa in rows:
+        response["empresas"].append({
+            "id": empresa[0],
+            "razon_social": empresa[1]
+        })
+    cur.close()
+    
     return jsonify(response)
 
 
@@ -129,6 +157,7 @@ def obtener_empresas():
     cur.close()
     return response
 
+################ FIN CRUD EMPRESA ####################
 
 ################ CRUD UBICACION ######################
 @app.route('/get_ubicaciones/', methods=['GET'])
