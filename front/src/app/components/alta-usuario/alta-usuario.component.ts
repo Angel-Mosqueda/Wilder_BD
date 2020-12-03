@@ -19,6 +19,9 @@ export class AltaUsuarioComponent implements OnInit {
   pwd2: String;
   empresa: String;
   empresas: any;
+  nuevaEmpresa: boolean = false;
+  deshabilitar: boolean = false;
+  empresa_form: FormGroup;
   file: any;
 
   formulario: FormGroup;
@@ -53,6 +56,10 @@ export class AltaUsuarioComponent implements OnInit {
       company: ['', Validators.required],
       select_img: ['', Validators.required]
     });
+    this.empresa_form = this.formBuilder.group({
+      nombre: ['', Validators.required],
+      razsoc: ['', Validators.required],
+    });
   }
 
   get f() { return this.formulario.controls; }
@@ -62,9 +69,28 @@ export class AltaUsuarioComponent implements OnInit {
   }
 
   agregarEmpresa() {
-    this.globals.nuevaEmpresa = true;
-    this.globals.deshabilitar = true;
-    
+    this.nuevaEmpresa = !this.nuevaEmpresa;
+    this.deshabilitar = !this.deshabilitar;
+  }
+
+  enviarEmpresa() {
+    this._requestService.crearEmpresa({
+      NOMBRE: this.empresa_form.get('nombre').value,
+      RAZSOC: this.empresa_form.get('razsoc').value
+    }).subscribe(
+      (success: any) => {
+        if (success.exito) {
+          this.empresas = success.empresas;
+          this.nuevaEmpresa = !this.nuevaEmpresa;
+          this.deshabilitar = !this.deshabilitar;
+        } else {
+          alert('Error en el servidor. Mensaje: ' + success.desc);
+        }
+      },
+      (error) => {
+        alert('Error en el servicio, contacta con un administrador,');
+      }
+    );
   }
 
   showPassword1() {
