@@ -1008,12 +1008,12 @@ def crear_solicitud():
     response = {}
     data = json.loads(request.data)
     cur = mysql.connection.cursor()
-    query = ("INSERT INTO SOLICITUD (ESTADO,"
-    "SOLICITANTE,INVENTARIO_ID) VALUES ("
-    + "'" + str(data['ESTADO_SOLICITUD']) + "', "
-    + str(data['USUARIO_ID']) + ", "
-    + str(data['INVENTARIO_ID']) + ");"
-    )
+    query = ("INSERT INTO SOLICITUD (FECHA_CREACION"
+    ",ESTADO,SOLICITANTE,INVENTARIO_ID) VALUES (" 
+    +"now(),"
+    + " '" + str(data['ESTADO_SOLICITUD']) 
+    + "', " + str(data['USUARIO_ID']) 
+    + ", " + str(data['INVENTARIO_ID']) + ");")
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()
