@@ -27,10 +27,11 @@ def create_app():
     app.config['MYSQL_DB'] = os.getenv('BD_BD')
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLER
 
-    mysql = MySQL(app)
     return app
 
 app = create_app()
+
+mysql = MySQL(app)
 
 @app.route('/static/<path:filename>') 
 def send_file(filename): 
