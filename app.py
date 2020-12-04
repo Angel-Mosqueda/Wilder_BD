@@ -474,6 +474,7 @@ def obtener_productos():
     return response
 ###################### FIN FILTRO ######################
 
+###################### INICIO CATEGORIA ################
 @app.route('/get_categorias/', methods=['GET'])
 def obtener_categorias():
     response = {}
@@ -576,8 +577,178 @@ def crear_categorias():
         })
     cur.close()
     return response
+###################### FIN CATEGORIA ######################
 
-######################### INICIO CONSUMIBLE #####################
+###################### INICIO INCIDENCIA ################
+@app.route('/get_incidencias/', methods=['GET'])
+@app.route('/get_incidencias/<inventario_id>', methods=['GET'])
+def obtener_incidencias(inventario_id = None):
+    response = {}
+    response["incidencias"] = []
+    empresa_id = int(request.cookies.get('empresa'))
+
+    cur = mysql.connection.cursor()
+    if inventario_id is not None:
+        query = ("SELECT I.ID, U.NOMBRE, PR.NOMBRE, INV.NSERIE, I.DESCRIPCION, I.FECHA, U.ID FROM INCIDENCIA I,"
+        " INVENTARIO INV, PRODUCTO PR, USUARIO U WHERE I.ARTICULO = INV.ID AND "
+        " PR.ID = INV.PRODUCTO_ID AND I.USUARIO_ID = U.ID AND I.ARTICULO = " + str(inventario_id))
+    else:
+        query = ("SELECT I.ID, U.NOMBRE, PR.NOMBRE, INV.NSERIE, I.DESCRIPCION, I.FECHA, U.ID FROM INCIDENCIA I,"
+        " INVENTARIO INV, PRODUCTO PR, USUARIO U WHERE I.ARTICULO = INV.ID AND "
+        " PR.ID = INV.PRODUCTO_ID AND I.USUARIO_ID = U.ID")
+
+    cur.execute(query)
+    mysql.connection.commit()
+
+    rows = cur.fetchall()
+    for incidencia in rows:
+        response["incidencias"].append({
+            "id": incidencia[0],
+            "nombre": incidencia[1],
+            "producto": incidencia[2],
+            "nserie": incidencia[3],
+            "descripcion": incidencia[4],
+            "fecha": incidencia[5],
+            "usrid": incidencia[6]
+        })
+
+    if len(response['incidencias']) == 0:
+        response['exito'] = False
+        response['desc'] = "No existen incidencias, intenta creando unas."
+    else:
+        response['exito'] = True
+    cur.close()
+    return response
+
+
+@app.route('/update_incidencia/', methods=['POST'])
+@app.route('/update_incidencia/<inventario_id>', methods=['POST'])
+def actualizar_incidencias(inventario_id = None):
+    response = {}
+    response["incidencias"] = []
+    cur = mysql.connection.cursor()
+    data = json.loads(request.data)
+    query = ("UPDATE INCIDENCIA SET DESCRIPCION = '" + data['DESCRIPCION'] +
+    "', FECHA = '" + data['FECHA'] + "' WHERE ID = " + data['ID'] + ";")
+
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response['exito'] = isinstance(last_id, int)
+    
+    cur = mysql.connection.cursor()
+    if inventario_id is not None:
+        query = ("SELECT I.ID, U.NOMBRE, PR.NOMBRE, INV.NSERIE, I.DESCRIPCION, I.FECHA, U.ID FROM INCIDENCIA I,"
+        " INVENTARIO INV, PRODUCTO PR, USUARIO U WHERE I.ARTICULO = INV.ID AND "
+        " PR.ID = INV.PRODUCTO_ID AND I.USUARIO_ID = U.ID AND I.ARTICULO = " + str(inventario_id))
+    else:
+        query = ("SELECT I.ID, U.NOMBRE, PR.NOMBRE, INV.NSERIE, I.DESCRIPCION, I.FECHA, U.ID FROM INCIDENCIA I,"
+        " INVENTARIO INV, PRODUCTO PR, USUARIO U WHERE I.ARTICULO = INV.ID AND "
+        " PR.ID = INV.PRODUCTO_ID AND I.USUARIO_ID = U.ID")
+    cur.execute(query)
+    mysql.connection.commit()
+
+    rows = cur.fetchall()
+    for incidencia in rows:
+        response["incidencias"].append({
+            "id": incidencia[0],
+            "nombre": incidencia[1],
+            "producto": incidencia[2],
+            "nserie": incidencia[3],
+            "descripcion": incidencia[4],
+            "fecha": incidencia[5],
+            "usrid": incidencia[6]
+        })
+    cur.close()
+    return response
+
+
+@app.route('/delete_incidencia/<id>/', methods=['GET'])
+@app.route('/delete_incidencia/<id>/<inventario_id>', methods=['GET'])
+def eliminar_incidencias(id, inventario_id = None):
+    response = {}
+
+    cur = mysql.connection.cursor()
+    query = "DELETE FROM INCIDENCIA WHERE ID = " + str(id) + ";"
+    
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    response["exito"] = True
+    cur.close()
+
+    cur = mysql.connection.cursor()
+    if inventario_id is not None:
+        query = ("SELECT I.ID, U.NOMBRE, PR.NOMBRE, INV.NSERIE, I.DESCRIPCION, I.FECHA, U.ID FROM INCIDENCIA I,"
+        " INVENTARIO INV, PRODUCTO PR, USUARIO U WHERE I.ARTICULO = INV.ID AND "
+        " PR.ID = INV.PRODUCTO_ID AND I.USUARIO_ID = U.ID AND I.ARTICULO = " + str(inventario_id))
+    else:
+        query = ("SELECT I.ID, U.NOMBRE, PR.NOMBRE, INV.NSERIE, I.DESCRIPCION, I.FECHA, U.ID FROM INCIDENCIA I,"
+        " INVENTARIO INV, PRODUCTO PR, USUARIO U WHERE I.ARTICULO = INV.ID AND "
+        " PR.ID = INV.PRODUCTO_ID AND I.USUARIO_ID = U.ID")
+    cur.execute(query)
+    mysql.connection.commit()
+
+    rows = cur.fetchall()
+    response["incidencias"] = []
+    for incidencia in rows:
+        response["incidencias"].append({
+            "id": incidencia[0],
+            "nombre": incidencia[1],
+            "producto": incidencia[2],
+            "nserie": incidencia[3],
+            "descripcion": incidencia[4],
+            "fecha": incidencia[5],
+            "usrid": incidencia[6]
+        })
+    cur.close()
+    return response
+
+
+@app.route('/create_incidencia/<producto_id>', methods=['POST'])
+def crear_incidencias(producto_id):
+    response = {}
+    response["incidencias"] = []
+    usuario_id = int(request.cookies.get('usuario'))
+
+    cur = mysql.connection.cursor()
+    data = json.loads(request.data)
+    query = ("INSERT INTO INCIDENCIA (USUARIO_ID, ARTICULO, DESCRIPCION, FECHA) VALUES ("
+       + str(usuario_id) + ", "
+       + str(producto_id) + ", "
+       + "'" + data['DESCRIPCION'] + "', "
+       + "'" + str(data['FECHA']) + "' "
+    ");")
+    
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response['exito'] = isinstance(last_id, int)
+
+    cur = mysql.connection.cursor()
+    query = ("SELECT I.ID, U.NOMBRE, PR.NOMBRE, INV.NSERIE, I.DESCRIPCION, I.FECHA, U.ID FROM INCIDENCIA I,"
+        " INVENTARIO INV, PRODUCTO PR, USUARIO U WHERE I.ARTICULO = INV.ID AND "
+        " PR.ID = INV.PRODUCTO_ID AND I.USUARIO_ID = U.ID AND I.ARTICULO = " + str(inventario_id))
+    cur.execute(query)
+    mysql.connection.commit()
+
+    rows = cur.fetchall()
+    for incidencia in rows:
+        response["incidencias"].append({
+            "id": incidencia[0],
+            "nombre": incidencia[1],
+            "producto": incidencia[2],
+            "nserie": incidencia[3],
+            "descripcion": incidencia[4],
+            "fecha": incidencia[5]
+        })
+    cur.close()
+    return response
+###################### FIN INCIDENCIA ######################
+
+######################### INICIO CONSUMIBLE ###############
 @app.route('/get_consumibles/', methods=['GET'])
 def obtener_consumibles():
     response = {}

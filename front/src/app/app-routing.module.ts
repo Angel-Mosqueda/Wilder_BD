@@ -33,6 +33,7 @@ import { ReporteInventarioComponent } from './components/reporte-inventario/repo
 import { UsuariosComponent } from './components/usuarios/usuarios.component';
 import { ReporteGraficasComponent } from './components/reporte-graficas/reporte-graficas.component';
 import { MantenimientoProductoComponent } from './components/mantenimiento-producto/mantenimiento-producto.component';
+import { IncidenciasComponent } from './components/incidencias/incidencias.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -59,6 +60,7 @@ const routes: Routes = [
   { path: 'consumible-inventario', component: ConsumibleInventarioComponent, canActivate: [AuthGuardService] },
   { path: 'alta-consumible', component: AltaConsumbibleComponent },
   { path: 'alta-inventario', component: AltaInventarioComponent },
+  { path: 'incidencias/:id', component: IncidenciasComponent },
   { path: 'eliminar-consumible', component: EliminarConsumibleComponent },
   { path: 'eliminar-inventario', component: EliminarInventarioComponent },
   { path: 'modificar-consumible', component: ModificarConsumibleComponent },

@@ -172,6 +172,26 @@ export class RequestsService {
     return this.http.get('/delete_consumible/' + id);
   }
 
+  ///////////// CRUD Incidencias
+  getIncidencias(inventario_id) {
+    return this.http.get('/get_incidencias/' + inventario_id);
+  }
+
+  updateIncidencia(payload: any, inventario_id?: any) {
+    if(inventario_id)
+      return this.http.post('/update_incidencia/' + inventario_id, payload);
+    else
+      return this.http.post('/update_incidencia/', payload);
+  }
+
+  crearIncidencia(payload: any, inventario_id) {
+    return this.http.post('/create_incidencia/' + inventario_id, payload)
+  }
+
+  eliminarIncidencia(id: any) {
+    return this.http.get('/delete_incidencia/' + id);
+  }
+
   ///////////// Filtro Inventario Proveedores
   obtenerProductos(checks: any, filtro: any) {
     console.log(checks);
