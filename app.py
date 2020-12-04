@@ -1450,23 +1450,92 @@ def crear_solicitud():
     return jsonify(response)
 
 
+###################   AGREGAR SOLICITUDES PARTE 2   #####################
+@app.route('/add_solicitudP2/<id_revpor>+<id_solicitud>', methods=['GET'])
+def crear_solicitudP2(id_revpor, id_solicitud):
+    response = {}
+    cur = mysql.connection.cursor()
+    query = ("UPDATE SOLICITUD SET REVISADO_POR = " + str(id_revpor) +", FECHA_REVISION = NOW() "
+    ", ESTADO = '1' WHERE ID = " + str(id_solicitud) +";" )
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response = {
+        'exito': isinstance(last_id, int),
+        'id_insertado': last_id
+    }
+    cur.close()
+    return jsonify(response)
+
+
+###################   AGREGAR SOLICITUDES PARTE 3   #####################
+@app.route('/add_solicitudP3/<observaciones>+<id_solicitud>', methods=['GET'])
+def crear_solicitudP3(observaciones, id_solicitud):
+    response = {}
+    cur = mysql.connection.cursor()
+    query = ("UPDATE SOLICITUD SET OBSERVACIONES = '" + str(observaciones) +"', "
+    "ESTADO = '0' WHERE ID = " + str(id_solicitud) +";" )
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response = {
+        'exito': isinstance(last_id, int),
+        'id_insertado': last_id
+    }
+    cur.close()
+    return jsonify(response)
+
+
+
+
+
+###################   ACTUALIZAR PRODUCTO   #####################
+@app.route('/upp_prestamo/<id_prestamo>', methods=['GET'])
+def update_prestamo(id_prestamo):
+    response = {}
+    cur = mysql.connection.cursor()
+    query = ("UPDATE PRESTAMO SET FECHA_REGRESO = NOW(), "
+    "ESTADO = '0' WHERE ID = " + str(id_prestamo) +";" )
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response = {
+        'exito': isinstance(last_id, int),
+        'id_insertado': last_id
+    }
+    cur.close()
+    return jsonify(response)
+
+
+#########################################################################
+
 
 @app.route('/get_solicitudes/', methods=['GET'])
 def obtener_solicitudes():
     response = {}
     response["solicitud"] = []
     cur = mysql.connection.cursor()
-    query = ("SELECT ID, ESTADO, SOLICITANTE, FECHA_CREACION, INVENTARIO_ID FROM SOLICITUD;")
+    query = ("SELECT S.ID, S.ESTADO, S.SOLICITANTE, S.FECHA_CREACION, S.INVENTARIO_ID, U.NOMBRE, U.APEPAT, P.NOMBRE, "
+    " I.NSERIE, I.ID FROM SOLICITUD S, USUARIO U, PRODUCTO P, INVENTARIO I  WHERE S.SOLICITANTE = U.ID AND "
+    " I.ID = S.INVENTARIO_ID AND P.ID = I.PRODUCTO_ID AND S.ESTADO = '4';")
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()
     for solicitud in rows:
         response["solicitud"].append({
-            "id": solicitud[0],
-            "estado": solicitud[1],
-            "solicitante": solicitud[2],
-            "fecha_creacion": solicitud[3],
-            "inventario_id": solicitud[4]
+            "sol_id": solicitud[0],
+            "sol_estado": solicitud[1],
+            "sol_solicitante": solicitud[2],
+            "sol_fecha_creacion": solicitud[3],
+            "sol_inventario_id": solicitud[4],
+            "usr_nombre": solicitud[5],
+            "usr_apepat": solicitud[6],
+            "prod_nombre": solicitud[7],
+            "inv_nserie": solicitud[8],
+            "inv_id": solicitud[9]
         })
     cur.close()
     return response
@@ -1478,7 +1547,7 @@ def obtener_productos_sin_sol():
     response = {}
     response["productos"] = []
     cur = mysql.connection.cursor()
-    query = ("SELECT I.ID, I.NSERIE, P.ID, P.NOMBRE, P.IMAGEN_REFERENCIA FROM INVENTARIO I, PRODUCTO P WHERE I.PRODUCTO_ID=P.ID AND I.ESTADO = 1;")
+    query = ("SELECT I.ID, I.NSERIE, P.ID, P.NOMBRE, P.IMAGEN_REFERENCIA FROM INVENTARIO I, PRODUCTO P WHERE I.PRODUCTO_ID=P.ID AND I.ESTADO = 0;")
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()
@@ -1494,11 +1563,34 @@ def obtener_productos_sin_sol():
     return response
 
 
-@app.route('/upp_estado/<id_producto>', methods=['GET'])
-def update_estado(id_producto):
+@app.route('/upp_estado/<id_producto>+<val_estado>', methods=['GET'])
+def update_estado(id_producto,val_estado):
     response = {}
     cur = mysql.connection.cursor()
-    query = "UPDATE INVENTARIO SET ESTADO = 4 WHERE ID = " + str(id_producto) + ";"
+    query = "UPDATE INVENTARIO SET ESTADO = " + str(val_estado) + " WHERE ID = " + str(id_producto) + ";"
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response = {
+        'exito': isinstance(last_id, int),
+        'id_insertado': last_id
+    }
+    cur.close()
+    return response
+
+@app.route('/add_prestamo/', methods=['POST'])
+def crear_prestamo():
+    response = {}
+    data = json.loads(request.data)
+    cur = mysql.connection.cursor()
+    query = ("INSERT INTO PRESTAMO (ESTADO, SOLICITANTE"
+    ", PRESTADOR,FECHA_ESTIMADA,INVENTARIO_ID) VALUES (" 
+    + " '" + str(data['ESTADO'])
+    + "', " + str(data['SOLICITANTE']) 
+    + ", " + str(data['PRESTADOR']) 
+    + ", '" + str(data['FECHA_ESTIMADA']) 
+    + "', " + str(data['INVENTARIO_ID']) + ");")
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()
@@ -1509,6 +1601,36 @@ def update_estado(id_producto):
     }
     cur.close()
     return jsonify(response)
+
+
+
+@app.route('/get_prestamos/', methods=['GET'])
+def obtener_prestamos():
+    response = {}
+    response["prestamos"] = []
+    cur = mysql.connection.cursor()
+    query = ("SELECT PREST.ID, U.NOMBRE, U.APEPAT, PROD.NOMBRE, S.FECHA_REVISION, S.ID, "
+    "I.NSERIE, I.ID FROM PRESTAMO PREST, INVENTARIO I, PRODUCTO PROD, USUARIO U, SOLICITUD S "
+    "WHERE I.PRODUCTO_ID = PROD.ID AND I.ESTADO = 1 AND U.ID = PREST.SOLICITANTE AND "
+    "S.INVENTARIO_ID = I.ID AND PREST.INVENTARIO_ID = I.ID;")
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    for prestamos in rows:
+        response["prestamos"].append({
+            "prest_id": prestamos[0],
+            "usr_nombre": prestamos[1],
+            "usr_apepat": prestamos[2],
+            "prod_nombre": prestamos[3],
+            "sol_fecha_revision": prestamos[4],
+            "sol_id": prestamos[5],
+            "inv_nserie": prestamos[6],
+            "inv_id": prestamos[7]
+        })
+    cur.close()
+    return response
+
+
 
 
 @app.route('/')

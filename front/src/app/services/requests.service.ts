@@ -42,6 +42,20 @@ export class RequestsService {
     return this.http.post('/add_solicitud/', payload);
   }
 
+  //Agregar campos restantes de solicitud parte 2
+  createSolicitudP2(usr_id: any, sol_id: any) {
+    return this.http.get('/add_solicitudP2/' + usr_id + '+' + sol_id);
+  }
+
+  createSolicitudP3(obs: any, sol_id: any) {
+    return this.http.get('/add_solicitudP3/' + obs + '+' + sol_id);
+  }
+
+  updateInventario(id_sol: any) {
+    return this.http.get('/upp_prestamo/' + id_sol );
+  }
+
+
   //Obtener Solicitud Inventario
   getSolicitud(){
     return this.http.get('/get_solicitudes/');
@@ -56,10 +70,19 @@ export class RequestsService {
     return this.http.get('/get_producto/' + id_producto);
   }
 
-  updateInvEst(id_inventario: any) {
-    return this.http.get('/upp_estado/' + id_inventario);
+  updateInvEst(id_inventario: any, val_estado: any) {
+    return this.http.get('/upp_estado/' + id_inventario + '+' + val_estado);
   }
 
+
+  //Insertar prestamo
+  createPrestamo(payload: any) {
+    return this.http.post('/add_prestamo/', payload);
+  }
+
+  getPrestamos(){
+    return this.http.get('/get_prestamos/');
+  }
 
 
   ///////////// CRUD Categorias

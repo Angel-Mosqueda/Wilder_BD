@@ -13,23 +13,19 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 })
 export class PrestamoProductoComponent implements OnInit {
   public solicitudes: any;
-
-
-
+  public prestamos: any;
   globals: Globals;
   filter: any = {};
-  public categorias: any;
-  public form: FormGroup
-  public form2: FormGroup
+  public form: FormGroup;
+  public form2: FormGroup;
   submitted = false;
-  public productos: any;
-  inventario: any;
-
-  idProducto: number; 
-  idProductoInv: number;
-
   usrinfo = null;
   _authService = new AuthService;
+  date: Date;
+  observaciones: string;
+  indexVar: number;
+  indexVarP: number;
+  
 
   constructor(
     globals: Globals,
@@ -41,7 +37,15 @@ export class PrestamoProductoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.form = this._fb.group({
+      fechaEsperada: ['', Validators.required]
+    });
+    this.form2 = this._fb.group({
+      observacionesTA: ['', Validators.required]
+    });
+    this.indexVar = null;
+    this.indexVarP = null;
+    this.usrinfo = this._authService.getInfo();
     this._requests.getSolicitud().subscribe(
       (response: any) => {
         this.solicitudes = response.solicitud;
@@ -52,30 +56,133 @@ export class PrestamoProductoComponent implements OnInit {
       }
     );
 
+    this._requests.getPrestamos().subscribe(
+      (response: any) => {
+        this.prestamos = response.prestamos;
+        console.log(this.prestamos);
+      },
+      (error) => {
+        alert("Error pidiendo las empresas");
+      }
+    );
   }
 
+  get f() {​​ return this.form.controls; }​​
 
-  public obtenerID(id_producto: number){
-      this.idProducto = id_producto;
-      this._requests.getProductoInfo(this.idProducto).subscribe(
-        (success: any) => {
-          if (success.exito) {
-            this.inventario = success.inventario;
-            console.log(this.inventario);
-            this.idProductoInv = this.inventario[0].id;
-            console.log("id inv " + this.idProductoInv);
-          } else {
-            this.categorias = null;
-            alert('Error en el servidor. Mensaje: ' + success.desc);
-          }
-        },
-        (error) => {
-          this.categorias = null;
-          alert('Error en el servicio, contacta con un administrador.');
+  get g() {​​ return this.form2.controls; }​​
+
+  index(idx: number){
+    this.indexVar = idx;
+    console.log(this.indexVar);
+  }
+
+  indexP(idxp: number){
+    this.indexVarP = idxp;
+    console.log(this.indexVarP);
+  }
+
+  aceptarSolicitud(){
+    console.log(this.form.get('fechaEsperada').value);
+    console.log(this.usrinfo['id'] + "  " + this.solicitudes[this.indexVar]['sol_id'] );
+    console.log(this.solicitudes[this.indexVar]);
+    this._requests.createSolicitudP2(this.usrinfo['id'], this.solicitudes[this.indexVar]['sol_id']).subscribe(
+      (success: any) => {
+        if (success.exito) {
+          console.log(this.usrinfo['id'] + "  " + this.solicitudes[this.indexVar]['sol_id']);
+        } else {
+          alert('error en el registro, mensaje del server: ' + success.desc);
         }
-      )
+      },
+      (error) => {
+        alert("Error en el servidor.")
+      }
+    );
+
+    this._requests.updateInvEst(this.solicitudes[this.indexVar]['inv_id'], 1).subscribe(
+      (success: any) => {
+        if (success.exito) {
+          console.log("exito")
+        } else {
+          alert('error en el registro, mensaje del server: ' + success.desc);
+        }
+      },
+      (error) => {
+        alert("Error en el servidor.")
+      }
+    );
+
+
+    this._requests.createPrestamo({
+      'ESTADO': 1,
+      'SOLICITANTE': this.solicitudes[this.indexVar]['sol_solicitante'],
+      'PRESTADOR': this.usrinfo['id'],
+      'FECHA_ESTIMADA': this.form.get('fechaEsperada').value,
+      'INVENTARIO_ID': this.solicitudes[this.indexVar]['inv_id']
+    }).subscribe(
+      (success: any) => {
+        if (success.exito) {
+          console.log("prestamo con exito")
+          alert("Solicitud registrada exitosamente.");
+          this.router.navigate(['/']);
+        } else {
+          alert('error en el registro, mensaje del server: ' + success.desc);
+        }
+      },
+      (error) => {
+        alert("Error en el servidor.")
+      }
+    );
   }
 
- 
+
+
+  aceptarDevolucion(){
+    console.log("prueba " + this.indexVarP);
+
+    console.log(this.form2.get('observacionesTA').value);
+    console.log(this.prestamos[this.indexVarP]['sol_id']);
+    console.log(this.prestamos[this.indexVarP]['inv_id']);
+    this._requests.createSolicitudP3(this.form2.get('observacionesTA').value, this.prestamos[this.indexVarP]['sol_id']).subscribe(
+      (success: any) => {
+        if (success.exito) {
+          console.log("Exito");
+        } else {
+          alert('error en el registro, mensaje del server: ' + success.desc);
+        }
+      },
+      (error) => {
+        alert("Error en el servidor.")
+      }
+    );
+
+
+    this._requests.updateInvEst(this.prestamos[this.indexVarP]['inv_id'], 0).subscribe(
+      (success: any) => {
+        if (success.exito) {
+          console.log("exito")
+        } else {
+          alert('error en el registro, mensaje del server: ' + success.desc);
+        }
+      },
+      (error) => {
+        alert("Error en el servidor.")
+      }
+    );
+
+
+    this._requests.updateInventario(this.prestamos[this.indexVarP]['prest_id']).subscribe(
+      (success: any) => {
+        if (success.exito) {
+          alert("Solicitud registrada exitosamente.");
+          this.router.navigate(['/']);
+        } else {
+          alert('error en el registro, mensaje del server: ' + success.desc);
+        }
+      },
+      (error) => {
+        alert("Error en el servidor.")
+      }
+    );
+  }
 
 }
