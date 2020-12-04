@@ -51,6 +51,10 @@ export class RequestsService {
     return this.http.get('/add_solicitudP3/' + obs + '+' + sol_id);
   }
 
+  updateInventario(id_sol: any) {
+    return this.http.get('/upp_prestamo/' + id_sol );
+  }
+
 
   //Obtener Solicitud Inventario
   getSolicitud(){

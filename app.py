@@ -1282,6 +1282,28 @@ def crear_solicitudP3(observaciones, id_solicitud):
     return jsonify(response)
 
 
+
+
+
+###################   ACTUALIZAR PRODUCTO   #####################
+@app.route('/upp_prestamo/<id_prestamo>', methods=['GET'])
+def update_prestamo(id_prestamo):
+    response = {}
+    cur = mysql.connection.cursor()
+    query = ("UPDATE PRESTAMO SET FECHA_REGRESO = NOW(), "
+    "ESTADO = '0' WHERE ID = " + str(id_prestamo) +";" )
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response = {
+        'exito': isinstance(last_id, int),
+        'id_insertado': last_id
+    }
+    cur.close()
+    return jsonify(response)
+
+
 #########################################################################
 
 
@@ -1382,7 +1404,7 @@ def obtener_prestamos():
     response["prestamos"] = []
     cur = mysql.connection.cursor()
     query = ("SELECT PREST.ID, U.NOMBRE, U.APEPAT, PROD.NOMBRE, S.FECHA_REVISION, S.ID, "
-    "I.NSERIE FROM PRESTAMO PREST, INVENTARIO I, PRODUCTO PROD, USUARIO U, SOLICITUD S "
+    "I.NSERIE, I.ID FROM PRESTAMO PREST, INVENTARIO I, PRODUCTO PROD, USUARIO U, SOLICITUD S "
     "WHERE I.PRODUCTO_ID = PROD.ID AND I.ESTADO = 1 AND U.ID = PREST.SOLICITANTE AND "
     "S.INVENTARIO_ID = I.ID AND PREST.INVENTARIO_ID = I.ID;")
     cur.execute(query)
@@ -1396,7 +1418,8 @@ def obtener_prestamos():
             "prod_nombre": prestamos[3],
             "sol_fecha_revision": prestamos[4],
             "sol_id": prestamos[5],
-            "inv_nserie": prestamos[6]
+            "inv_nserie": prestamos[6],
+            "inv_id": prestamos[7]
         })
     cur.close()
     return response

@@ -141,10 +141,40 @@ export class PrestamoProductoComponent implements OnInit {
 
     console.log(this.form2.get('observacionesTA').value);
     console.log(this.prestamos[this.indexVarP]['sol_id']);
+    console.log(this.prestamos[this.indexVarP]['inv_id']);
     this._requests.createSolicitudP3(this.form2.get('observacionesTA').value, this.prestamos[this.indexVarP]['sol_id']).subscribe(
       (success: any) => {
         if (success.exito) {
           console.log("Exito");
+        } else {
+          alert('error en el registro, mensaje del server: ' + success.desc);
+        }
+      },
+      (error) => {
+        alert("Error en el servidor.")
+      }
+    );
+
+
+    this._requests.updateInvEst(this.prestamos[this.indexVarP]['inv_id'], 0).subscribe(
+      (success: any) => {
+        if (success.exito) {
+          console.log("exito")
+        } else {
+          alert('error en el registro, mensaje del server: ' + success.desc);
+        }
+      },
+      (error) => {
+        alert("Error en el servidor.")
+      }
+    );
+
+
+    this._requests.updateInventario(this.prestamos[this.indexVarP]['prest_id']).subscribe(
+      (success: any) => {
+        if (success.exito) {
+          alert("Solicitud registrada exitosamente.");
+          this.router.navigate(['/']);
         } else {
           alert('error en el registro, mensaje del server: ' + success.desc);
         }
