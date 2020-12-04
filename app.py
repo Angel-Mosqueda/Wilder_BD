@@ -151,39 +151,74 @@ def reportes(tiempo):
     cur.close()
     
     cur = mysql.connection.cursor()
-    cur.callproc('REPORTE_CONTEO_INCIDENCIA', [empresa_id, tiempo])
+    query = ("SELECT REPORTE_CONTEO_INCIDENCIA("
+    + str(empresa_id) + ", " + str(tiempo) +
+    ");")
+    cur.execute(query)
+    mysql.connection.commit()
     row_inc = cur.fetchone()
     cur.close()
-    cur = mysql.connection.cursor()
-    cur.callproc('REPORTE_CONTEO_MTTO', [empresa_id, tiempo])
-    row_mtto = cur.fetchone()
-    cur.close()
-    cur.callproc('REPORTE_CONTEO_SOLICITUD', [empresa_id, tiempo])
-    row_sol = cur.fetchone()
-    cur.close()
-    cur.callproc('REPORTE_CONTEO_PRESTAMO', [empresa_id, tiempo])
-    row_prest = cur.fetchone()
-    cur.close()
-    response["reportes"].append({
-        "incidencias": row_inc,
-        "mantenimientos": row_mtto,
-        "solicitudes": row_sol,
-        "prestamos": row_prest
-    })
 
     cur = mysql.connection.cursor()
-    cur.callproc('CHART_DINERO_INV', [empresa_id, tiempo])
-    row_inv = cur.fetchone()
-    cur.close()
-    cur = mysql.connection.cursor()
-    cur.callproc('CHART_DINERO_MTTO', [empresa_id, tiempo])
+    query = ("SELECT REPORTE_CONTEO_MTTO("
+    + str(empresa_id) + ", " + str(tiempo) +
+    ");")
+    cur.execute(query)
+    mysql.connection.commit()
     row_mtto = cur.fetchone()
     cur.close()
-    response["dinero"].append({
-        "inventario": row_inv,
-        "mantenimiento": row_mtto
-    })
+    
+    cur = mysql.connection.cursor()
+    query = ("SELECT REPORTE_CONTEO_SOLICITUD("
+    + str(empresa_id) + ", " + str(tiempo) +
+    ");")
+    cur.execute(query)
+    mysql.connection.commit()
+    row_sol = cur.fetchone()
+    cur.close()
+
+    cur = mysql.connection.cursor()
+    query = ("SELECT REPORTE_CONTEO_PRESTAMO("
+    + str(empresa_id) + ", " + str(tiempo) +
+    ");")
+    cur.execute(query)
+    mysql.connection.commit()
+    row_prest = cur.fetchone()
+    cur.close()
+
+    response["reportes"] = {}
+    response["reportes"] = {
+        "incidencias": row_inc[0],
+        "mantenimientos": row_mtto[0],
+        "solicitudes": row_sol[0],
+        "prestamos": row_prest[0]
+    }
+
+    cur = mysql.connection.cursor()
+    query = ("SELECT CHART_DINERO_INV("
+    + str(empresa_id) + ", " + str(tiempo) +
+    ");")
+    cur.execute(query)
+    mysql.connection.commit()
+    row_inv = cur.fetchone()
+    cur.close()
+    
+    cur = mysql.connection.cursor()
+    query = ("SELECT CHART_DINERO_MTTO("
+    + str(empresa_id) + ", " + str(tiempo) +
+    ");")
+    cur.execute(query)
+    mysql.connection.commit()
+    row_mtto = cur.fetchone()
+    cur.close()
+
+    response["dinero"] = {}
+    response["dinero"] = {
+        "inventario": row_inv[0],
+        "mantenimiento": row_mtto[0]
+    }
     response['exito'] = True
+    return response
 
 ################ FIN REPORTES ######################
 
@@ -1191,6 +1226,36 @@ def detalle_articulo_inventario():
     return jsonify(response)
 
 
+def get_mantenimientos():
+    request = {}
+    request["mantenimientos"] = []
+    cur = mysql.connection.cursor()
+    query = ("SELECT PROVEEDOR_MTTO, COSTO, DESCRIPCION, F_INICIO, F_FINAL"
+    " FROM MANTENIMIENTO WHERE INVENTARIO_ID = '" + request.args.get("id_inv")
+    + "';"
+    )
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    counter = 0
+    for i in rows:
+        query = ("SELECT RAZSOC FROM EMPRESA WHERE ID = " + i[0]
+        )
+        cur.execute(query)
+        mysql.connection.commit()
+        row = cur.fetchone()
+        response["mantenimientos"][counter] = {
+            "proveedor": row[0],
+            "costo": i[1],
+            "descripcion": i[2],
+            "f_inicio": i[3],
+            "f_final": i[4]
+        }
+        counter = counter + 1
+    cur.close()
+    return jsonify(request)
+
+##############AGREGAR SOLICITUDES#################
 @app.route('/add_solicitud/', methods=['POST'])
 def crear_solicitud():
     response = {}
@@ -1202,6 +1267,67 @@ def crear_solicitud():
     + " '" + str(data['ESTADO_SOLICITUD']) 
     + "', " + str(data['USUARIO_ID']) 
     + ", " + str(data['INVENTARIO_ID']) + ");")
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response = {
+        'exito': isinstance(last_id, int),
+        'id_insertado': last_id
+    }
+    cur.close()
+    return jsonify(response)
+
+
+
+@app.route('/get_solicitudes/', methods=['GET'])
+def obtener_solicitudes():
+    response = {}
+    response["solicitud"] = []
+    cur = mysql.connection.cursor()
+    query = ("SELECT ID, ESTADO, SOLICITANTE, FECHA_CREACION, INVENTARIO_ID FROM SOLICITUD;")
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    for solicitud in rows:
+        response["solicitud"].append({
+            "id": solicitud[0],
+            "estado": solicitud[1],
+            "solicitante": solicitud[2],
+            "fecha_creacion": solicitud[3],
+            "inventario_id": solicitud[4]
+        })
+    cur.close()
+    return response
+
+
+
+@app.route('/get_prod_sin_sol/', methods=['GET'])
+def obtener_productos_sin_sol():
+    response = {}
+    response["productos"] = []
+    cur = mysql.connection.cursor()
+    query = ("SELECT I.ID, I.NSERIE, P.ID, P.NOMBRE, P.IMAGEN_REFERENCIA FROM INVENTARIO I, PRODUCTO P WHERE I.PRODUCTO_ID=P.ID AND I.ESTADO = 1;")
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    for producto in rows:
+        response["productos"].append({
+            "inv_id": producto[0],
+            "inv_nserie": producto[1],
+            "prod_id": producto[2],
+            "prod_nombre": producto[3],
+            "prod_imagen_referencia": producto[4]
+        })
+    cur.close()
+    return response
+
+
+@app.route('/upp_estado/<id_producto>', methods=['GET'])
+def update_estado(id_producto):
+    response = {}
+    cur = mysql.connection.cursor()
+    query = "UPDATE INVENTARIO SET ESTADO = 4 WHERE ID = " + str(id_producto) + ";"
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()
