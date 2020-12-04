@@ -1,0 +1,90 @@
+<div class="row">
+    <div class="col-12">
+        <h4>Mantenimiento(s) para este producto:</h4>
+        <button class="float-right btn btn-success" (click)="this.create = !this.create;">Añade una
+            nuevo mantenimiento</button>
+    </div>
+    <div class="col-12 mt-3">
+        <table class="table table-dark text-center">
+            <tr>
+                <th>ID</th>
+                <th>Proveedor</th>
+                <th>Costo</th>
+                <th>Descripcion</th>
+                <th>Fecha Inicio</th>
+                <th>Fecha Final</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+            </tr>
+            <!--  Arreglo que corresponda a cada formulario -->
+            <tr *ngFor="let mantenimiento of this.mantenimientos; let idx = index">
+                <td><input class="form-control" id="id-{{ idx }}" type="text" value="{{ mantenimiento.id }}" disabled>
+                </td>
+                <td>{{ mantenimiento.proveedor }}</td>
+                <td><input class="form-control" id="costo-{{ idx }}" type="number" step="0.01" min="0.01"
+                        value="{{ mantenimiento.costo }}" [disabled]="!this.editable[idx]"></td>
+                <td><input class="form-control" id="descripcion-{{ idx }}" type="text"
+                        value="{{ mantenimiento.descripcion }}" [disabled]="!this.editable[idx]"></td>
+                <td><input class="form-control" id="f_inicial-{{ idx }}" type="date"
+                        value="{{ mantenimiento.f_inicio | date:'yyyy-MM-dd' }}" [disabled]="!this.editable[idx]"></td>
+                <td><input class="form-control" id="f_final-{{ idx }}" type="date"
+                        value="{{ mantenimiento.f_final | date:'yyyy-MM-dd' }}" [disabled]="!this.editable[idx]"></td>
+                <td><button class="btn btn-secondary"
+                        (click)="toggleEdicion(idx)">{{ this.editable[idx] ? 'Terminar' : 'Editar' }}</button></td>
+                <td><button class="btn btn-danger" (click)="eliminarMantenimiento(mantenimiento.id)">Eliminar</button>
+                </td>
+            </tr>
+        </table>
+        <ng-template #nohay>
+            <h3>No tienes registradas Mantenimientos</h3>
+        </ng-template>
+        <div class="row" *ngIf="this.create">
+            <div class="col-3"></div>
+            <div class="col-6">
+                <h3>Crea un nuevo mantenimiento</h3>
+                <form action="" [formGroup]="this.formulario" (ngSubmit)="crearMantenimiento()">
+                    <div class="from-group">
+                        <label>¿Qué se le hará al artículo del inventario?</label>
+                        <input type="text" formControlName="descripcion" class="form-control"
+                            [ngClass]="{'is-invalid': f.descripcion.touched && f.descripcion.errors }">
+                        <div class="invalid-feedback">
+                            <div *ngIf="f.descripcion.errors?.required">La descripción del mantenimiento es obligatoria.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="from-group">
+                        <label>¿Cuánto costará el mantenimiento?</label>
+                        <input type="text" formControlName="costo" class="form-control"
+                            [ngClass]="{'is-invalid': f.costo.touched && f.costo.errors }">
+                        <div class="invalid-feedback">
+                            <div *ngIf="f.costo.errors?.required">Añade un costo de inventario.</div>
+                        </div>
+                    </div>
+                    <div class="from-group">
+                        <label>Fecha de inicio de mantenimiento</label>
+                        <input type="date" max="{{ this.fecha | date:'yyyy-MM-dd'}}" formControlName="f_inicial"
+                            class="form-control" [ngClass]="{'is-invalid': f.f_inicial.touched && f.f_inicial.errors }">
+                        <div class="invalid-feedback">
+                            <div *ngIf="f.f_inicial.errors?.required">La fecha de inicio es obligatoria</div>
+                        </div>
+                    </div>
+                    <div class="from-group">
+                        <label>Fecha de final de mantenimiento (opcional)</label>
+                        <input type="date" formControlName="f_final"
+                            class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="proveedorSelect">Proveedor</label>
+                        <select class="custom-select" formControlName="proveedor" id="proveedorSelect">
+                            <option *ngFor="let proveedor of this.proveedores;" [value]="proveedor.id">
+                                {{ proveedor.razsoc }}</option>
+                        </select>
+                    </div>
+                    <button class="text-center btn btn-primary mt-3 text-center" type="submit">Enviar</button>
+                </form>
+                <br><br><br><br><br>
+            </div>
+            <div class="col-3"></div>
+        </div>
+    </div>
+</div>

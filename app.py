@@ -131,6 +131,62 @@ def obtener_empresas():
     return response
 
 
+################ INICIO REPORTES ###################
+@app.route('/reportes/<tiempo>', methods=['GET'])
+def reportes(tiempo):
+    response = {}
+    response["ubicaciones"] = []
+    empresa_id = int(request.cookies.get('empresa'))
+
+    cur = mysql.connection.cursor()
+    # select c.nombre, count(cp.producto_id) from categoria c, producto p, categoria_producto cp where p.id = cp.producto_id and p.empresa_id = 7 and c.id = cp.categoria_id group by cp.categoria_id; 
+    cur.callproc('CONTEO_CATEGORIAS', [empresa_id])
+    rows = cur.fetchall()
+    response["categorias"] = []
+    for conteo in rows:
+        response["categorias"].append({
+            "categ": conteo[0],
+            "n": conteo[1]
+        })
+    cur.close()
+    
+    cur = mysql.connection.cursor()
+    cur.callproc('REPORTE_CONTEO_INCIDENCIA', [empresa_id, tiempo])
+    row_inc = cur.fetchone()
+    cur.close()
+    cur = mysql.connection.cursor()
+    cur.callproc('REPORTE_CONTEO_MTTO', [empresa_id, tiempo])
+    row_mtto = cur.fetchone()
+    cur.close()
+    cur.callproc('REPORTE_CONTEO_SOLICITUD', [empresa_id, tiempo])
+    row_sol = cur.fetchone()
+    cur.close()
+    cur.callproc('REPORTE_CONTEO_PRESTAMO', [empresa_id, tiempo])
+    row_prest = cur.fetchone()
+    cur.close()
+    response["reportes"].append({
+        "incidencias": row_inc,
+        "mantenimientos": row_mtto,
+        "solicitudes": row_sol,
+        "prestamos": row_prest
+    })
+
+    cur = mysql.connection.cursor()
+    cur.callproc('CHART_DINERO_INV', [empresa_id, tiempo])
+    row_inv = cur.fetchone()
+    cur.close()
+    cur = mysql.connection.cursor()
+    cur.callproc('CHART_DINERO_MTTO', [empresa_id, tiempo])
+    row_mtto = cur.fetchone()
+    cur.close()
+    response["dinero"].append({
+        "inventario": row_inv,
+        "mantenimiento": row_mtto
+    })
+    response['exito'] = True
+
+################ FIN REPORTES ######################
+
 ################ CRUD UBICACION ######################
 @app.route('/get_ubicaciones/', methods=['GET'])
 def obtener_ubicaciones():
@@ -744,7 +800,7 @@ def crear_usuario():
     cur.close()
     return jsonify(response)
 
-######################### INICIO USUARIO #####################
+######################### FIN USUARIO #####################
 
 @app.route('/add_categoria/', methods=['POST'])
 def crear_categoria():
@@ -863,6 +919,7 @@ def obtener_producto(producto_id):
     return jsonify(response)
 
 ################### FIN PROD ######################
+
 ################### INICIO INV ####################
 @app.route('/add_inventario/<id_producto>', methods=['POST'])
 def crear_inventario(id_producto):
@@ -923,6 +980,167 @@ def crear_inventario(id_producto):
     cur.close()
     return jsonify(response)
 ################### FIN INV #######################
+
+################## INC MANTENIMIENTO###############
+@app.route('/get_mantenimientos/<id_producto>', methods=['GET'])
+def get_mantenimientos(id_producto):
+    response = {}
+    response["mantenimientos"] = []
+    cur = mysql.connection.cursor()
+    query = ("SELECT M.ID, P.RAZSOC, M.COSTO, M.DESCRIPCION, M.F_INICIO, M.F_FINAL"
+    " FROM MANTENIMIENTO M, EMPRESA P WHERE M.PROVEEDOR_MTTO = P.ID AND INVENTARIO_ID = '" + str(id_producto)
+    + "';"
+    )
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    counter = 0
+    for mtto in rows:
+        response["mantenimientos"].append({
+            'id': mtto[0],
+            'proveedor': mtto[1],
+            'costo': mtto[2],
+            'descripcion': mtto[3],
+            'f_inicio': mtto[4],
+            'f_final': mtto[5]
+        })
+    if len(response['mantenimientos']) == 0:
+        response['exito'] = False
+        response['desc'] = "No existen mantenimientos."
+    else:
+        response['exito'] = True
+    cur.close()
+    return jsonify(response)
+
+@app.route('/create_mantenimiento/<id_producto>', methods=['POST'])
+def crear_mantenimiento(id_producto):
+    response = {}
+    cur = mysql.connection.cursor()
+    data = json.loads(request.data)
+    F_FINAL = ' F_FINAL = NULL ' if data['F_FINAL'] == '' else " F_FINAL = '" + str(data['F_FINAL']) + "' "
+    query = ("INSERT INTO MANTENIMIENTO (INVENTARIO_ID, COSTO, DESCRIPCION, PROVEEDOR_MTTO, F_INICIO, F_FINAL) VALUES ("
+    + str(id_producto) + ", "
+    + str(data['COSTO']) + ", "
+    "'" + data['DESCRIPCION'] + "', "
+    + str(data['PROVEEDOR']) + ", "
+    "'" + str(data['F_INICIO']) + "', " + F_FINAL +
+    ");"
+    )
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response = {
+        'exito': isinstance(last_id, int),
+        'id_insertado': last_id
+    }
+
+    response["mantenimientos"] = []
+    cur = mysql.connection.cursor()
+    query = ("SELECT M.ID, P.RAZSOC, M.COSTO, M.DESCRIPCION, M.F_INICIO, M.F_FINAL"
+    " FROM MANTENIMIENTO M, EMPRESA P WHERE M.PROVEEDOR_MTTO = P.ID AND INVENTARIO_ID = '" + str(id_producto)
+    + "';"
+    )
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    counter = 0
+    for mtto in rows:
+        response["mantenimientos"].append({
+            'id': mtto[0],
+            'proveedor': mtto[1],
+            'costo': mtto[2],
+            'descripcion': mtto[3],
+            'f_inicio': mtto[4],
+            'f_final': mtto[5]
+        })
+    cur.close()
+    return jsonify(response)
+
+
+@app.route('/delete_mantenimiento/<id>/<id_producto>', methods=['GET'])
+def eliminar_mantenimientos(id, id_producto):
+    response = {}
+    cur = mysql.connection.cursor()
+    query = "DELETE FROM MANTENIMIENTO WHERE ID = " + str(id) + ";"
+    
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    cur.close()
+
+    empresa_id = int(request.cookies.get('empresa'))
+    response["mantenimientos"] = []
+    cur = mysql.connection.cursor()
+    query = ("SELECT M.ID, P.RAZSOC, M.COSTO, M.DESCRIPCION, M.F_INICIO, M.F_FINAL"
+    " FROM MANTENIMIENTO M, EMPRESA P WHERE M.PROVEEDOR_MTTO = P.ID AND INVENTARIO_ID = '" + str(id_producto)
+    + "';"
+    )
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    counter = 0
+    for mtto in rows:
+        response["mantenimientos"].append({
+            'id': mtto[0],
+            'proveedor': mtto[1],
+            'costo': mtto[2],
+            'descripcion': mtto[3],
+            'f_inicio': mtto[4],
+            'f_final': mtto[5]
+        })
+    cur.close()
+    return jsonify(response)
+    return response
+
+
+@app.route('/update_mantenimiento/<id_producto>', methods=['POST'])
+def actualizar_mantenimiento(id_producto):
+    response = {}
+    cur = mysql.connection.cursor()
+    data = json.loads(request.data)
+    F_INICIO = ' F_INICIO = NULL, ' if data['F_INICIO'] == '' else " F_INICIO = '" + str(data['F_INICIO']) + "', "
+    F_FINAL = ' F_FINAL = NULL ' if data['F_FINAL'] == '' else " F_FINAL = '" + str(data['F_FINAL']) + "' "
+    query = ("UPDATE MANTENIMIENTO SET"
+    " COSTO = " + str(data['COSTO']) + ", "
+    " DESCRIPCION = '" + str(data['DESCRIPCION']) + "', "
+    + F_INICIO + " " + F_FINAL +
+    " WHERE ID = " + str(data['ID']) + ";"
+    )
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response = {
+        'exito': isinstance(last_id, int),
+        'id_insertado': last_id
+    }
+    cur.close()
+
+    response["mantenimientos"] = []
+    cur = mysql.connection.cursor()
+    query = ("SELECT M.ID, P.RAZSOC, M.COSTO, M.DESCRIPCION, M.F_INICIO, M.F_FINAL"
+    " FROM MANTENIMIENTO M, EMPRESA P WHERE M.PROVEEDOR_MTTO = P.ID AND INVENTARIO_ID = '" + str(id_producto)
+    + "';"
+    )
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    counter = 0
+    for mtto in rows:
+        response["mantenimientos"].append({
+            'id': mtto[0],
+            'proveedor': mtto[1],
+            'costo': mtto[2],
+            'descripcion': mtto[3],
+            'f_inicio': mtto[4],
+            'f_final': mtto[5]
+        })
+    cur.close()
+    return response
+##################### FIN MANTENIMIENTO ###################   
+
+
 def count_pedidos_solcitudes():
     response = {}
     response["categorias"] = {}
@@ -1070,11 +1288,11 @@ def obtener_productos_sin_sol():
     return response
 
 
-@app.route('/upp_estado/<id_producto>', methods=['GET'])
-def update_estado(id_producto):
+@app.route('/upp_estado/<id_producto>+<val_estado>', methods=['GET'])
+def update_estado(id_producto,val_estado):
     response = {}
     cur = mysql.connection.cursor()
-    query = "UPDATE INVENTARIO SET ESTADO = 4 WHERE ID = " + str(id_producto) + ";"
+    query = "UPDATE INVENTARIO SET ESTADO = " + str(val_estado) + " WHERE ID = " + str(id_producto) + ";"
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()

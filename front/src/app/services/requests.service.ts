@@ -56,8 +56,8 @@ export class RequestsService {
     return this.http.get('/get_producto/' + id_producto);
   }
 
-  updateInvEst(id_inventario: any) {
-    return this.http.get('/upp_estado/' + id_inventario);
+  updateInvEst(id_inventario: any, val_estado: any) {
+    return this.http.get('/upp_estado/' + id_inventario + '+' + val_estado);
   }
 
 
@@ -138,6 +138,23 @@ export class RequestsService {
     return this.http.post('/add_inventario/' + id_producto, fd);
   }
 
+  /////////// CRUD Mantenimiento
+  getMantenimientos(id: Number) {
+    return this.http.get('/get_mantenimientos/' + id);
+  }
+
+  updateMantenimiento(payload: any, id: Number) {
+    return this.http.post('/update_mantenimiento/' + id, payload);
+  }
+
+  crearMantenimiento(payload: any, id: any) {
+    return this.http.post('/create_mantenimiento/' + id, payload)
+  }
+
+  eliminarMantenimiento(id: any, id_prod: Number) {
+    return this.http.get('/delete_mantenimiento/' + id + "/" + id_prod);
+  }
+
   ///////////// CRUD Consumibles
   getConsumibles() {
     return this.http.get('/get_consumibles/');
@@ -186,5 +203,10 @@ export class RequestsService {
 
   getEmpresas() {
     return this.http.get('/get_empresas/');
+  }
+
+  ///////////////////// Reportes
+  getConteos(tiempo: any) {
+    return this.http.get('/reportes/' + tiempo);
   }
 }

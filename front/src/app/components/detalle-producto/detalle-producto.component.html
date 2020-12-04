@@ -16,6 +16,7 @@
         </div>
     </div>
 </div>
+
 <div class="p-5">
     <h3>Detalle general del producto</h3>
     <div class="row">
@@ -77,6 +78,7 @@
                     <th rowspan="2">Proveedor</th>
                     <th rowspan="2">Fecha de Compra</th>
                     <th rowspan="2">Mostrar Factura</th>
+                    <th rowspan="2">Mostrar Mantenimiento</th>
                 </tr>
                 <tr>
                     <th>Nombre</th>
@@ -98,6 +100,9 @@
                     <td>
                         <button (click)="this.setpdf('/static/' + inv.archivo_fac);" class="btn btn-secondary"
                             data-toggle="modal" data-target="#modalFactura">Factura</button>
+                    </td>
+                    <td>
+                        <button (click)="this.setpdf('/static/' + inv.archivo_fac);" class="btn btn-secondary" [routerLink]="['/mantenimiento-producto',inv.id]" >Mantenimiento</button>
                     </td>
                 </tr>
             </table>

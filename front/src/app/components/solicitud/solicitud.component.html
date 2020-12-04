@@ -31,7 +31,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let producto of this.inventarioFiltrado">
+          <tr *ngFor="let producto of this.inventarioFiltrado; let idx = index">
             <th scope="row">{{ producto.inv_id }}</th>
             <td>{{ producto.prod_nombre }}</td>
             <td>{{ producto.prod_id }}</td>
@@ -40,7 +40,7 @@
               <img class="w-100" src="/static/{{ producto.prod_imagen_referencia }}" alt="" srcset="">
             </td>
             <td><button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#modalSolicitar" 
-              (click)="obtenerID(producto.prod_id)">Solicitar</button></td>
+              (click)="obtenerID(producto.prod_id, idx)">Solicitar</button></td>
           </tr>
         </tbody>
       </table>

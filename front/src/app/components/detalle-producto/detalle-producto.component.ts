@@ -24,6 +24,8 @@ export class DetalleProductoComponent implements OnInit {
   fecha: Date = new Date();
   submitted: boolean = false;
   file: File;
+  /*mantenimiento: any;
+  formulario_2: FormGroup;*/
 
   constructor(
     private route: ActivatedRoute,
@@ -79,6 +81,18 @@ export class DetalleProductoComponent implements OnInit {
       factura: ['', [Validators.required]],
     });
 
+    /*this.formulario_2 = this._fb.group({
+      nserie: ['', [Validators.required]],
+      nfactura: ['', [Validators.required]],
+      ubicacion: ['', [Validators.required]],
+      costo: ['', [Validators.required]],
+      estado: ['', [Validators.required]],
+      observaciones: ['', [Validators.required]],
+      proveedor: ['', [Validators.required]],
+      fecha_compra: ['', [Validators.required]],
+      factura: ['', [Validators.required]],
+    });*/
+
     this._requests.getProductoInfo(this.id).subscribe(
       (success: any) => {
         if (success.exito) {
@@ -133,6 +147,13 @@ export class DetalleProductoComponent implements OnInit {
     }
     this.modo_creacion = !this.modo_creacion;
   }
+
+  /*crearMantenimiento(){
+    let algo= {
+      COSTO: this.formulario_2.get('costo').value,
+    }
+  }*/
+
 
   fileChange(event) {
     this.file = event.target.files.item(0);
