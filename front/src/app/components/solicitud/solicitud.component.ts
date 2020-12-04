@@ -13,6 +13,8 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
   styleUrls: ['./solicitud.component.css']
 })
 export class SolicitudComponent implements OnInit {
+  public solicitudes: any;
+
   globals: Globals;
   filter: any = {};
   public categorias: any;
@@ -20,7 +22,9 @@ export class SolicitudComponent implements OnInit {
   public form2: FormGroup
   submitted = false;
   public productos: any;
-  inventario: any;
+  public productosSinSolicitud: any;
+  public inventario: any;
+  public inventarioFiltrado: any;
 
   idProducto: number; 
   idProductoInv: number;
@@ -39,7 +43,6 @@ export class SolicitudComponent implements OnInit {
       categorias: this._fb.array(['', Validators.required]),
       busqueda: ['', [Validators.required]]
     });
-    this.addCheckboxes();
   }
 
   onCheckboxChange(e) {
@@ -65,11 +68,12 @@ export class SolicitudComponent implements OnInit {
     if (this.productos === null) {
       this.router.navigate(['/']);
     }
-    
+
     this._requests.obtenerProductos(null, null).subscribe(
       (success: any) => {
         if (success.exito) {
           this.productos = success.productos;
+          console.log(this.productos);
         } else {
           this.productos = null;
           alert('Error en el servidor. Mensaje: ' + success.desc);
@@ -80,46 +84,19 @@ export class SolicitudComponent implements OnInit {
         alert('Error en el servicio, contacta con un administrador,');
       }
     );
-  }
-
-  get f() { return this.form2.controls; }
-
-  public buscarQuery() {
-    let nombre = this.form.controls["busqueda"].value;
-    let checks = this.form.controls.categorias.value;
-    checks.splice(0,2);
-    this._requests.obtenerProductos(checks, nombre).subscribe(
-      (success: any) => {
-        if (success.exito) {
-          this.productos = success.productos;
-        } else {
-          this.productos = null;
-          alert('Error en el servidor. Mensaje: ' + success.desc);
-        }
+    
+    this._requests.getInventarioDisponible().subscribe(
+      (response: any) => {
+        this.inventarioFiltrado = response.productos;
+        console.log(this.inventarioFiltrado);
       },
       (error) => {
-        this.productos = null;
-        alert('Error en el servicio, contacta con un administrador,');
+        alert("Error pidiendo las empresas");
       }
     );
+
   }
 
-  private addCheckboxes() {
-    this._requests.getCategorias().subscribe(
-      (success: any) => {
-        if (success.exito) {
-          this.categorias = success.categorias;
-        } else {
-          this.categorias = null;
-          alert('Error en el servidor. Mensaje: ' + success.desc);
-        }
-      },
-      (error) => {
-        this.categorias = null;
-        alert('Error en el servicio, contacta con un administrador,');
-      }
-    )
-  }
 
   public obtenerID(id_producto: number){
       this.idProducto = id_producto;
@@ -151,6 +128,20 @@ export class SolicitudComponent implements OnInit {
         }).subscribe(
           (success: any) => {
             if (success.exito) {
+
+              this._requests.updateInvEst(this.idProductoInv).subscribe(
+                (success: any) => {
+                  if (success.exito) {
+                    this.router.navigate(['/']);
+                  } else {
+                    alert('error en el registro, mensaje del server: ' + success.desc);
+                  }
+                },
+                (error) => {
+                  alert("Error en el servidor.")
+                }
+              );
+
               alert("Solicitud registrada exitosamente.");
               this.router.navigate(['/']);
             } else {
@@ -161,6 +152,9 @@ export class SolicitudComponent implements OnInit {
             alert("Error en el servidor.")
           }
         );
+
+
+        
    
       
   }

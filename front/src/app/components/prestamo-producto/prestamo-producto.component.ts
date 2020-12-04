@@ -12,6 +12,10 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
   styleUrls: ['./prestamo-producto.component.css']
 })
 export class PrestamoProductoComponent implements OnInit {
+  public solicitudes: any;
+
+
+
   globals: Globals;
   filter: any = {};
   public categorias: any;
@@ -34,91 +38,22 @@ export class PrestamoProductoComponent implements OnInit {
     private _fb: FormBuilder
   ) {
     this.globals = globals;
-    this.form = this._fb.group({
-      categorias: this._fb.array(['', Validators.required]),
-      busqueda: ['', [Validators.required]]
-    });
-    this.addCheckboxes();
-  }
-
-  onCheckboxChange(e) {
-    const checkArray: FormArray = this.form.get('categorias') as FormArray;
-
-    if (e.target.checked) {
-      checkArray.push(new FormControl(e.target.value));
-    } else {
-      let i: number = 0;
-      checkArray.controls.forEach((item: FormControl) => {
-        if (item.value == e.target.value) {
-          checkArray.removeAt(i);
-          return;
-        }
-        i++;
-      });
-    }
   }
 
   ngOnInit(): void {
-    this.idProducto = null;
-    this.usrinfo = this._authService.getInfo();
-    if (this.productos === null) {
-      this.router.navigate(['/']);
-    }
-    
-    this._requests.obtenerProductos(null, null).subscribe(
-      (success: any) => {
-        if (success.exito) {
-          this.productos = success.productos;
-        } else {
-          this.productos = null;
-          alert('Error en el servidor. Mensaje: ' + success.desc);
-        }
+
+    this._requests.getSolicitud().subscribe(
+      (response: any) => {
+        this.solicitudes = response.solicitud;
+        console.log(this.solicitudes);
       },
       (error) => {
-        this.productos = null;
-        alert('Error en el servicio, contacta con un administrador,');
+        alert("Error pidiendo las empresas");
       }
     );
+
   }
 
-  get f() { return this.form2.controls; }
-
-  public buscarQuery() {
-    let nombre = this.form.controls["busqueda"].value;
-    let checks = this.form.controls.categorias.value;
-    checks.splice(0,2);
-    this._requests.obtenerProductos(checks, nombre).subscribe(
-      (success: any) => {
-        if (success.exito) {
-          this.productos = success.productos;
-        } else {
-          this.productos = null;
-          alert('Error en el servidor. Mensaje: ' + success.desc);
-        }
-      },
-      (error) => {
-        this.productos = null;
-        alert('Error en el servicio, contacta con un administrador,');
-      }
-    );
-  }
-
-  private addCheckboxes() {
-    this._requests.getCategorias().subscribe(
-      (success: any) => {
-        if (success.exito) {
-          this.categorias = success.categorias;
-        } else {
-          this.categorias = null;
-          alert('Error en el servidor. Mensaje: ' + success.desc);
-        }
-      },
-      (error) => {
-        this.categorias = null;
-        alert('Error en el servicio, contacta con un administrador,');
-      }
-    )
-  }
 
   public obtenerID(id_producto: number){
       this.idProducto = id_producto;
@@ -141,27 +76,6 @@ export class PrestamoProductoComponent implements OnInit {
       )
   }
 
-  public solicitudProducto(){
-    this.submitted = true;
-        this._requests.createSolicitud({
-          'ESTADO_SOLICITUD': 4,
-          'USUARIO_ID': this.usrinfo['id'],
-          'INVENTARIO_ID': this.idProductoInv
-        }).subscribe(
-          (success: any) => {
-            if (success.exito) {
-              alert("Solicitud registrada exitosamente.");
-              this.router.navigate(['/']);
-            } else {
-              alert('error en el registro, mensaje del server: ' + success.desc);
-            }
-          },
-          (error) => {
-            alert("Error en el servidor.")
-          }
-        );
-   
-      
-  }
+ 
 
 }

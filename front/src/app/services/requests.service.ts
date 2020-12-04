@@ -42,9 +42,25 @@ export class RequestsService {
     return this.http.post('/add_solicitud/', payload);
   }
 
+  //Obtener Solicitud Inventario
+  getSolicitud(){
+    return this.http.get('/get_solicitudes/');
+  }
+
+  //Obtener Inventario Disponible
+  getInventarioDisponible(){
+    return this.http.get('/get_prod_sin_sol/');
+  }
+
   getProductoInfo(id_producto: any) {
     return this.http.get('/get_producto/' + id_producto);
   }
+
+  updateInvEst(id_inventario: any) {
+    return this.http.get('/upp_estado/' + id_inventario);
+  }
+
+
 
   ///////////// CRUD Categorias
   getCategorias() {

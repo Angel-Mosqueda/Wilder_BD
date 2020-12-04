@@ -1002,7 +1002,7 @@ def get_mantenimientos():
     cur.close()
     return jsonify(request)
 
-
+##############AGREGAR SOLICITUDES#################
 @app.route('/add_solicitud/', methods=['POST'])
 def crear_solicitud():
     response = {}
@@ -1014,6 +1014,67 @@ def crear_solicitud():
     + " '" + str(data['ESTADO_SOLICITUD']) 
     + "', " + str(data['USUARIO_ID']) 
     + ", " + str(data['INVENTARIO_ID']) + ");")
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response = {
+        'exito': isinstance(last_id, int),
+        'id_insertado': last_id
+    }
+    cur.close()
+    return jsonify(response)
+
+
+
+@app.route('/get_solicitudes/', methods=['GET'])
+def obtener_solicitudes():
+    response = {}
+    response["solicitud"] = []
+    cur = mysql.connection.cursor()
+    query = ("SELECT ID, ESTADO, SOLICITANTE, FECHA_CREACION, INVENTARIO_ID FROM SOLICITUD;")
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    for solicitud in rows:
+        response["solicitud"].append({
+            "id": solicitud[0],
+            "estado": solicitud[1],
+            "solicitante": solicitud[2],
+            "fecha_creacion": solicitud[3],
+            "inventario_id": solicitud[4]
+        })
+    cur.close()
+    return response
+
+
+
+@app.route('/get_prod_sin_sol/', methods=['GET'])
+def obtener_productos_sin_sol():
+    response = {}
+    response["productos"] = []
+    cur = mysql.connection.cursor()
+    query = ("SELECT I.ID, I.NSERIE, P.ID, P.NOMBRE, P.IMAGEN_REFERENCIA FROM INVENTARIO I, PRODUCTO P WHERE I.PRODUCTO_ID=P.ID AND I.ESTADO = 1;")
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    for producto in rows:
+        response["productos"].append({
+            "inv_id": producto[0],
+            "inv_nserie": producto[1],
+            "prod_id": producto[2],
+            "prod_nombre": producto[3],
+            "prod_imagen_referencia": producto[4]
+        })
+    cur.close()
+    return response
+
+
+@app.route('/upp_estado/<id_producto>', methods=['GET'])
+def update_estado(id_producto):
+    response = {}
+    cur = mysql.connection.cursor()
+    query = "UPDATE INVENTARIO SET ESTADO = 4 WHERE ID = " + str(id_producto) + ";"
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()
