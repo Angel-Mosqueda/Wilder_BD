@@ -21,6 +21,7 @@ export class PrestamoProductoComponent implements OnInit {
   _authService = new AuthService;
   date: Date;
   indexVar: number;
+  
 
   constructor(
     globals: Globals,
@@ -57,10 +58,45 @@ export class PrestamoProductoComponent implements OnInit {
   aceptarSolicitud(){
     console.log(this.form.get('fechaEsperada').value);
     console.log(this.usrinfo['id'] + "  " + this.solicitudes[this.indexVar]['sol_id'] );
+    console.log(this.solicitudes[this.indexVar]);
     this._requests.createSolicitudP2(this.usrinfo['id'], this.solicitudes[this.indexVar]['sol_id']).subscribe(
       (success: any) => {
         if (success.exito) {
-          console.log(this.usrinfo['id'] + "  " + this.solicitudes['id'] );
+          console.log(this.usrinfo['id'] + "  " + this.solicitudes[this.indexVar]['sol_id']);
+        } else {
+          alert('error en el registro, mensaje del server: ' + success.desc);
+        }
+      },
+      (error) => {
+        alert("Error en el servidor.")
+      }
+    );
+
+    this._requests.updateInvEst(this.solicitudes[this.indexVar]['inv_id'], 1).subscribe(
+      (success: any) => {
+        if (success.exito) {
+          console.log("exito")
+        } else {
+          alert('error en el registro, mensaje del server: ' + success.desc);
+        }
+      },
+      (error) => {
+        alert("Error en el servidor.")
+      }
+    );
+
+
+    this._requests.createPrestamo({
+      'ESTADO': 1,
+      'SOLICITANTE': this.solicitudes[this.indexVar]['sol_solicitante'],
+      'PRESTADOR': this.usrinfo['id'],
+      'FECHA_ESTIMADA': this.form.get('fechaEsperada').value,
+      'INVENTARIO_ID': this.solicitudes[this.indexVar]['inv_id']
+    }).subscribe(
+      (success: any) => {
+        if (success.exito) {
+          console.log("prestamo con exito")
+          alert("Solicitud registrada exitosamente.");
           this.router.navigate(['/']);
         } else {
           alert('error en el registro, mensaje del server: ' + success.desc);
@@ -70,6 +106,13 @@ export class PrestamoProductoComponent implements OnInit {
         alert("Error en el servidor.")
       }
     );
+
+
+
+
+
+
+    
   }
 
 }

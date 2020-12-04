@@ -1266,14 +1266,13 @@ def crear_solicitudP2(id_revpor, id_solicitud):
 #########################################################################
 
 
-
 @app.route('/get_solicitudes/', methods=['GET'])
 def obtener_solicitudes():
     response = {}
     response["solicitud"] = []
     cur = mysql.connection.cursor()
     query = ("SELECT S.ID, S.ESTADO, S.SOLICITANTE, S.FECHA_CREACION, S.INVENTARIO_ID, U.NOMBRE, U.APEPAT, P.NOMBRE, "
-    " I.NSERIE FROM SOLICITUD S, USUARIO U, PRODUCTO P, INVENTARIO I  WHERE S.SOLICITANTE = U.ID AND "
+    " I.NSERIE, I.ID FROM SOLICITUD S, USUARIO U, PRODUCTO P, INVENTARIO I  WHERE S.SOLICITANTE = U.ID AND "
     " I.ID = S.INVENTARIO_ID AND P.ID = I.PRODUCTO_ID AND S.ESTADO = '4';")
     cur.execute(query)
     mysql.connection.commit()
@@ -1288,7 +1287,8 @@ def obtener_solicitudes():
             "usr_nombre": solicitud[5],
             "usr_apepat": solicitud[6],
             "prod_nombre": solicitud[7],
-            "inv_nserie": solicitud[8]
+            "inv_nserie": solicitud[8],
+            "inv_id": solicitud[9]
         })
     cur.close()
     return response
@@ -1300,7 +1300,7 @@ def obtener_productos_sin_sol():
     response = {}
     response["productos"] = []
     cur = mysql.connection.cursor()
-    query = ("SELECT I.ID, I.NSERIE, P.ID, P.NOMBRE, P.IMAGEN_REFERENCIA FROM INVENTARIO I, PRODUCTO P WHERE I.PRODUCTO_ID=P.ID AND I.ESTADO = 1;")
+    query = ("SELECT I.ID, I.NSERIE, P.ID, P.NOMBRE, P.IMAGEN_REFERENCIA FROM INVENTARIO I, PRODUCTO P WHERE I.PRODUCTO_ID=P.ID AND I.ESTADO = 0;")
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()
@@ -1330,7 +1330,32 @@ def update_estado(id_producto,val_estado):
         'id_insertado': last_id
     }
     cur.close()
+    return response
+
+@app.route('/add_prestamo/', methods=['POST'])
+def crear_prestamo():
+    response = {}
+    data = json.loads(request.data)
+    cur = mysql.connection.cursor()
+    query = ("INSERT INTO PRESTAMO (ESTADO, SOLICITANTE"
+    ", PRESTADOR,FECHA_ESTIMADA,INVENTARIO_ID) VALUES (" 
+    + " '" + str(data['ESTADO'])
+    + "', " + str(data['SOLICITANTE']) 
+    + ", " + str(data['PRESTADOR']) 
+    + ", '" + str(data['FECHA_ESTIMADA']) 
+    + "', " + str(data['INVENTARIO_ID']) + ");")
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response = {
+        'exito': isinstance(last_id, int),
+        'id_insertado': last_id
+    }
+    cur.close()
     return jsonify(response)
+
+
 
 
 @app.route('/')

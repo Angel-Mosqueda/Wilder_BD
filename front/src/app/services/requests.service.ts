@@ -47,6 +47,7 @@ export class RequestsService {
     return this.http.get('/add_solicitudP2/' + usr_id + '+' + sol_id);
   }
 
+
   //Obtener Solicitud Inventario
   getSolicitud(){
     return this.http.get('/get_solicitudes/');
@@ -65,6 +66,11 @@ export class RequestsService {
     return this.http.get('/upp_estado/' + id_inventario + '+' + val_estado);
   }
 
+
+  //Insertar prestamo
+  createPrestamo(payload: any) {
+    return this.http.post('/add_prestamo/', payload);
+  }
 
 
   ///////////// CRUD Categorias
