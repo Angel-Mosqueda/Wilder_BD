@@ -42,6 +42,11 @@ export class RequestsService {
     return this.http.post('/add_solicitud/', payload);
   }
 
+  //Agregar campos restantes de solicitud parte 2
+  createSolicitudP2(usr_id: any, sol_id: any) {
+    return this.http.get('/add_solicitudP2/' + usr_id + '+' + sol_id);
+  }
+
   //Obtener Solicitud Inventario
   getSolicitud(){
     return this.http.get('/get_solicitudes/');

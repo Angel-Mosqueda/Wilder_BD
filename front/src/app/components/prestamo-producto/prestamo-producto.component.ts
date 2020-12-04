@@ -13,23 +13,14 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 })
 export class PrestamoProductoComponent implements OnInit {
   public solicitudes: any;
-
-
-
   globals: Globals;
   filter: any = {};
-  public categorias: any;
   public form: FormGroup
-  public form2: FormGroup
   submitted = false;
-  public productos: any;
-  inventario: any;
-
-  idProducto: number; 
-  idProductoInv: number;
-
   usrinfo = null;
   _authService = new AuthService;
+  date: Date;
+  indexVar: number;
 
   constructor(
     globals: Globals,
@@ -38,10 +29,13 @@ export class PrestamoProductoComponent implements OnInit {
     private _fb: FormBuilder
   ) {
     this.globals = globals;
+    this.form = this._fb.group({
+      fechaEsperada: ['', Validators.required]
+    });
   }
 
   ngOnInit(): void {
-
+    this.usrinfo = this._authService.getInfo();
     this._requests.getSolicitud().subscribe(
       (response: any) => {
         this.solicitudes = response.solicitud;
@@ -54,28 +48,28 @@ export class PrestamoProductoComponent implements OnInit {
 
   }
 
+  index(idx: number){
+    this.indexVar = idx;
+    console.log(this.indexVar);
 
-  public obtenerID(id_producto: number){
-      this.idProducto = id_producto;
-      this._requests.getProductoInfo(this.idProducto).subscribe(
-        (success: any) => {
-          if (success.exito) {
-            this.inventario = success.inventario;
-            console.log(this.inventario);
-            this.idProductoInv = this.inventario[0].id;
-            console.log("id inv " + this.idProductoInv);
-          } else {
-            this.categorias = null;
-            alert('Error en el servidor. Mensaje: ' + success.desc);
-          }
-        },
-        (error) => {
-          this.categorias = null;
-          alert('Error en el servicio, contacta con un administrador.');
-        }
-      )
   }
 
- 
+  aceptarSolicitud(){
+    console.log(this.form.get('fechaEsperada').value);
+    console.log(this.usrinfo['id'] + "  " + this.solicitudes[this.indexVar]['sol_id'] );
+    this._requests.createSolicitudP2(this.usrinfo['id'], this.solicitudes[this.indexVar]['sol_id']).subscribe(
+      (success: any) => {
+        if (success.exito) {
+          console.log(this.usrinfo['id'] + "  " + this.solicitudes['id'] );
+          this.router.navigate(['/']);
+        } else {
+          alert('error en el registro, mensaje del server: ' + success.desc);
+        }
+      },
+      (error) => {
+        alert("Error en el servidor.")
+      }
+    );
+  }
 
 }

@@ -1244,23 +1244,51 @@ def crear_solicitud():
     return jsonify(response)
 
 
+###################   AGREGAR SOLICITUDES PARTE 2   #####################
+@app.route('/add_solicitudP2/<id_revpor>+<id_solicitud>', methods=['GET'])
+def crear_solicitudP2(id_revpor, id_solicitud):
+    response = {}
+    cur = mysql.connection.cursor()
+    query = ("UPDATE SOLICITUD SET REVISADO_POR = " + str(id_revpor) +", FECHA_REVISION = NOW() "
+    ", ESTADO = '1' WHERE ID = " + str(id_solicitud) +";" )
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response = {
+        'exito': isinstance(last_id, int),
+        'id_insertado': last_id
+    }
+    cur.close()
+    return jsonify(response)
+
+
+#########################################################################
+
+
 
 @app.route('/get_solicitudes/', methods=['GET'])
 def obtener_solicitudes():
     response = {}
     response["solicitud"] = []
     cur = mysql.connection.cursor()
-    query = ("SELECT ID, ESTADO, SOLICITANTE, FECHA_CREACION, INVENTARIO_ID FROM SOLICITUD;")
+    query = ("SELECT S.ID, S.ESTADO, S.SOLICITANTE, S.FECHA_CREACION, S.INVENTARIO_ID, U.NOMBRE, U.APEPAT, P.NOMBRE, "
+    " I.NSERIE FROM SOLICITUD S, USUARIO U, PRODUCTO P, INVENTARIO I  WHERE S.SOLICITANTE = U.ID AND "
+    " I.ID = S.INVENTARIO_ID AND P.ID = I.PRODUCTO_ID AND S.ESTADO = '4';")
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()
     for solicitud in rows:
         response["solicitud"].append({
-            "id": solicitud[0],
-            "estado": solicitud[1],
-            "solicitante": solicitud[2],
-            "fecha_creacion": solicitud[3],
-            "inventario_id": solicitud[4]
+            "sol_id": solicitud[0],
+            "sol_estado": solicitud[1],
+            "sol_solicitante": solicitud[2],
+            "sol_fecha_creacion": solicitud[3],
+            "sol_inventario_id": solicitud[4],
+            "usr_nombre": solicitud[5],
+            "usr_apepat": solicitud[6],
+            "prod_nombre": solicitud[7],
+            "inv_nserie": solicitud[8]
         })
     cur.close()
     return response
