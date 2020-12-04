@@ -171,4 +171,9 @@ export class RequestsService {
   getEmpresas() {
     return this.http.get('/get_empresas/');
   }
+
+  ///////////////////// Reportes
+  getConteos(tiempo: any) {
+    return this.http.get('/reportes/' + tiempo);
+  }
 }

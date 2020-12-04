@@ -131,6 +131,62 @@ def obtener_empresas():
     return response
 
 
+################ INICIO REPORTES ###################
+@app.route('/reportes/<tiempo>', methods=['GET'])
+def reportes(tiempo):
+    response = {}
+    response["ubicaciones"] = []
+    empresa_id = int(request.cookies.get('empresa'))
+
+    cur = mysql.connection.cursor()
+    # select c.nombre, count(cp.producto_id) from categoria c, producto p, categoria_producto cp where p.id = cp.producto_id and p.empresa_id = 7 and c.id = cp.categoria_id group by cp.categoria_id; 
+    cur.callproc('CONTEO_CATEGORIAS', [empresa_id])
+    rows = cur.fetchall()
+    response["categorias"] = []
+    for conteo in rows:
+        response["categorias"].append({
+            "categ": conteo[0],
+            "n": conteo[1]
+        })
+    cur.close()
+    
+    cur = mysql.connection.cursor()
+    cur.callproc('REPORTE_CONTEO_INCIDENCIA', [empresa_id, tiempo])
+    row_inc = cur.fetchone()
+    cur.close()
+    cur = mysql.connection.cursor()
+    cur.callproc('REPORTE_CONTEO_MTTO', [empresa_id, tiempo])
+    row_mtto = cur.fetchone()
+    cur.close()
+    cur.callproc('REPORTE_CONTEO_SOLICITUD', [empresa_id, tiempo])
+    row_sol = cur.fetchone()
+    cur.close()
+    cur.callproc('REPORTE_CONTEO_PRESTAMO', [empresa_id, tiempo])
+    row_prest = cur.fetchone()
+    cur.close()
+    response["reportes"].append({
+        "incidencias": row_inc,
+        "mantenimientos": row_mtto,
+        "solicitudes": row_sol,
+        "prestamos": row_prest
+    })
+
+    cur = mysql.connection.cursor()
+    cur.callproc('CHART_DINERO_INV', [empresa_id, tiempo])
+    row_inv = cur.fetchone()
+    cur.close()
+    cur = mysql.connection.cursor()
+    cur.callproc('CHART_DINERO_MTTO', [empresa_id, tiempo])
+    row_mtto = cur.fetchone()
+    cur.close()
+    response["dinero"].append({
+        "inventario": row_inv,
+        "mantenimiento": row_mtto
+    })
+    response['exito'] = True
+
+################ FIN REPORTES ######################
+
 ################ CRUD UBICACION ######################
 @app.route('/get_ubicaciones/', methods=['GET'])
 def obtener_ubicaciones():
