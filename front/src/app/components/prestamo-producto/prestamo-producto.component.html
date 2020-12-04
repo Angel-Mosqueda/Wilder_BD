@@ -64,9 +64,6 @@
       </div>
       <div class="modal-body">
         <form [formGroup]="this.form">
-          <div class="card-header">
-            <h5>Filtros</h5>
-          </div>
           <div class="card-body">
             <div id="busqueda">
               <div class="form-group">
@@ -85,3 +82,86 @@
     </div>
   </div>
 </div>
+
+
+
+
+
+
+
+
+<div class="col mt-5">
+  <div>
+    <h3 class="row-md-12 text-center">PRÉSTAMOS ACEPTADOS</h3>
+  </div>
+
+</div>
+
+
+<div class="container-md" style="margin-bottom: 45px;">
+  <div class="row">
+    <div class="col-xl-12" *ngIf="this.prestamos; else noprestamos">
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">ID De Préstamo</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Número de Serie</th>
+            <th scope="col">Fecha de Revisión</th>
+            <th scope="col">Nombre de Empleado</th>
+            <th scope="col">Devolución</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let prestamo of this.prestamos; let idxp = index">
+            <th scope="row">{{ prestamo.prest_id }}</th>
+            <td>{{ prestamo.prod_nombre }}</td>
+            <td>{{ prestamo.inv_nserie }}</td>
+            <td>{{ prestamo.sol_fecha_revision }}</td>
+            <td>{{ prestamo.usr_nombre }} {{prestamo.usr_apepat}}</td>
+            <td><button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#modalPrestamo" 
+            (click)="indexP(idxp)">Aceptar</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-template #noprestamos>
+      <div>
+        <h3>No existen solicitudes.</h3>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<div class="modal fade" id="modalPrestamo" tabindex="-1" role="dialog" aria-labelledby="consultaModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="consultaModalLabel">Devolver Producto</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="this.form2">
+          <div class="card-body">
+            <div id="busqueda">
+              <div class="form-group">
+                <h6 class="card-title">Observaciones</h6>
+                <textarea formControlName="observacionesTA" [(ngModel)]="observaciones" cols="56" rows="7"></textarea>
+              </div>
+            </div>
+          </div>
+        </form>
+        <p>¿Seguro que quieres aceptar la devolución de este producto?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="aceptarDevolucion()">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

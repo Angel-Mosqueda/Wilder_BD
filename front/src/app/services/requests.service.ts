@@ -47,6 +47,10 @@ export class RequestsService {
     return this.http.get('/add_solicitudP2/' + usr_id + '+' + sol_id);
   }
 
+  createSolicitudP3(obs: any, sol_id: any) {
+    return this.http.get('/add_solicitudP3/' + obs + '+' + sol_id);
+  }
+
 
   //Obtener Solicitud Inventario
   getSolicitud(){
@@ -70,6 +74,10 @@ export class RequestsService {
   //Insertar prestamo
   createPrestamo(payload: any) {
     return this.http.post('/add_prestamo/', payload);
+  }
+
+  getPrestamos(){
+    return this.http.get('/get_prestamos/');
   }
 
 

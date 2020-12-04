@@ -13,14 +13,18 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 })
 export class PrestamoProductoComponent implements OnInit {
   public solicitudes: any;
+  public prestamos: any;
   globals: Globals;
   filter: any = {};
-  public form: FormGroup
+  public form: FormGroup;
+  public form2: FormGroup;
   submitted = false;
   usrinfo = null;
   _authService = new AuthService;
   date: Date;
+  observaciones: string;
   indexVar: number;
+  indexVarP: number;
   
 
   constructor(
@@ -30,12 +34,17 @@ export class PrestamoProductoComponent implements OnInit {
     private _fb: FormBuilder
   ) {
     this.globals = globals;
-    this.form = this._fb.group({
-      fechaEsperada: ['', Validators.required]
-    });
   }
 
   ngOnInit(): void {
+    this.form = this._fb.group({
+      fechaEsperada: ['', Validators.required]
+    });
+    this.form2 = this._fb.group({
+      observacionesTA: ['', Validators.required]
+    });
+    this.indexVar = null;
+    this.indexVarP = null;
     this.usrinfo = this._authService.getInfo();
     this._requests.getSolicitud().subscribe(
       (response: any) => {
@@ -47,12 +56,29 @@ export class PrestamoProductoComponent implements OnInit {
       }
     );
 
+    this._requests.getPrestamos().subscribe(
+      (response: any) => {
+        this.prestamos = response.prestamos;
+        console.log(this.prestamos);
+      },
+      (error) => {
+        alert("Error pidiendo las empresas");
+      }
+    );
   }
+
+  get f() {​​ return this.form.controls; }​​
+
+  get g() {​​ return this.form2.controls; }​​
 
   index(idx: number){
     this.indexVar = idx;
     console.log(this.indexVar);
+  }
 
+  indexP(idxp: number){
+    this.indexVarP = idxp;
+    console.log(this.indexVarP);
   }
 
   aceptarSolicitud(){
@@ -106,13 +132,27 @@ export class PrestamoProductoComponent implements OnInit {
         alert("Error en el servidor.")
       }
     );
+  }
 
 
 
+  aceptarDevolucion(){
+    console.log("prueba " + this.indexVarP);
 
-
-
-    
+    console.log(this.form2.get('observacionesTA').value);
+    console.log(this.prestamos[this.indexVarP]['sol_id']);
+    this._requests.createSolicitudP3(this.form2.get('observacionesTA').value, this.prestamos[this.indexVarP]['sol_id']).subscribe(
+      (success: any) => {
+        if (success.exito) {
+          console.log("Exito");
+        } else {
+          alert('error en el registro, mensaje del server: ' + success.desc);
+        }
+      },
+      (error) => {
+        alert("Error en el servidor.")
+      }
+    );
   }
 
 }
