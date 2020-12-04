@@ -151,39 +151,74 @@ def reportes(tiempo):
     cur.close()
     
     cur = mysql.connection.cursor()
-    cur.callproc('REPORTE_CONTEO_INCIDENCIA', [empresa_id, tiempo])
+    query = ("SELECT REPORTE_CONTEO_INCIDENCIA("
+    + str(empresa_id) + ", " + str(tiempo) +
+    ");")
+    cur.execute(query)
+    mysql.connection.commit()
     row_inc = cur.fetchone()
     cur.close()
-    cur = mysql.connection.cursor()
-    cur.callproc('REPORTE_CONTEO_MTTO', [empresa_id, tiempo])
-    row_mtto = cur.fetchone()
-    cur.close()
-    cur.callproc('REPORTE_CONTEO_SOLICITUD', [empresa_id, tiempo])
-    row_sol = cur.fetchone()
-    cur.close()
-    cur.callproc('REPORTE_CONTEO_PRESTAMO', [empresa_id, tiempo])
-    row_prest = cur.fetchone()
-    cur.close()
-    response["reportes"].append({
-        "incidencias": row_inc,
-        "mantenimientos": row_mtto,
-        "solicitudes": row_sol,
-        "prestamos": row_prest
-    })
 
     cur = mysql.connection.cursor()
-    cur.callproc('CHART_DINERO_INV', [empresa_id, tiempo])
-    row_inv = cur.fetchone()
-    cur.close()
-    cur = mysql.connection.cursor()
-    cur.callproc('CHART_DINERO_MTTO', [empresa_id, tiempo])
+    query = ("SELECT REPORTE_CONTEO_MTTO("
+    + str(empresa_id) + ", " + str(tiempo) +
+    ");")
+    cur.execute(query)
+    mysql.connection.commit()
     row_mtto = cur.fetchone()
     cur.close()
-    response["dinero"].append({
-        "inventario": row_inv,
-        "mantenimiento": row_mtto
-    })
+    
+    cur = mysql.connection.cursor()
+    query = ("SELECT REPORTE_CONTEO_SOLICITUD("
+    + str(empresa_id) + ", " + str(tiempo) +
+    ");")
+    cur.execute(query)
+    mysql.connection.commit()
+    row_sol = cur.fetchone()
+    cur.close()
+
+    cur = mysql.connection.cursor()
+    query = ("SELECT REPORTE_CONTEO_PRESTAMO("
+    + str(empresa_id) + ", " + str(tiempo) +
+    ");")
+    cur.execute(query)
+    mysql.connection.commit()
+    row_prest = cur.fetchone()
+    cur.close()
+
+    response["reportes"] = {}
+    response["reportes"] = {
+        "incidencias": row_inc[0],
+        "mantenimientos": row_mtto[0],
+        "solicitudes": row_sol[0],
+        "prestamos": row_prest[0]
+    }
+
+    cur = mysql.connection.cursor()
+    query = ("SELECT CHART_DINERO_INV("
+    + str(empresa_id) + ", " + str(tiempo) +
+    ");")
+    cur.execute(query)
+    mysql.connection.commit()
+    row_inv = cur.fetchone()
+    cur.close()
+    
+    cur = mysql.connection.cursor()
+    query = ("SELECT CHART_DINERO_MTTO("
+    + str(empresa_id) + ", " + str(tiempo) +
+    ");")
+    cur.execute(query)
+    mysql.connection.commit()
+    row_mtto = cur.fetchone()
+    cur.close()
+
+    response["dinero"] = {}
+    response["dinero"] = {
+        "inventario": row_inv[0],
+        "mantenimiento": row_mtto[0]
+    }
     response['exito'] = True
+    return response
 
 ################ FIN REPORTES ######################
 
@@ -1191,8 +1226,6 @@ def detalle_articulo_inventario():
     return jsonify(response)
 
 
-<<<<<<< HEAD
-=======
 def get_mantenimientos():
     request = {}
     request["mantenimientos"] = []
@@ -1223,7 +1256,6 @@ def get_mantenimientos():
     return jsonify(request)
 
 ##############AGREGAR SOLICITUDES#################
->>>>>>> 9cf664c2533504e38e21f93a5f786b26d4a8fd8d
 @app.route('/add_solicitud/', methods=['POST'])
 def crear_solicitud():
     response = {}
