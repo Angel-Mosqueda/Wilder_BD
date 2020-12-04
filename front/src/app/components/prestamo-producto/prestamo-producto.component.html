@@ -9,13 +9,10 @@
   </div>
 </form>
 <div class="col mt-5">
-  <div *ngIf="globals.producto === true else tituloConsumible">
-    <h3 class="row-md-12 text-center">CONSULTA DE PRODUCTOS</h3>
+  <div>
+    <h3 class="row-md-12 text-center">SOLICITUD DE PRESTAMO</h3>
   </div>
 
-  <ng-template #tituloConsumible>
-    <h3 class="row-md-12 text-center">CONSULTA CONSUMIBLE</h3>
-  </ng-template>
 </div>
 <div class="container-md" style="margin-bottom: 45px;">
   <div class="row">
@@ -106,13 +103,11 @@
         </button>
       </div>
       <div class="modal-body">
-
-
-
+        <p>¿Seguro que quieres hacer una solicitud de este producto?</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary" (click)="solicitudProducto()">Solicitar</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="solicitudProducto()">Solicitar</button>
       </div>
     </div>
   </div>

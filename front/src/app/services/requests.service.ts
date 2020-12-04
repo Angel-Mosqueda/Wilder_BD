@@ -124,6 +124,8 @@ export class RequestsService {
 
   /////////// CRUD Mantenimiento
   createMantenimiento(playload: any, id_producto:Number){
+    let fd = new FormData();
+    fd.append('datos',JSON.stringify(playload));
     return this.http.post('/add_mantenimiento/' + id_producto);
   }
 

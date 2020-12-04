@@ -926,30 +926,22 @@ def crear_inventario(id_producto):
 
 ################## INC MANTENIMIENTO###############
 @app.route('/add_mantenimiento/<id_producto>', methods=['POST'])
-def crear_inventario(id_producto):
+def crear_mantenimiento(id_producto):
     response = {}
+    data = json.loads(request.data)
     cur = mysql.connection.cursor()
-    data = json.loads(request.form['datos'])
-    if not allowed_file(arch.filename):
-        response['exito'] = False
-        response['desc'] = "Sube un archivo de los permitidos"
-        return response
-    filename = secure_filename(str(int(datetime.now().timestamp())) + arch.filename)
+    #data = json.loads(request.form['datos'])
+    
     # filename = (str(int(datetime.now().timestamp())) + filename)
-    arch.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     empresa_id = request.cookies.get('empresa')
-    query = ("INSERT INTO INVENTARIO (PRODUCTO_ID, NSERIE, NFACTURA, UBICACION_ID, COSTO,"
-    "ESTADO, OBSERVACIONES, PROVEEDOR, FECHA_COMPRA, FACTURA) VALUES ("
+    query = ("INSERT INTO MANTENIMIENTO (INVENTARIO_ID, COSTO, DESCRIPCION, PROVEEDOR_MTTO, F_INICIO,"
+    "F_FINAL) VALUES ("
     + str(id_producto) + ", "
-    "'"+ data['NSERIE'] + "', "
-    "'"+ data['NFACTURA'] + "', "
-    + data['UBICACION_ID'] + ", "
-    + str(data['COSTO']) + ", "
-    + data['ESTADO'] + ", "
-    "'"+ data['OBSERVACIONES'] + "', "
-    + data['PROVEEDOR'] + ", "
-    "'"+ data['FECHA_COMPRA'] + "', "
-    "'"+ filename + "'"
+    "'"+ str(data['costo']) + "', "
+    "'"+ data['descripcion'] + "', "
+    + data['proveedor_mtto'] + ", "
+    + data['f_inicio'] + ", "
+    + data['f_final'] + ", "
     ");"
     )
     cur.execute(query)
@@ -1070,12 +1062,12 @@ def crear_solicitud():
     response = {}
     data = json.loads(request.data)
     cur = mysql.connection.cursor()
-    query = ("INSERT INTO SOLICITUD (ESTADO,"
-    "SOLICITANTE,INVENTARIO_ID) VALUES ("
-    + "'" + str(data['ESTADO_SOLICITUD']) + "', "
-    + str(data['USUARIO_ID']) + ", "
-    + str(data['INVENTARIO_ID']) + ");"
-    )
+    query = ("INSERT INTO SOLICITUD (FECHA_CREACION"
+    ",ESTADO,SOLICITANTE,INVENTARIO_ID) VALUES (" 
+    +"now(),"
+    + " '" + str(data['ESTADO_SOLICITUD']) 
+    + "', " + str(data['USUARIO_ID']) 
+    + ", " + str(data['INVENTARIO_ID']) + ");")
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()

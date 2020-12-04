@@ -19,8 +19,10 @@ export class PrestamoProductoComponent implements OnInit {
   public form2: FormGroup
   submitted = false;
   public productos: any;
+  inventario: any;
 
   idProducto: number; 
+  idProductoInv: number;
 
   usrinfo = null;
   _authService = new AuthService;
@@ -120,22 +122,36 @@ export class PrestamoProductoComponent implements OnInit {
 
   public obtenerID(id_producto: number){
       this.idProducto = id_producto;
+      this._requests.getProductoInfo(this.idProducto).subscribe(
+        (success: any) => {
+          if (success.exito) {
+            this.inventario = success.inventario;
+            console.log(this.inventario);
+            this.idProductoInv = this.inventario[0].id;
+            console.log("id inv " + this.idProductoInv);
+          } else {
+            this.categorias = null;
+            alert('Error en el servidor. Mensaje: ' + success.desc);
+          }
+        },
+        (error) => {
+          this.categorias = null;
+          alert('Error en el servicio, contacta con un administrador.');
+        }
+      )
   }
 
   public solicitudProducto(){
     this.submitted = true;
-    console.log(this.idProducto + " , id_user = " + this.usrinfo['id'] );
-    
-        let usrinfo = this._authService.getInfo();
         this._requests.createSolicitud({
           'ESTADO_SOLICITUD': 4,
           'USUARIO_ID': this.usrinfo['id'],
-          'INVENTARIO_ID': this.idProducto
+          'INVENTARIO_ID': this.idProductoInv
         }).subscribe(
           (success: any) => {
             if (success.exito) {
-              alert("Producto registrado exitosamente.");
-              this.router.navigate(['/alta-producto/']);
+              alert("Solicitud registrada exitosamente.");
+              this.router.navigate(['/']);
             } else {
               alert('error en el registro, mensaje del server: ' + success.desc);
             }

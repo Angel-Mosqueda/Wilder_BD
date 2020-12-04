@@ -154,9 +154,8 @@ export class MantenimientoProductoComponent implements OnInit {
         PROVEEDOR_MTTO: this.formulario_2.get('proveedor_mtto').value,
         F_INICIO: this.formulario_2.get('f_inicio').value,
         F_FINAL: this.formulario_2.get('f_final').value
-        
       };
-      this._requests.createInventario(payload, this.file, this.id).subscribe(
+      this._requests.createMantenimiento(payload, this.id).subscribe(
         (success: any) => {
           if (success.exito) {
             this.mantenimiento = success.mantenimiento;
