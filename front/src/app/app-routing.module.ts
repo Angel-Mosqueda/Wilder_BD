@@ -32,6 +32,7 @@ import { ReporteConsumibleComponent } from './components/reporte-consumible/repo
 import { ReporteInventarioComponent } from './components/reporte-inventario/reporte-inventario.component';
 import { UsuariosComponent } from './components/usuarios/usuarios.component';
 import { ReporteGraficasComponent } from './components/reporte-graficas/reporte-graficas.component';
+import { MantenimientoProductoComponent } from './components/mantenimiento-producto/mantenimiento-producto.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -65,6 +66,7 @@ const routes: Routes = [
   { path: 'reporte-consumible', component: ReporteConsumibleComponent },
   { path: 'reporte-inventario', component: ReporteInventarioComponent },
   { path: 'graficas', component: ReporteGraficasComponent },
+  { path: 'mantenimiento-producto/:id', component: MantenimientoProductoComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 

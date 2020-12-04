@@ -979,6 +979,60 @@ def crear_inventario(id_producto):
     cur.close()
     return jsonify(response)
 ################### FIN INV #######################
+
+################## INC MANTENIMIENTO###############
+@app.route('/add_mantenimiento/<id_producto>', methods=['POST'])
+def crear_mantenimiento(id_producto):
+    response = {}
+    data = json.loads(request.data)
+    cur = mysql.connection.cursor()
+    #data = json.loads(request.form['datos'])
+    
+    # filename = (str(int(datetime.now().timestamp())) + filename)
+    empresa_id = request.cookies.get('empresa')
+    query = ("INSERT INTO MANTENIMIENTO (INVENTARIO_ID, COSTO, DESCRIPCION, PROVEEDOR_MTTO, F_INICIO,"
+    "F_FINAL) VALUES ("
+    + str(id_producto) + ", "
+    "'"+ str(data['costo']) + "', "
+    "'"+ data['descripcion'] + "', "
+    + data['proveedor_mtto'] + ", "
+    + data['f_inicio'] + ", "
+    + data['f_final'] + ", "
+    ");"
+    )
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response['exito'] = isinstance(last_id, int)
+    cur.close()
+    cur = mysql.connection.cursor()
+    query = ("SELECT * FROM ARMAR_INVENTARIO WHERE PRODUCTO_ID = " + str(id_producto))
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    response['inventario'] = []
+    if len(rows) > 0:
+        for inv in rows:
+            response['inventario'].append({
+                'id': inv[1],
+                'serie': inv[2],
+                'folio': inv[3],
+                'unombre': inv[4],
+                'lat': inv[5],
+                'lon': inv[6],
+                'costo': inv[7],
+                'estado': inv[8],
+                'observaciones': inv[9],
+                'proveedor': inv[10],
+                'f_compra': inv[11],
+                'archivo_fac': inv[12]
+            })
+    cur.close()
+    return jsonify(response)
+ #############FIN MANTENIMIENTO ###################   
+
+
 def count_pedidos_solcitudes():
     response = {}
     response["categorias"] = {}
@@ -1064,12 +1118,12 @@ def crear_solicitud():
     response = {}
     data = json.loads(request.data)
     cur = mysql.connection.cursor()
-    query = ("INSERT INTO SOLICITUD (ESTADO,"
-    "SOLICITANTE,INVENTARIO_ID) VALUES ("
-    + "'" + str(data['ESTADO_SOLICITUD']) + "', "
-    + str(data['USUARIO_ID']) + ", "
-    + str(data['INVENTARIO_ID']) + ");"
-    )
+    query = ("INSERT INTO SOLICITUD (FECHA_CREACION"
+    ",ESTADO,SOLICITANTE,INVENTARIO_ID) VALUES (" 
+    +"now(),"
+    + " '" + str(data['ESTADO_SOLICITUD']) 
+    + "', " + str(data['USUARIO_ID']) 
+    + ", " + str(data['INVENTARIO_ID']) + ");")
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()
