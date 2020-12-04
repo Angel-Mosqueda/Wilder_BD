@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Options } from '@angular-slider/ngx-slider';
+import { Globals } from '../../globals/globals';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { RequestsService } from 'src/app/services/requests.service';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+
 
 @Component({
   selector: 'app-solicitud',
@@ -7,209 +13,156 @@ import { Options } from '@angular-slider/ngx-slider';
   styleUrls: ['./solicitud.component.css']
 })
 export class SolicitudComponent implements OnInit {
-  array = []; //Arreglo para almacenar info de base de datos
-  minValue: number = 0;
-  maxValue: number = 500;
-  options: Options = {
-    floor: 0,
-    ceil: 500,
-    translate: (value: number): string => {
-      return '$' + value;
-    }
-  };
+  globals: Globals;
+  filter: any = {};
+  public categorias: any;
+  public form: FormGroup
+  public form2: FormGroup
+  submitted = false;
+  public productos: any;
+  inventario: any;
 
-  constructor() { }
+  idProducto: number; 
+  idProductoInv: number;
+
+  usrinfo = null;
+  _authService = new AuthService;
+
+  constructor(
+    globals: Globals,
+    private router: Router,
+    private _requests: RequestsService,
+    private _fb: FormBuilder
+  ) {
+    this.globals = globals;
+    this.form = this._fb.group({
+      categorias: this._fb.array(['', Validators.required]),
+      busqueda: ['', [Validators.required]]
+    });
+    this.addCheckboxes();
+  }
+
+  onCheckboxChange(e) {
+    const checkArray: FormArray = this.form.get('categorias') as FormArray;
+
+    if (e.target.checked) {
+      checkArray.push(new FormControl(e.target.value));
+    } else {
+      let i: number = 0;
+      checkArray.controls.forEach((item: FormControl) => {
+        if (item.value == e.target.value) {
+          checkArray.removeAt(i);
+          return;
+        }
+        i++;
+      });
+    }
+  }
 
   ngOnInit(): void {
-    this.prestamoInventario = false;
-    this.mantenimientoInventario = false;
-    this.almacenInventario = false;
-    this.computacionInventario = false;
-    this.herramientasInventario = false;
-    this.maquinariaInventario = false;
-    this.muebleriaInventario = false;
-    this.vehiculosInventario = false;
-    this.disponibleConsumible = false;
-    this.agotadoConsumible = false;
-    this.automotrizConsumible = false;
-    this.herramientasConsumible = false;
-    this.limpiezaConsumible = false;
-    this.maquinariaConsumible = false;
-    this.papeleriaConsumible = false;
-    this.sliderCostoMin = 0;
-    this.sliderCostoMax = 0;
-    this.stringConsumible = "";
-    this.stringInventario = "";
-  }
-
-  prestamoInventario: boolean = null;
-  mantenimientoInventario: boolean = null;
-  almacenInventario: boolean = null;
-  computacionInventario: boolean = null;
-  herramientasInventario: boolean = null;
-  maquinariaInventario: boolean = null;
-  muebleriaInventario: boolean = null;
-  vehiculosInventario: boolean = null;
-  disponibleConsumible: boolean = null;
-  agotadoConsumible: boolean = null;
-  automotrizConsumible: boolean = null;
-  herramientasConsumible: boolean = null;
-  limpiezaConsumible: boolean = null;
-  maquinariaConsumible: boolean = null;
-  papeleriaConsumible: boolean = null;
-  sliderCostoMin:  number = 0;
-  sliderCostoMax: number = 0;
-  stringConsumible: string;
-  stringInventario: string;
-
-  checkPrestamoInventarioFunction(){
-    if(this.prestamoInventario == false){
-      this.prestamoInventario = true;
-      this.concatenacionInventario();
-    }else{
-      this.prestamoInventario = false;
-      this.concatenacionInventario();
-    }
-  }
-
-  checkMantenimientoInventarioFunction(){
-    if(this.mantenimientoInventario == false){
-      this.mantenimientoInventario = true;
-      this.concatenacionInventario();
-    }else{
-      this.mantenimientoInventario = false;
-      this.concatenacionInventario();
-    }
-  }
-
-  checkAlmacenInventarioFunction(){
-    if(this.almacenInventario == false){
-      this.almacenInventario = true;
-      this.concatenacionInventario();
-    }else{
-      this.almacenInventario = false;
-      this.concatenacionInventario();
-    }
-  }
-
-  checkComputacionInventarioFunction(){
-    if(this.computacionInventario == false){
-      this.computacionInventario = true;
-      this.concatenacionInventario();
-    }else{
-      this.computacionInventario = false;
-      this.concatenacionInventario();
-    }
-  }
-
-  checkHerramientasInventarioFuntion(){
-    if(this.herramientasInventario == false){
-      this.herramientasInventario = true;
-      this.concatenacionInventario();
-    }else{
-      this.herramientasInventario = false;
-      this.concatenacionInventario();
-    }
-  }
-
-  checkMaquinariaInventarioFunction(){
-    if(this.maquinariaInventario == false){
-      this.maquinariaInventario = true;
-      this.concatenacionInventario();
-    }else{
-      this.maquinariaInventario = false;
-      this.concatenacionInventario();
-    }
-  }
-
-  checkMuebleriaInventarioFunction(){
-    if(this.muebleriaInventario == false){
-      this.muebleriaInventario = true;
-      this.concatenacionInventario();
-    }else{
-      this.muebleriaInventario = false;
-      this.concatenacionInventario();
-    }
-  }
-
-  checkVehiculosInventarioFunction(){
-    if(this.vehiculosInventario == false){
-      this.vehiculosInventario = true;
-      this.concatenacionInventario();
-    }else{
-      this.vehiculosInventario = false;
-      this.concatenacionInventario();
-    }
-  }
-
-  sliderCosto(){
-    this.sliderCostoMin = this.minValue;
-    this.sliderCostoMax = this.maxValue;
-    this.concatenacionInventario();
-    
-
-  }
-
-  concatenacionInventario(){
-    this.stringInventario = "";
-    if(this.prestamoInventario == true){
-      this.stringInventario += "prestInv=true&";
-    }
-    if(this.mantenimientoInventario == true){
-      this.stringInventario += "mantInv=true&";
-    }
-    if(this.almacenInventario == true){
-      this.stringInventario += "almInv=true&";
+    this.idProducto = null;
+    this.usrinfo = this._authService.getInfo();
+    if (this.productos === null) {
+      this.router.navigate(['/']);
     }
     
-    if(this.computacionInventario == true){
-      this.stringInventario += "compInv=true&";
-    }
-    if(this.herramientasInventario == true){
-      this.stringInventario += "herInv=true&";
-    }
-    if(this.maquinariaInventario == true){
-      this.stringInventario += "maqInv=true&";
-    }
-    if(this.muebleriaInventario == true){
-      this.stringInventario += "muebInv=true&";
-    }
-    if(this.vehiculosInventario == true){
-      this.stringInventario += "vehiInv=true&";
-    }
-    
-    this.stringInventario += "min=" + this.sliderCostoMin + "&";
-    this.stringInventario += "max=" + this.sliderCostoMax;
-    console.log(this.stringInventario);
+    this._requests.obtenerProductos(null, null).subscribe(
+      (success: any) => {
+        if (success.exito) {
+          this.productos = success.productos;
+        } else {
+          this.productos = null;
+          alert('Error en el servidor. Mensaje: ' + success.desc);
+        }
+      },
+      (error) => {
+        this.productos = null;
+        alert('Error en el servicio, contacta con un administrador,');
+      }
+    );
   }
 
-  concatenacionConsumible(){ 
-    this.stringInventario = "";
-    if(this.disponibleConsumible == true){
-      this.stringInventario += "dispCons=true&";
-    }
-    if(this.agotadoConsumible == true){
-      this.stringInventario += "agotCons=true&";
-    }
-    if(this.automotrizConsumible == true){
-      this.stringInventario += "autoCons=true&";
-    }
-    
-    if(this.herramientasConsumible == true){
-      this.stringInventario += "herCons=true&";
-    }
-    if(this.limpiezaConsumible == true){
-      this.stringInventario += "limpCons=true&";
-    }
-    if(this.maquinariaConsumible == true){
-      this.stringInventario += "maqCons=true&";
-    }
-    if(this.papeleriaConsumible == true){
-      this.stringInventario += "papCons=true&";
-    }
-    
-    this.stringInventario += "min=" + this.sliderCostoMin + "&";
-    this.stringInventario += "max=" + this.sliderCostoMax;
-    console.log(this.stringInventario);
+  get f() { return this.form2.controls; }
+
+  public buscarQuery() {
+    let nombre = this.form.controls["busqueda"].value;
+    let checks = this.form.controls.categorias.value;
+    checks.splice(0,2);
+    this._requests.obtenerProductos(checks, nombre).subscribe(
+      (success: any) => {
+        if (success.exito) {
+          this.productos = success.productos;
+        } else {
+          this.productos = null;
+          alert('Error en el servidor. Mensaje: ' + success.desc);
+        }
+      },
+      (error) => {
+        this.productos = null;
+        alert('Error en el servicio, contacta con un administrador,');
+      }
+    );
   }
+
+  private addCheckboxes() {
+    this._requests.getCategorias().subscribe(
+      (success: any) => {
+        if (success.exito) {
+          this.categorias = success.categorias;
+        } else {
+          this.categorias = null;
+          alert('Error en el servidor. Mensaje: ' + success.desc);
+        }
+      },
+      (error) => {
+        this.categorias = null;
+        alert('Error en el servicio, contacta con un administrador,');
+      }
+    )
+  }
+
+  public obtenerID(id_producto: number){
+      this.idProducto = id_producto;
+      this._requests.getProductoInfo(this.idProducto).subscribe(
+        (success: any) => {
+          if (success.exito) {
+            this.inventario = success.inventario;
+            console.log(this.inventario);
+            this.idProductoInv = this.inventario[0].id;
+            console.log("id inv " + this.idProductoInv);
+          } else {
+            this.categorias = null;
+            alert('Error en el servidor. Mensaje: ' + success.desc);
+          }
+        },
+        (error) => {
+          this.categorias = null;
+          alert('Error en el servicio, contacta con un administrador.');
+        }
+      )
+  }
+
+  public solicitudProducto(){
+    this.submitted = true;
+        this._requests.createSolicitud({
+          'ESTADO_SOLICITUD': 4,
+          'USUARIO_ID': this.usrinfo['id'],
+          'INVENTARIO_ID': this.idProductoInv
+        }).subscribe(
+          (success: any) => {
+            if (success.exito) {
+              alert("Solicitud registrada exitosamente.");
+              this.router.navigate(['/']);
+            } else {
+              alert('error en el registro, mensaje del server: ' + success.desc);
+            }
+          },
+          (error) => {
+            alert("Error en el servidor.")
+          }
+        );
+   
+      
+  }
+ 
 }
