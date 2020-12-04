@@ -10,44 +10,37 @@ import { DomSanitizer } from "@angular/platform-browser"
   styleUrls: ['./mantenimiento-producto.component.css']
 })
 export class MantenimientoProductoComponent implements OnInit {
-  mantenimiento: any;
-  formulario_2: FormGroup;
-  @ViewChild('embebidoFac', { static: true }) pdf: ElementRef;
+  mantenimientos: any;
+  editable: any;
   id: any;
-  categorias: any;
   producto_info: any;
-  inventario: any;
-  modo_creacion: boolean = false;
+  create: boolean = false;
   formulario: FormGroup;
-  ubicaciones: any;
-  proveedores: any;
   fecha: Date = new Date();
   submitted: boolean = false;
-  file: File;
+  proveedores: any;
 
   constructor(
     private route: ActivatedRoute,
     private _requests: RequestsService,
     private _fb: FormBuilder,
     public sanitizer: DomSanitizer,
-    private _renderer: Renderer2
   ) { }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
     console.log(this.id);
 
-    this._requests.getUbicaciones().subscribe(
+    this._requests.getMantenimientos(this.id).subscribe(
       (success: any) => {
         if (success.exito) {
-          this.ubicaciones = success.ubicaciones;
+          this.mantenimientos = success.mantenimientos;
+          this.editable = this.mantenimientos.map(a => false);
         } else {
-          this.ubicaciones = null;
           alert('Error en el servidor. Mensaje: ' + success.desc);
         }
       },
       (error) => {
-        this.ubicaciones = null;
         alert('Error en el servicio, contacta con un administrador,');
       }
     )
@@ -68,70 +61,79 @@ export class MantenimientoProductoComponent implements OnInit {
     )
 
     this.formulario = this._fb.group({
-      nserie: ['', [Validators.required]],
-      nfactura: ['', [Validators.required]],
-      ubicacion: ['', [Validators.required]],
       costo: ['', [Validators.required]],
-      estado: ['', [Validators.required]],
-      observaciones: ['', [Validators.required]],
+      descripcion: ['', [Validators.required]],
       proveedor: ['', [Validators.required]],
-      fecha_compra: ['', [Validators.required]],
-      factura: ['', [Validators.required]],
+      f_inicial: ['', [Validators.required]],
+      f_final: ['', []]
     });
-
-    this.formulario_2 = this._fb.group({
-      costo: ['',[Validators.required]],
-      descripcion: ['',[Validators.required]],
-      proveedor_mtto: ['',[Validators.required]],
-      f_inicio: ['',[Validators.required]],
-      f_final: ['',[Validators.required]]
-    });
-
-    this._requests.getProductoInfo(this.id).subscribe(
-      (success: any) => {
-        if (success.exito) {
-          this.categorias = success.categorias;
-          this.producto_info = success.producto;
-          this.inventario = success.inventario;
-          this.mantenimiento = success.mantenimiento;
-          console.log(this.inventario);
-        } else {
-          this.categorias = null;
-          alert('Error en el servidor. Mensaje: ' + success.desc);
-        }
-      },
-      (error) => {
-        this.categorias = null;
-        alert('Error en el servicio, contacta con un administrador.');
-      }
-    )
   }
 
   get f() { return this.formulario.controls; }
 
-  crearInventario() {
+  toggleEdicion(index: any) {
+    if (this.editable[index]) {
+      // Mandar update
+      let costo = (<HTMLInputElement>document.getElementById("costo-" + index)).value;
+      let descripcion = (<HTMLInputElement>document.getElementById("descripcion-" + index)).value;
+      let f_inicio = (<HTMLInputElement>document.getElementById("f_inicial-" + index)).value;
+      let f_final = (<HTMLInputElement>document.getElementById("f_final-" + index)).value;
+      let id = (<HTMLInputElement>document.getElementById("id-" + index)).value;
+      this._requests.updateMantenimiento({
+        COSTO: costo,
+        DESCRIPCION: descripcion,
+        F_INICIO: f_inicio,
+        F_FINAL: f_final,
+        ID: id
+      }, this.id).subscribe(
+        (success: any) => {
+          if (success.exito) {
+            this.mantenimientos = success.mantenimientos;
+            this.editable = this.mantenimientos.map(a => false);
+          } else {
+            alert('Error en el servidor. Mensaje: ' + success.desc);
+          }
+        },
+        (error) => {
+          alert('Error en el servicio, contacta con un administrador,');
+        }
+      );
+    }
+    this.editable[index] = !this.editable[index];
+  }
+
+  eliminarMantenimiento(index: any) {
+    this._requests.eliminarMantenimiento(index, this.id).subscribe(
+      (success: any) => {
+        this.mantenimientos = success.mantenimientos;
+        this.editable = this.mantenimientos.map(a => false);
+      },
+      (error) => {
+        this.mantenimientos = null;
+        alert('Error en el servicio, contacta con un administrador,');
+      }
+    );
+  }
+
+  crearMantenimiento() {
     this.submitted = true;
     if (this.formulario.invalid) {
       return;
     } else {
       let payload = {
-        NSERIE: this.formulario.get('nserie').value,
-        NFACTURA: this.formulario.get('nfactura').value,
-        UBICACION_ID: this.formulario.get('ubicacion').value,
-        COSTO: this.formulario.get('costo').value,
-        ESTADO: this.formulario.get('estado').value,
-        OBSERVACIONES: this.formulario.get('observaciones').value,
+        DESCRIPCION: this.formulario.get('descripcion').value,
         PROVEEDOR: this.formulario.get('proveedor').value,
-        FECHA_COMPRA: this.formulario.get('fecha_compra').value,
-        FACTURA: this.formulario.get('factura').value
+        F_INICIO: this.formulario.get('f_inicial').value,
+        F_FINAL: this.formulario.get('f_final').value,
+        COSTO: this.formulario.get('costo').value
       };
-      this._requests.createInventario(payload, this.file, this.id).subscribe(
+      this._requests.crearMantenimiento(payload, this.id).subscribe(
         (success: any) => {
           if (success.exito) {
-            this.inventario = success.inventario;
-            console.log(this.inventario);
+            this.mantenimientos = success.mantenimientos;
+            console.log(this.mantenimientos);
           } else {
-            this.categorias = null;
+            this.mantenimientos = null;
             alert('Error en el servidor. Mensaje: ' + success.desc);
           }
         },
@@ -140,48 +142,6 @@ export class MantenimientoProductoComponent implements OnInit {
         }
       );
     }
-    this.modo_creacion = !this.modo_creacion;
+    this.create = !this.create;
   }
-
-  crearMantenimiento() {
-    this.submitted = true;
-    if (this.formulario_2.invalid) {
-      return;
-    } else {
-      let payload = {
-        COSTO: this.formulario_2.get('costo').value,
-        DESCRIPCION: this.formulario_2.get('descripcion').value,
-        PROVEEDOR_MTTO: this.formulario_2.get('proveedor_mtto').value,
-        F_INICIO: this.formulario_2.get('f_inicio').value,
-        F_FINAL: this.formulario_2.get('f_final').value
-      };
-      this._requests.createMantenimiento(payload, this.id).subscribe(
-        (success: any) => {
-          if (success.exito) {
-            this.mantenimiento = success.mantenimiento;
-            console.log(this.mantenimiento);
-          } else {
-            this.categorias = null;
-            alert('Error en el servidor. Mensaje: ' + success.desc);
-          }
-        },
-        (error) => {
-          alert("Error en el servidor. Intente más tarde.");
-        }
-      );
-    }
-    this.modo_creacion = !this.modo_creacion;
-  }
-
-  fileChange(event) {
-    this.file = event.target.files.item(0);
-  }
-
-  setpdf(recurso: any) {
-    this._renderer.removeAttribute(this.pdf.nativeElement, "src");
-    setTimeout(() => {
-      this._renderer.setAttribute(this.pdf.nativeElement, "src", recurso)
-    })
-  }
-
 }

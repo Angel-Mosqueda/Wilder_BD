@@ -800,7 +800,7 @@ def crear_usuario():
     cur.close()
     return jsonify(response)
 
-######################### INICIO USUARIO #####################
+######################### FIN USUARIO #####################
 
 @app.route('/add_categoria/', methods=['POST'])
 def crear_categoria():
@@ -919,6 +919,7 @@ def obtener_producto(producto_id):
     return jsonify(response)
 
 ################### FIN PROD ######################
+
 ################### INICIO INV ####################
 @app.route('/add_inventario/<id_producto>', methods=['POST'])
 def crear_inventario(id_producto):
@@ -981,56 +982,163 @@ def crear_inventario(id_producto):
 ################### FIN INV #######################
 
 ################## INC MANTENIMIENTO###############
-@app.route('/add_mantenimiento/<id_producto>', methods=['POST'])
+@app.route('/get_mantenimientos/<id_producto>', methods=['GET'])
+def get_mantenimientos(id_producto):
+    response = {}
+    response["mantenimientos"] = []
+    cur = mysql.connection.cursor()
+    query = ("SELECT M.ID, P.RAZSOC, M.COSTO, M.DESCRIPCION, M.F_INICIO, M.F_FINAL"
+    " FROM MANTENIMIENTO M, EMPRESA P WHERE M.PROVEEDOR_MTTO = P.ID AND INVENTARIO_ID = '" + str(id_producto)
+    + "';"
+    )
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    counter = 0
+    for mtto in rows:
+        response["mantenimientos"].append({
+            'id': mtto[0],
+            'proveedor': mtto[1],
+            'costo': mtto[2],
+            'descripcion': mtto[3],
+            'f_inicio': mtto[4],
+            'f_final': mtto[5]
+        })
+    if len(response['mantenimientos']) == 0:
+        response['exito'] = False
+        response['desc'] = "No existen mantenimientos."
+    else:
+        response['exito'] = True
+    cur.close()
+    return jsonify(response)
+
+@app.route('/create_mantenimiento/<id_producto>', methods=['POST'])
 def crear_mantenimiento(id_producto):
     response = {}
-    data = json.loads(request.data)
     cur = mysql.connection.cursor()
-    #data = json.loads(request.form['datos'])
-    
-    # filename = (str(int(datetime.now().timestamp())) + filename)
-    empresa_id = request.cookies.get('empresa')
-    query = ("INSERT INTO MANTENIMIENTO (INVENTARIO_ID, COSTO, DESCRIPCION, PROVEEDOR_MTTO, F_INICIO,"
-    "F_FINAL) VALUES ("
+    data = json.loads(request.data)
+    F_FINAL = ' F_FINAL = NULL ' if data['F_FINAL'] == '' else " F_FINAL = '" + str(data['F_FINAL']) + "' "
+    query = ("INSERT INTO MANTENIMIENTO (INVENTARIO_ID, COSTO, DESCRIPCION, PROVEEDOR_MTTO, F_INICIO, F_FINAL) VALUES ("
     + str(id_producto) + ", "
-    "'"+ str(data['costo']) + "', "
-    "'"+ data['descripcion'] + "', "
-    + data['proveedor_mtto'] + ", "
-    + data['f_inicio'] + ", "
-    + data['f_final'] + ", "
+    + str(data['COSTO']) + ", "
+    "'" + data['DESCRIPCION'] + "', "
+    + str(data['PROVEEDOR']) + ", "
+    "'" + str(data['F_INICIO']) + "', " + F_FINAL +
     ");"
     )
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()
     last_id = cur.lastrowid
-    response['exito'] = isinstance(last_id, int)
-    cur.close()
+    response = {
+        'exito': isinstance(last_id, int),
+        'id_insertado': last_id
+    }
+
+    response["mantenimientos"] = []
     cur = mysql.connection.cursor()
-    query = ("SELECT * FROM ARMAR_INVENTARIO WHERE PRODUCTO_ID = " + str(id_producto))
+    query = ("SELECT M.ID, P.RAZSOC, M.COSTO, M.DESCRIPCION, M.F_INICIO, M.F_FINAL"
+    " FROM MANTENIMIENTO M, EMPRESA P WHERE M.PROVEEDOR_MTTO = P.ID AND INVENTARIO_ID = '" + str(id_producto)
+    + "';"
+    )
     cur.execute(query)
     mysql.connection.commit()
     rows = cur.fetchall()
-    response['inventario'] = []
-    if len(rows) > 0:
-        for inv in rows:
-            response['inventario'].append({
-                'id': inv[1],
-                'serie': inv[2],
-                'folio': inv[3],
-                'unombre': inv[4],
-                'lat': inv[5],
-                'lon': inv[6],
-                'costo': inv[7],
-                'estado': inv[8],
-                'observaciones': inv[9],
-                'proveedor': inv[10],
-                'f_compra': inv[11],
-                'archivo_fac': inv[12]
-            })
+    counter = 0
+    for mtto in rows:
+        response["mantenimientos"].append({
+            'id': mtto[0],
+            'proveedor': mtto[1],
+            'costo': mtto[2],
+            'descripcion': mtto[3],
+            'f_inicio': mtto[4],
+            'f_final': mtto[5]
+        })
     cur.close()
     return jsonify(response)
- #############FIN MANTENIMIENTO ###################   
+
+
+@app.route('/delete_mantenimiento/<id>/<id_producto>', methods=['GET'])
+def eliminar_mantenimientos(id, id_producto):
+    response = {}
+    cur = mysql.connection.cursor()
+    query = "DELETE FROM MANTENIMIENTO WHERE ID = " + str(id) + ";"
+    
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    cur.close()
+
+    empresa_id = int(request.cookies.get('empresa'))
+    response["mantenimientos"] = []
+    cur = mysql.connection.cursor()
+    query = ("SELECT M.ID, P.RAZSOC, M.COSTO, M.DESCRIPCION, M.F_INICIO, M.F_FINAL"
+    " FROM MANTENIMIENTO M, EMPRESA P WHERE M.PROVEEDOR_MTTO = P.ID AND INVENTARIO_ID = '" + str(id_producto)
+    + "';"
+    )
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    counter = 0
+    for mtto in rows:
+        response["mantenimientos"].append({
+            'id': mtto[0],
+            'proveedor': mtto[1],
+            'costo': mtto[2],
+            'descripcion': mtto[3],
+            'f_inicio': mtto[4],
+            'f_final': mtto[5]
+        })
+    cur.close()
+    return jsonify(response)
+    return response
+
+
+@app.route('/update_mantenimiento/<id_producto>', methods=['POST'])
+def actualizar_mantenimiento(id_producto):
+    response = {}
+    cur = mysql.connection.cursor()
+    data = json.loads(request.data)
+    F_INICIO = ' F_INICIO = NULL, ' if data['F_INICIO'] == '' else " F_INICIO = '" + str(data['F_INICIO']) + "', "
+    F_FINAL = ' F_FINAL = NULL ' if data['F_FINAL'] == '' else " F_FINAL = '" + str(data['F_FINAL']) + "' "
+    query = ("UPDATE MANTENIMIENTO SET"
+    " COSTO = " + str(data['COSTO']) + ", "
+    " DESCRIPCION = '" + str(data['DESCRIPCION']) + "', "
+    + F_INICIO + " " + F_FINAL +
+    " WHERE ID = " + str(data['ID']) + ";"
+    )
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response = {
+        'exito': isinstance(last_id, int),
+        'id_insertado': last_id
+    }
+    cur.close()
+
+    response["mantenimientos"] = []
+    cur = mysql.connection.cursor()
+    query = ("SELECT M.ID, P.RAZSOC, M.COSTO, M.DESCRIPCION, M.F_INICIO, M.F_FINAL"
+    " FROM MANTENIMIENTO M, EMPRESA P WHERE M.PROVEEDOR_MTTO = P.ID AND INVENTARIO_ID = '" + str(id_producto)
+    + "';"
+    )
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    counter = 0
+    for mtto in rows:
+        response["mantenimientos"].append({
+            'id': mtto[0],
+            'proveedor': mtto[1],
+            'costo': mtto[2],
+            'descripcion': mtto[3],
+            'f_inicio': mtto[4],
+            'f_final': mtto[5]
+        })
+    cur.close()
+    return response
+##################### FIN MANTENIMIENTO ###################   
 
 
 def count_pedidos_solcitudes():
@@ -1081,36 +1189,6 @@ def detalle_articulo_inventario():
         counter = counter + 1
     cur.close()
     return jsonify(response)
-
-
-def get_mantenimientos():
-    request = {}
-    request["mantenimientos"] = []
-    cur = mysql.connection.cursor()
-    query = ("SELECT PROVEEDOR_MTTO, COSTO, DESCRIPCION, F_INICIO, F_FINAL"
-    " FROM MANTENIMIENTO WHERE INVENTARIO_ID = '" + request.args.get("id_inv")
-    + "';"
-    )
-    cur.execute(query)
-    mysql.connection.commit()
-    rows = cur.fetchall()
-    counter = 0
-    for i in rows:
-        query = ("SELECT RAZSOC FROM EMPRESA WHERE ID = " + i[0]
-        )
-        cur.execute(query)
-        mysql.connection.commit()
-        row = cur.fetchone()
-        response["mantenimientos"][counter] = {
-            "proveedor": row[0],
-            "costo": i[1],
-            "descripcion": i[2],
-            "f_inicio": i[3],
-            "f_final": i[4]
-        }
-        counter = counter + 1
-    cur.close()
-    return jsonify(request)
 
 
 @app.route('/add_solicitud/', methods=['POST'])

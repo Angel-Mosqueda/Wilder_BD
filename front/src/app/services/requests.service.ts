@@ -123,10 +123,20 @@ export class RequestsService {
   }
 
   /////////// CRUD Mantenimiento
-  createMantenimiento(playload: any, id_producto:Number){
-    let fd = new FormData();
-    fd.append('datos',JSON.stringify(playload));
-    return this.http.post('/add_mantenimiento/' + id_producto);
+  getMantenimientos(id: Number) {
+    return this.http.get('/get_mantenimientos/' + id);
+  }
+
+  updateMantenimiento(payload: any, id: Number) {
+    return this.http.post('/update_mantenimiento/' + id, payload);
+  }
+
+  crearMantenimiento(payload: any, id: any) {
+    return this.http.post('/create_mantenimiento/' + id, payload)
+  }
+
+  eliminarMantenimiento(id: any, id_prod: Number) {
+    return this.http.get('/delete_mantenimiento/' + id + "/" + id_prod);
   }
 
   ///////////// CRUD Consumibles
