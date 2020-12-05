@@ -1,0 +1,32 @@
+<div class="row p-3">
+    <div class="col-1"></div>
+    <div class="col-10">
+        <h3>Reporte de Solicitudes de Inventario</h3>
+        <button class="float-right btn btn-primary d-print-none" (click)="window.print()">Imprimir</button>
+        <table class="table table-light table-bordered" *ngIf="this.solicitudes.length > 0; else nosolicitudes">
+            <tr>
+                <th>ID</th>
+                <th>Estado</th>
+                <th>Producto Solicitado</th>
+                <th>Número de Serie</th>
+                <th>Usuario</th>
+                <th>Fecha de Creación</th>
+                <th>Fecha de Revisión</th>
+                <th>Observaciones</th>
+            </tr>
+            <tr *ngFor="let instancia of this.solicitudes">
+                <td>{{ instancia.id }}</td>
+                <td>{{ instancia.estado ? "Activo" : "Inactivo" }}</td>
+                <td>{{ instancia.producto }}</td>
+                <td>{{ instancia.nserie }}</td>
+                <td>{{ instancia.fecha_creacion }}</td>
+                <td>{{ instancia.fecha_revision }}</td>
+                <td>{{ instancia.observaciones }}</td>
+            </tr>
+        </table>
+        <ng-template #nosolicitudes>
+            <h4>No existen solicitudes en la empresa actual.</h4>
+        </ng-template>
+    </div>
+    <div class="col-1"></div>
+</div>

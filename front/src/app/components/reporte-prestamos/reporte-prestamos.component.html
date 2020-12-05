@@ -1,0 +1,30 @@
+<div class="row p-3">
+    <div class="col-1"></div>
+    <div class="col-10">
+        <h3>Reporte de Préstamos</h3>
+        <button class="float-right btn btn-primary d-print-none" (click)="window.print()">Imprimir</button>
+        <table class="table table-light table-bordered" *ngIf="this.prestamos.length > 0; else noprestamos">
+            <tr>
+                <th>ID</th>
+                <th>Estado</th>
+                <th>Producto Prestado</th>
+                <th>Número de Serie</th>
+                <th>Usuario</th>
+                <th>Fecha Estimada de Regreso</th>
+                <th>Fecha de Regreso</th>
+            </tr>
+            <tr *ngFor="let instancia of this.prestamos">
+                <td>{{ instancia.id }}</td>
+                <td>{{ instancia.estado ? "Activo" : "Inactivo" }}</td>
+                <td>{{ instancia.producto }}</td>
+                <td>{{ instancia.nserie }}</td>
+                <td>{{ instancia.fecha_estimada }}</td>
+                <td>{{ instancia.fecha_regreso }}</td>
+            </tr>
+        </table>
+        <ng-template #noprestamos>
+            <h4>No existen prestamos en la empresa actual.</h4>
+        </ng-template>
+    </div>
+    <div class="col-1"></div>
+</div>

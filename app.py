@@ -132,6 +132,73 @@ def obtener_empresas():
 
 
 ################ INICIO REPORTES ###################
+@app.route('/reporte_prestamo/', methods=['GET'])
+def reporte_prestamo():
+    response = {}
+    cur = mysql.connection.cursor()
+    cur.callproc('REPORTE_PRESTAMOS', [empresa_id])
+    rows = cur.fetchall()
+    response["prestamos"] = []
+    for prestamo in rows:
+        response["prestamos"].append({
+            "id": prestamo[0],
+            "estado": prestamo[1],
+            "usuario": prestamo[2],
+            "fecha_estimada": prestamo[3],
+            "fecha_regreso": prestamo[4],
+            "producto": prestamo[5],
+            "nserie": prestamo[6]
+        })
+    response["exito"] = len(response["prestamos"]) > 0
+    cur.close()
+    return response
+
+
+@app.route('/reporte_solicitudes/', methods=['GET'])
+def reporte_solicitudes():
+    response = {}
+    cur = mysql.connection.cursor()
+    cur.callproc('REPORTE_SOLICITUDES', [empresa_id])
+    rows = cur.fetchall()
+    response["solicitudes"] = []
+    for solicitud in rows:
+        response["solicitudes"].append({
+            "id": solicitud[0],
+            "estado": solicitud[1],
+            "usuario": solicitud[2],
+            "observaciones": solicitud[3],
+            "fecha_creacion": solicitud[4],
+            "fecha_revision": solicitud[5],
+            "producto": solicitud[6],
+            "nserie": solicitud[7]
+        })
+    response["exito"] = len(response["solicitudes"]) > 0
+    cur.close()
+    return response
+
+
+@app.route('/reporte_mantenimientos/', methods=['GET'])
+def reporte_mantenimientos():
+    response = {}
+    cur = mysql.connection.cursor()
+    cur.callproc('REPORTE_MANTENIMIENTOS', [empresa_id])
+    rows = cur.fetchall()
+    response["mantenimientos"] = []
+    for mantenimiento in rows:
+        response["mantenimientos"].append({
+            "id": mantenimiento[0],
+            "nserie": mantenimiento[1],
+            "producto": mantenimiento[2],
+            "costo": mantenimiento[3],
+            "descripcion": mantenimiento[4],
+            "f_inicio": mantenimiento[5],
+            "f_final": mantenimiento[6]
+        })
+    response["exito"] = len(response["mantenimientos"]) > 0
+    cur.close()
+    return response
+
+
 @app.route('/reportes/<tiempo>', methods=['GET'])
 def reportes(tiempo):
     response = {}
@@ -139,7 +206,6 @@ def reportes(tiempo):
     empresa_id = int(request.cookies.get('empresa'))
 
     cur = mysql.connection.cursor()
-    # select c.nombre, count(cp.producto_id) from categoria c, producto p, categoria_producto cp where p.id = cp.producto_id and p.empresa_id = 7 and c.id = cp.categoria_id group by cp.categoria_id; 
     cur.callproc('CONTEO_CATEGORIAS', [empresa_id])
     rows = cur.fetchall()
     response["categorias"] = []
@@ -217,6 +283,28 @@ def reportes(tiempo):
         "inventario": row_inv[0],
         "mantenimiento": row_mtto[0]
     }
+
+    cur = mysql.connection.cursor()
+    cur.callproc('PROVEEDORES_MTTO', [empresa_id])
+    rows = cur.fetchall()
+    response["principales_prov_mtto"] = []
+    for conteo in rows:
+        response["principales_prov_mtto"].append({
+            "proveedores": conteo[0],
+            "cantidad": conteo[1]
+        })
+    cur.close()
+
+    cur = mysql.connection.cursor()
+    cur.callproc('PROVEEDORES_INVENTARIO', [empresa_id])
+    rows = cur.fetchall()
+    response["principales_prov_inv"] = []
+    for conteo in rows:
+        response["principales_prov_inv"].append({
+            "proveedores": conteo[0],
+            "cantidad": conteo[1]
+        })
+    cur.close()
     response['exito'] = True
     return response
 
@@ -1631,6 +1719,9 @@ def obtener_prestamos():
     return response
 
 
+@app.errorhandler(404) 
+def not_found(e):
+    return render_template("index.html") 
 
 
 @app.route('/')

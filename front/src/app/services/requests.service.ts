@@ -52,17 +52,17 @@ export class RequestsService {
   }
 
   updateInventario(id_sol: any) {
-    return this.http.get('/upp_prestamo/' + id_sol );
+    return this.http.get('/upp_prestamo/' + id_sol);
   }
 
 
   //Obtener Solicitud Inventario
-  getSolicitud(){
+  getSolicitud() {
     return this.http.get('/get_solicitudes/');
   }
 
   //Obtener Inventario Disponible
-  getInventarioDisponible(){
+  getInventarioDisponible() {
     return this.http.get('/get_prod_sin_sol/');
   }
 
@@ -80,7 +80,7 @@ export class RequestsService {
     return this.http.post('/add_prestamo/', payload);
   }
 
-  getPrestamos(){
+  getPrestamos() {
     return this.http.get('/get_prestamos/');
   }
 
@@ -196,12 +196,15 @@ export class RequestsService {
   }
 
   ///////////// CRUD Incidencias
-  getIncidencias(inventario_id) {
-    return this.http.get('/get_incidencias/' + inventario_id);
+  getIncidencias(inventario_id = null) {
+    if (inventario_id)
+      return this.http.get('/get_incidencias/' + inventario_id);
+    else
+      return this.http.get('/get_incidencias/');
   }
 
   updateIncidencia(payload: any, inventario_id?: any) {
-    if(inventario_id)
+    if (inventario_id)
       return this.http.post('/update_incidencia/' + inventario_id, payload);
     else
       return this.http.post('/update_incidencia/', payload);
@@ -251,5 +254,17 @@ export class RequestsService {
   ///////////////////// Reportes
   getConteos(tiempo: any) {
     return this.http.get('/reportes/' + tiempo);
+  }
+
+  getRPrestamos() {
+    return this.http.get('/reporte_prestamo/');
+  }
+
+  getRSolicitudes() {
+    return this.http.get('/reporte_solicitudes/');
+  }
+
+  getRMantenimientos() {
+    return this.http.get('/reporte_mantenimientos/');
   }
 }

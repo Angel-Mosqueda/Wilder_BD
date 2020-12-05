@@ -34,6 +34,9 @@ import { UsuariosComponent } from './components/usuarios/usuarios.component';
 import { ReporteGraficasComponent } from './components/reporte-graficas/reporte-graficas.component';
 import { MantenimientoProductoComponent } from './components/mantenimiento-producto/mantenimiento-producto.component';
 import { IncidenciasComponent } from './components/incidencias/incidencias.component';
+import { ReporteMantenimientoComponent } from './components/reporte-mantenimiento/reporte-mantenimiento.component';
+import { ReporteSolicitudesComponent } from './components/reporte-solicitudes/reporte-solicitudes.component';
+import { ReportePrestamosComponent } from './components/reporte-prestamos/reporte-prestamos.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -60,6 +63,10 @@ const routes: Routes = [
   { path: 'consumible-inventario', component: ConsumibleInventarioComponent, canActivate: [AuthGuardService] },
   { path: 'alta-consumible', component: AltaConsumbibleComponent },
   { path: 'alta-inventario', component: AltaInventarioComponent },
+  { path: 'incidencias', component: IncidenciasComponent },
+  { path: 'reporte_mtto', component: ReporteMantenimientoComponent },
+  { path: 'reporte_pres', component: ReportePrestamosComponent },
+  { path: 'reporte_sol', component: ReporteSolicitudesComponent },
   { path: 'incidencias/:id', component: IncidenciasComponent },
   { path: 'eliminar-consumible', component: EliminarConsumibleComponent },
   { path: 'eliminar-inventario', component: EliminarInventarioComponent },

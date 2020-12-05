@@ -1,0 +1,74 @@
+<div class="row">
+    <div class="col-12 mt-4">
+        <h4>{{ this.id ? "Incidencia(s) para este producto:" : "Incidencias creadas" }}</h4>
+        <button class="float-right ml-3 btn btn-success d-print-none" (click)="this.create = !this.create;" *ngIf="this.id">Añade una
+            nueva incidencia</button>
+        <button class="btn btn-primary float-right d-print-none"(click)="window.print();">Imprimir Reporte</button>
+    </div>
+    <div class="col-12 mt-3">
+        <table class="table table-dark text-center">
+            <tr>
+                <th>ID</th>
+                <th>Usuario que Reporta</th>
+                <th>Producto que Reporta</th>
+                <th>Numero de serie que Reporta</th>
+                <th>Descripcion</th>
+                <th>Fecha</th>
+                <th class="d-print-none">Editar</th>
+                <th class="d-print-none" *ngIf="this.globals.rol == 'admin'">Eliminar</th>
+            </tr>
+            <!--  Arreglo que corresponda a cada formulario -->
+            <tr *ngFor="let incidencia of this.incidencias; let idx = index">
+                <td><input class="form-control" id="id-{{ idx }}" type="text" value="{{ incidencia.id }}" disabled>
+                </td>
+                <td>{{ incidencia.nombre }}</td>
+                <td>{{ incidencia.producto }}</td>
+                <td>{{ incidencia.nserie }}</td>
+                <td><input class="form-control" id="descripcion-{{ idx }}" type="text"
+                        value="{{ incidencia.descripcion }}" [disabled]="!this.editable[idx]"></td>
+                <td><input class="form-control" id="fecha-{{ idx }}" type="date"
+                        value="{{ incidencia.fecha | date:'yyyy-MM-dd' }}" [disabled]="!this.editable[idx]"></td>
+                <td class="d-print-none">
+                    <button class="btn btn-secondary" (click)="toggleEdicion(idx)"
+                        [disabled]="!(this.globals.rol == 'normal' && this.usrinfo.id == incidencia.usrid)">{{ this.editable[idx] ? 'Terminar' : 'Editar' }}</button>
+                </td>
+                <td class="d-print-none" *ngIf="this.globals.rol == 'admin'"><button class="btn btn-danger"
+                        (click)="eliminarIncidencia(incidencia.id)">Eliminar</button>
+                </td>
+            </tr>
+        </table>
+        <ng-template #nohay>
+            <h3>No tienes registradas Incidencias</h3>
+        </ng-template>
+        <div class="row" *ngIf="this.create">
+            <div class="col-3"></div>
+            <div class="col-6">
+                <h3>Crea una nueva incidencia</h3>
+                <form action="" [formGroup]="this.formulario" (ngSubmit)="crearIncidencia()">
+                    <div class="from-group">
+                        <label>¿De qué trata la incidencia?</label>
+                        <input type="text" formControlName="descripcion" class="form-control"
+                            [ngClass]="{'is-invalid': f.descripcion.touched && f.descripcion.errors }">
+                        <div class="invalid-feedback">
+                            <div *ngIf="f.descripcion.errors?.required">La descripción de la incidencia es obligatoria.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="from-group">
+                        <label>¿Cuándo se reporta esta incidencia?</label>
+                        <input type="date" max="{{ this.fecha | date:'yyyy-MM-dd'}}" formControlName="fecha"
+                            class="form-control" [ngClass]="{'is-invalid': f.fecha.touched && f.fecha.errors }">
+                        <div class="invalid-feedback">
+                            <div *ngIf="f.fecha.errors?.required">La fecha es obligatoria</div>
+                        </div>
+                    </div>
+
+                    <button class="text-center btn btn-primary mt-3 text-center" type="submit">Enviar</button>
+                </form>
+                <br><br><br><br><br>
+            </div>
+            <div class="col-3"></div>
+        </div>
+    </div>
+</div>

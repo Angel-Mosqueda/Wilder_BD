@@ -11,9 +11,13 @@ export class ReporteGraficasComponent implements OnInit {
   data_chart_conteo_categorias: any;
   data_chart_reporte_conteos: any;
   data_chart_dinero: any;
+  data_proveedores_mtto: any;
+  data_proveedores_inv: any;
   chart_conteo_categorias: Chart;
   chart_reporte_conteos: Chart;
   chart_dinero: Chart;
+  chart_proveedores_mtto: any;
+  chart_proveedores_inv: any;
   selector: Number = 1;
 
   constructor(
@@ -49,6 +53,22 @@ export class ReporteGraficasComponent implements OnInit {
         for (let atributo in this.data_chart_dinero) {
           array_reporte_dinero.push(atributo);
           dinero.push(this.data_chart_dinero[atributo]);
+        }
+
+        this.data_proveedores_inv = exito.principales_prov_inv;
+        let proveedores_inv = [];
+        let dinero_inv = [];
+        for (let atributo in this.data_proveedores_inv) {
+          proveedores_inv.push(this.data_proveedores_inv[atributo]['proveedores']);
+          dinero_inv.push(this.data_proveedores_inv[atributo]['cantidad']);
+        }
+
+        this.data_proveedores_mtto = exito.principales_prov_mtto;
+        let proveedores_mtto = [];
+        let dinero_mtto = [];
+        for (let atributo in this.data_proveedores_mtto) {
+          proveedores_mtto.push(this.data_proveedores_mtto[atributo]['proveedores']);
+          dinero_mtto.push(this.data_proveedores_mtto[atributo]['cantidad']);
         }
 
         this.chart_conteo_categorias = new Chart('categorias', {
@@ -97,6 +117,55 @@ export class ReporteGraficasComponent implements OnInit {
             }]
           }
         });
+
+        this.chart_proveedores_inv = new Chart('dinero_inv', {
+          type: 'bar',
+          data: {
+            labels: proveedores_inv,
+            datasets: [
+              {
+                label: 'Dinero gastado en Inventario',
+                fill: false,
+                backgroundColor: ["#73EEDC", "#73C2BE", "#776885", "#04030F", "#49C6E5", "#00BD9D", "#BFD7EA", "#FEFFFE", "#E2EF70", "#F6E4F6"],
+                data: dinero_inv
+              }
+            ]
+          },
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
+                }
+              }]
+            }
+          }
+        });
+
+        this.chart_proveedores_mtto = new Chart('dinero_mtto', {
+          type: 'bar',
+          data: {
+            labels: proveedores_mtto,
+            datasets: [
+              {
+                label: 'Dinero gastado en Mantenimiento',
+                fill: false,
+                backgroundColor: ["#73EEDC", "#73C2BE", "#776885", "#04030F", "#49C6E5", "#00BD9D", "#BFD7EA", "#FEFFFE", "#E2EF70", "#F6E4F6"],
+                data: dinero_mtto
+              }
+            ]
+          },
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
+                }
+              }]
+            }
+          }
+        });
+
       },
       (error) => {
         alert("Ocurrio un error con el servicio, intenta más tarde.");

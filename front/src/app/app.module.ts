@@ -45,6 +45,9 @@ import { UsuariosComponent } from './components/usuarios/usuarios.component';
 import { ReporteGraficasComponent } from './components/reporte-graficas/reporte-graficas.component';
 import { MantenimientoProductoComponent } from './components/mantenimiento-producto/mantenimiento-producto.component';
 import { IncidenciasComponent } from './components/incidencias/incidencias.component';
+import { ReportePrestamosComponent } from './components/reporte-prestamos/reporte-prestamos.component';
+import { ReporteSolicitudesComponent } from './components/reporte-solicitudes/reporte-solicitudes.component';
+import { ReporteMantenimientoComponent } from './components/reporte-mantenimiento/reporte-mantenimiento.component';
 
 
 @NgModule({
@@ -82,7 +85,10 @@ import { IncidenciasComponent } from './components/incidencias/incidencias.compo
     ReporteInventarioComponent,
     UsuariosComponent,
     MantenimientoProductoComponent,
-    IncidenciasComponent
+    IncidenciasComponent,
+    ReportePrestamosComponent,
+    ReporteSolicitudesComponent,
+    ReporteMantenimientoComponent
   ],
   imports: [
     BrowserModule,
@@ -98,6 +104,7 @@ import { IncidenciasComponent } from './components/incidencias/incidencias.compo
   ],
   providers: [
     Globals,
+    { provide: Window, useValue: window }
   ],
   bootstrap: [AppComponent]
 })
