@@ -238,6 +238,16 @@ export class RequestsService {
     return this.http.get(url);
   }
 
+  //////////////////// Filtro Consumibles
+  obtenerConsumibles(filtro: any) {
+    let url = "/filtro_consumibles";
+    if (filtro)
+      if (filtro.length > 0) {
+        url += ("?filtro=" + filtro);
+      }
+    return this.http.get(url);
+  }
+
   login(payload: any) {
     return this.http.post('/iniciar/', payload);
   }

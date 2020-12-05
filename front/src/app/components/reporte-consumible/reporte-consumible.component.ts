@@ -14,9 +14,8 @@ export class ReporteConsumibleComponent implements OnInit {
 
   globals: Globals;
   filter: any = {};
-  public categorias: any;
   public form: FormGroup
-  public productos: any;
+  public consumibles: any;
 
   constructor(
     globals: Globals,
@@ -26,44 +25,25 @@ export class ReporteConsumibleComponent implements OnInit {
   ) {
     this.globals = globals;
     this.form = this._fb.group({
-      categorias: this._fb.array(['', Validators.required]),
       busqueda: ['', [Validators.required]]
     });
-    this.addCheckboxes();
-  }
-
-  onCheckboxChange(e) {
-    const checkArray: FormArray = this.form.get('categorias') as FormArray;
-
-    if (e.target.checked) {
-      checkArray.push(new FormControl(e.target.value));
-    } else {
-      let i: number = 0;
-      checkArray.controls.forEach((item: FormControl) => {
-        if (item.value == e.target.value) {
-          checkArray.removeAt(i);
-          return;
-        }
-        i++;
-      });
-    }
   }
 
   ngOnInit(): void {
     if (this.globals.producto === null) {
       this.router.navigate(['/']);
     }
-    this._requests.obtenerProductos(null, null).subscribe(
+    this._requests.obtenerConsumibles(null).subscribe(
       (success: any) => {
         if (success.exito) {
-          this.productos = success.productos;
+          this.consumibles = success.consumibles;
         } else {
-          this.productos = null;
+          this.consumibles = null;
           alert('Error en el servidor. Mensaje: ' + success.desc);
         }
       },
       (error) => {
-        this.productos = null;
+        this.consumibles = null;
         alert('Error en el servicio, contacta con un administrador,');
       }
     );
@@ -71,39 +51,19 @@ export class ReporteConsumibleComponent implements OnInit {
 
   public buscarQuery() {
     let nombre = this.form.controls["busqueda"].value;
-    let checks = this.form.controls.categorias.value;
-    checks.splice(0,2);
-    this._requests.obtenerProductos(checks, nombre).subscribe(
+    this._requests.obtenerConsumibles(nombre).subscribe(
       (success: any) => {
         if (success.exito) {
-          this.productos = success.productos;
+          this.consumibles = success.consumibles;
         } else {
-          this.productos = null;
+          this.consumibles = null;
           alert('Error en el servidor. Mensaje: ' + success.desc);
         }
       },
       (error) => {
-        this.productos = null;
+        this.consumibles = null;
         alert('Error en el servicio, contacta con un administrador,');
       }
     );
   }
-
-  private addCheckboxes() {
-    this._requests.getCategorias().subscribe(
-      (success: any) => {
-        if (success.exito) {
-          this.categorias = success.categorias;
-        } else {
-          this.categorias = null;
-          alert('Error en el servidor. Mensaje: ' + success.desc);
-        }
-      },
-      (error) => {
-        this.categorias = null;
-        alert('Error en el servicio, contacta con un administrador,');
-      }
-    )
-  }
-
 }

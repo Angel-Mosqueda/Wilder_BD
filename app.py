@@ -82,6 +82,16 @@ def iniciar_sesion():
     cur.close()
     return response
 
+@app.route('/cerrar_sesion/', methods=['GET'])
+def cerrar_sesion():
+    response = {}
+    response = make_response(response)
+    response.delete_cookie('usrinfo')
+    response.delete_cookie('usuario')
+    response.delete_cookie('empresa')
+    response.delete_cookie('logged')
+    return response
+
 
 @app.route('/get_ok/', methods=['GET'])
 def enviar_ok():
@@ -92,14 +102,14 @@ def enviar_ok():
     return jsonify(response)
 
 
-@app.route('/add_empresa/', methods=['POST'])
+@app.route('/create_empresa/', methods=['POST'])
 def crear_empresa():
     response = {}
     cur = mysql.connection.cursor()
-    query = ("INSERT INTO EMPRESA (NOMBRE,"
-    "RAZSOC) VALUES ("
-    + "'" + request.form['NOMBRE'] + "', "
-    + "'" + request.form['RAZSOC'] + "');"
+    data = json.loads(request.data)
+    query = ("INSERT INTO EMPRESA (NOMBRE, RAZSOC) VALUES ('"
+    + data['NOMBRE'] + "', '"
+    + data['RAZSOC'] + "');"
     )
     cur.execute(query)
     mysql.connection.commit()
@@ -110,6 +120,21 @@ def crear_empresa():
         'id_insertado': last_id
     }
     cur.close()
+
+    response["empresas"] = []
+    cur = mysql.connection.cursor()
+    query = ("SELECT ID, RAZSOC FROM EMPRESA WHERE TIPO IS NULL;")
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+
+    for empresa in rows:
+        response["empresas"].append({
+            "id": empresa[0],
+            "razon_social": empresa[1]
+        })
+    cur.close()
+    
     return jsonify(response)
 
 
@@ -533,6 +558,35 @@ def crear_proveedores():
 ################ FIN CRUD PROVEEDORES ##################
 
 ################### INICIO FILTRO ######################
+@app.route('/filtro_consumibles', methods=['GET'])
+def obtener_consumibles_f():
+    response = {}
+    response["consumibles"] = []
+    cur = mysql.connection.cursor()
+    empresa_id = int(request.cookies.get('empresa'))
+    filtro = request.args.get('filtro')
+    filtro = filtro if filtro is not None else ''
+
+    cur.callproc('FILTRO_CONSUMIBLES', [filtro, empresa_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for consumible in rows:
+        response["consumibles"].append({
+            "id": consumible[0],
+            "nombre": consumible[1],
+            "sku": consumible[2],
+            "descripcion": consumible[3],
+            "proveedor": consumible[4],
+            "cantidad": consumible[5]
+        })
+    if len(response['consumibles']) == 0:
+        response['exito'] = False
+        response['desc'] = "No existen consumibles, intenta crear uno."
+    else:
+        response['exito'] = True
+    cur.close()        
+    return response
+
 @app.route('/filtro_productos', methods=['GET'])
 def obtener_productos():
     response = {}
@@ -961,7 +1015,6 @@ def obtener_usuarios():
     cur = mysql.connection.cursor()
     empresa_id = int(request.cookies.get('empresa'))
     usuario_id = request.cookies.get('usuario')
-
     cur.callproc('GET_USUARIOS', [empresa_id, usuario_id])
     rows = cur.fetchall()
     for usuario in rows:
