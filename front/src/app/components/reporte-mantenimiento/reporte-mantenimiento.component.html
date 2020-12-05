@@ -3,7 +3,7 @@
     <div class="col-10">
         <h3>Reporte de Mantenimientos</h3>
         <button class="float-right btn btn-primary d-print-none" (click)="window.print()">Imprimir</button>
-        <table class="table table-light table-bordered" *ngIf="this.mantenimientos.length > 0; else nomantenimientos">
+        <table class="table table-bordered" *ngIf="this.mantenimientos.length > 0; else nomantenimientos">
             <tr>
                 <th>ID</th>
                 <th>Producto Afectado</th>

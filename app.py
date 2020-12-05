@@ -134,6 +134,7 @@ def obtener_empresas():
 ################ INICIO REPORTES ###################
 @app.route('/reporte_prestamo/', methods=['GET'])
 def reporte_prestamo():
+    empresa_id = int(request.cookies.get('empresa'))
     response = {}
     cur = mysql.connection.cursor()
     cur.callproc('REPORTE_PRESTAMOS', [empresa_id])
@@ -156,6 +157,7 @@ def reporte_prestamo():
 
 @app.route('/reporte_solicitudes/', methods=['GET'])
 def reporte_solicitudes():
+    empresa_id = int(request.cookies.get('empresa'))
     response = {}
     cur = mysql.connection.cursor()
     cur.callproc('REPORTE_SOLICITUDES', [empresa_id])
@@ -179,6 +181,7 @@ def reporte_solicitudes():
 
 @app.route('/reporte_mantenimientos/', methods=['GET'])
 def reporte_mantenimientos():
+    empresa_id = int(request.cookies.get('empresa'))
     response = {}
     cur = mysql.connection.cursor()
     cur.callproc('REPORTE_MANTENIMIENTOS', [empresa_id])
