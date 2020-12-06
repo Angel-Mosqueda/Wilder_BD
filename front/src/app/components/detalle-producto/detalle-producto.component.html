@@ -78,9 +78,9 @@
                     <th rowspan="2">Observaciones</th>
                     <th rowspan="2">Proveedor</th>
                     <th rowspan="2">Fecha de Compra</th>
-                    <th rowspan="2">Mostrar Factura</th>
-                    <th rowspan="2">Mostrar Mantenimiento</th>
-                    <th rowspan="2">Incidencias</th>
+                    <th rowspan="2" class="d-print-none">Mostrar Factura</th>
+                    <th rowspan="2" class="d-print-none">Mostrar Mantenimiento</th>
+                    <th rowspan="2" class="d-print-none">Incidencias</th>
                 </tr>
                 <tr>
                     <th>Nombre</th>
@@ -99,14 +99,14 @@
                     <td>{{ inv.observaciones }}</td>
                     <td>{{ inv.proveedor }}</td>
                     <td>{{ inv.f_compra }}</td>
-                    <td>
+                    <td class="d-print-none">
                         <button (click)="this.setpdf('/static/' + inv.archivo_fac);" class="btn btn-secondary"
                             data-toggle="modal" data-target="#modalFactura">Factura</button>
                     </td>
-                    <td>
+                    <td class="d-print-none">
                         <button class="btn btn-secondary" [routerLink]="['/mantenimiento-producto', inv.id]" >Mantenimiento</button>
                     </td>
-                    <td>
+                    <td class="d-print-none">
                         <button class="btn btn-secondary" [routerLink]="['/incidencias', inv.id]" >Incidencias</button>
                     </td>
                 </tr>
