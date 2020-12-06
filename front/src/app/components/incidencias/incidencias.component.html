@@ -3,7 +3,7 @@
         <h4>{{ this.id ? "Incidencia(s) para este producto:" : "Incidencias creadas" }}</h4>
         <button class="float-right ml-3 btn btn-success d-print-none" (click)="this.create = !this.create;" *ngIf="this.id">Añade una
             nueva incidencia</button>
-        <button class="btn btn-primary float-right d-print-none"(click)="window.print();">Imprimir Reporte</button>
+        <!-- <button class="btn btn-primary float-right d-print-none"(click)="imprimirVentana();">Imprimir Reporte</button> -->
     </div>
     <div class="col-12 mt-3">
         <table class="table table-dark text-center">

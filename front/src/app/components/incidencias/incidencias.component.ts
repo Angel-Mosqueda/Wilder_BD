@@ -5,11 +5,13 @@ import { Globals } from 'src/app/globals/globals';
 import { AuthService } from 'src/app/services/auth.service';
 import { RequestsService } from 'src/app/services/requests.service';
 
+
 @Component({
   selector: 'app-incidencias',
   templateUrl: './incidencias.component.html',
   styleUrls: ['./incidencias.component.css']
 })
+
 export class IncidenciasComponent implements OnInit {
   incidencias: any;
   editable: any;
@@ -64,72 +66,77 @@ export class IncidenciasComponent implements OnInit {
     });
   }
 
-get f() { return this.formulario.controls; }
+  get f() { return this.formulario.controls; }
 
-toggleEdicion(index: any) {
-  if (this.editable[index]) {
-    // Mandar update
-    let fecha = (<HTMLInputElement>document.getElementById("fecha-" + index)).value;
-    let descripcion = (<HTMLInputElement>document.getElementById("descripcion-" + index)).value;
-    let id = (<HTMLInputElement>document.getElementById("id-" + index)).value;
-    this._requests.updateIncidencia({
-      DESCRIPCION: descripcion,
-      FECHA: fecha,
-      ID: id
-    }, this.id).subscribe(
-      (success: any) => {
-        if (success.exito) {
-          this.incidencias = success.incidencias;
-          this.editable = this.incidencias.map(a => false);
-        } else {
-          alert('Error en el servidor. Mensaje: ' + success.desc);
+
+  imprimirVentana() {
+    this.window.print();
+  }
+
+  toggleEdicion(index: any) {
+    if (this.editable[index]) {
+      // Mandar update
+      let fecha = (<HTMLInputElement>document.getElementById("fecha-" + index)).value;
+      let descripcion = (<HTMLInputElement>document.getElementById("descripcion-" + index)).value;
+      let id = (<HTMLInputElement>document.getElementById("id-" + index)).value;
+      this._requests.updateIncidencia({
+        DESCRIPCION: descripcion,
+        FECHA: fecha,
+        ID: id
+      }, this.id).subscribe(
+        (success: any) => {
+          if (success.exito) {
+            this.incidencias = success.incidencias;
+            this.editable = this.incidencias.map(a => false);
+          } else {
+            alert('Error en el servidor. Mensaje: ' + success.desc);
+          }
+        },
+        (error) => {
+          alert('Error en el servicio, contacta con un administrador,');
         }
+      );
+    }
+    this.editable[index] = !this.editable[index];
+  }
+
+  eliminarIncidencia(index: any) {
+    this._requests.eliminarIncidencia(index).subscribe(
+      (success: any) => {
+        this.incidencias = success.incidencias;
+        this.editable = this.incidencias.map(a => false);
       },
       (error) => {
+        this.incidencias = null;
         alert('Error en el servicio, contacta con un administrador,');
       }
     );
   }
-  this.editable[index] = !this.editable[index];
-}
 
-eliminarIncidencia(index: any) {
-  this._requests.eliminarIncidencia(index).subscribe(
-    (success: any) => {
-      this.incidencias = success.incidencias;
-      this.editable = this.incidencias.map(a => false);
-    },
-    (error) => {
-      this.incidencias = null;
-      alert('Error en el servicio, contacta con un administrador,');
-    }
-  );
-}
-
-crearIncidencia() {
-  this.submitted = true;
-  if (this.formulario.invalid) {
-    return;
-  } else {
-    let payload = {
-      DESCRIPCION: this.formulario.get('descripcion').value,
-      FECHA: this.formulario.get('fecha').value
-    };
-    this._requests.crearIncidencia(payload, this.id).subscribe(
-      (success: any) => {
-        if (success.exito) {
-          this.incidencias = success.incidencias;
-          console.log(this.incidencias);
-        } else {
-          this.incidencias = null;
-          alert('Error en el servidor. Mensaje: ' + success.desc);
+  crearIncidencia() {
+    this.submitted = true;
+    if (this.formulario.invalid) {
+      return;
+    } else {
+      let payload = {
+        DESCRIPCION: this.formulario.get('descripcion').value,
+        FECHA: this.formulario.get('fecha').value
+      };
+      this._requests.crearIncidencia(payload, this.id).subscribe(
+        (success: any) => {
+          if (success.exito) {
+            this.incidencias = success.incidencias;
+            console.log(this.incidencias);
+          } else {
+            this.incidencias = null;
+            alert('Error en el servidor. Mensaje: ' + success.desc);
+          }
+        },
+        (error) => {
+          alert("Error en el servidor. Intente más tarde.");
         }
-      },
-      (error) => {
-        alert("Error en el servidor. Intente más tarde.");
-      }
-    );
+      );
+    }
+    this.create = !this.create;
   }
-  this.create = !this.create;
-}
 }

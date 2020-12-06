@@ -48,6 +48,8 @@ import { IncidenciasComponent } from './components/incidencias/incidencias.compo
 import { ReportePrestamosComponent } from './components/reporte-prestamos/reporte-prestamos.component';
 import { ReporteSolicitudesComponent } from './components/reporte-solicitudes/reporte-solicitudes.component';
 import { ReporteMantenimientoComponent } from './components/reporte-mantenimiento/reporte-mantenimiento.component';
+import { AuthService } from './services/auth.service';
+import { RequestsService } from './services/requests.service';
 
 
 @NgModule({
@@ -104,6 +106,8 @@ import { ReporteMantenimientoComponent } from './components/reporte-mantenimient
   ],
   providers: [
     Globals,
+    AuthService,
+    RequestsService,
     { provide: Window, useValue: window }
   ],
   bootstrap: [AppComponent]

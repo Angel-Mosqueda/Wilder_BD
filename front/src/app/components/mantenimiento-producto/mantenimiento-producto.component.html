@@ -13,8 +13,8 @@
                 <th>Descripcion</th>
                 <th>Fecha Inicio</th>
                 <th>Fecha Final</th>
-                <th>Editar</th>
-                <th>Eliminar</th>
+                <th *ngIf="this.globals.rol != 'normal'">Editar</th>
+                <th *ngIf="this.globals.rol != 'normal'">Eliminar</th>
             </tr>
             <!--  Arreglo que corresponda a cada formulario -->
             <tr *ngFor="let mantenimiento of this.mantenimientos; let idx = index">
@@ -29,9 +29,9 @@
                         value="{{ mantenimiento.f_inicio | date:'yyyy-MM-dd' }}" [disabled]="!this.editable[idx]"></td>
                 <td><input class="form-control" id="f_final-{{ idx }}" type="date"
                         value="{{ mantenimiento.f_final | date:'yyyy-MM-dd' }}" [disabled]="!this.editable[idx]"></td>
-                <td><button class="btn btn-secondary"
+                <td *ngIf="this.globals.rol != 'normal'"><button class="btn btn-secondary"
                         (click)="toggleEdicion(idx)">{{ this.editable[idx] ? 'Terminar' : 'Editar' }}</button></td>
-                <td><button class="btn btn-danger" (click)="eliminarMantenimiento(mantenimiento.id)">Eliminar</button>
+                <td *ngIf="this.globals.rol != 'normal'"><button class="btn btn-danger" (click)="eliminarMantenimiento(mantenimiento.id)">Eliminar</button>
                 </td>
             </tr>
         </table>

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { RequestsService } from 'src/app/services/requests.service';
 import { DomSanitizer } from "@angular/platform-browser"
+import { Globals } from 'src/app/globals/globals';
 
 @Component({
   selector: 'app-mantenimiento-producto',
@@ -19,13 +20,17 @@ export class MantenimientoProductoComponent implements OnInit {
   fecha: Date = new Date();
   submitted: boolean = false;
   proveedores: any;
+  globals: Globals;
 
   constructor(
+    globals: Globals,
     private route: ActivatedRoute,
     private _requests: RequestsService,
     private _fb: FormBuilder,
     public sanitizer: DomSanitizer,
-  ) { }
+  ) {
+    this.globals = globals;
+  }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');

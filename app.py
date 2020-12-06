@@ -875,7 +875,7 @@ def crear_incidencias(producto_id):
     cur = mysql.connection.cursor()
     query = ("SELECT I.ID, U.NOMBRE, PR.NOMBRE, INV.NSERIE, I.DESCRIPCION, I.FECHA, U.ID FROM INCIDENCIA I,"
         " INVENTARIO INV, PRODUCTO PR, USUARIO U WHERE I.ARTICULO = INV.ID AND "
-        " PR.ID = INV.PRODUCTO_ID AND I.USUARIO_ID = U.ID AND I.ARTICULO = " + str(inventario_id))
+        " PR.ID = INV.PRODUCTO_ID AND I.USUARIO_ID = U.ID AND I.ARTICULO = " + str(producto_id))
     cur.execute(query)
     mysql.connection.commit()
 

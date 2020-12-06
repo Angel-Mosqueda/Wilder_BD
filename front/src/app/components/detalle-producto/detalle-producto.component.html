@@ -62,8 +62,9 @@
     <div class="row">
         <div class="col-12">
             <h4>Existencias de inventario para este producto:</h4>
-            <button class="float-right btn btn-success" (click)="this.modo_creacion = !this.modo_creacion;">Añade una
+            <button *ngIf="this.globals.rol != 'normal'" class="float-right d-print-none btn btn-success" (click)="this.modo_creacion = !this.modo_creacion;">Añade una
                 nueva existencia de este producto</button>
+            <button class="btn btn-primary d-print-none" (click)="window.print();">Imprimir pantalla</button>
         </div>
         <div class="col-12 mt-3">
             <table class="table table-dark text-center" *ngIf="this.inventario.length > 0; else noInventario">
@@ -79,6 +80,7 @@
                     <th rowspan="2">Fecha de Compra</th>
                     <th rowspan="2">Mostrar Factura</th>
                     <th rowspan="2">Mostrar Mantenimiento</th>
+                    <th rowspan="2">Incidencias</th>
                 </tr>
                 <tr>
                     <th>Nombre</th>

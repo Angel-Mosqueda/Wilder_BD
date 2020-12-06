@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { RequestsService } from 'src/app/services/requests.service';
 import { DomSanitizer } from "@angular/platform-browser"
+import { Globals } from 'src/app/globals/globals';
 
 // API Key: AIzaSyA5XCX6GS2djp8PyY6XY8z7VeziV1DxyQU
 
@@ -24,16 +25,21 @@ export class DetalleProductoComponent implements OnInit {
   fecha: Date = new Date();
   submitted: boolean = false;
   file: File;
+  globals: Globals;
   /*mantenimiento: any;
   formulario_2: FormGroup;*/
 
   constructor(
+    globals: Globals,
     private route: ActivatedRoute,
     private _requests: RequestsService,
     private _fb: FormBuilder,
     public sanitizer: DomSanitizer,
-    private _renderer: Renderer2
-  ) { }
+    private _renderer: Renderer2,
+    public window: Window
+  ) {
+    this.globals = globals;
+  }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
