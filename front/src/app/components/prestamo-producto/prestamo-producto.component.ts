@@ -34,15 +34,16 @@ export class PrestamoProductoComponent implements OnInit {
     private _fb: FormBuilder
   ) {
     this.globals = globals;
-  }
-
-  ngOnInit(): void {
     this.form = this._fb.group({
       fechaEsperada: ['', Validators.required]
     });
     this.form2 = this._fb.group({
       observacionesTA: ['', Validators.required]
     });
+  }
+
+  ngOnInit(): void {
+    
     this.indexVar = null;
     this.indexVarP = null;
     this.usrinfo = this._authService.getInfo();

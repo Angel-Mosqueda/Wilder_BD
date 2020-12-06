@@ -68,7 +68,7 @@
             <div id="busqueda">
               <div class="form-group">
                 <h6 class="card-title">Fecha Estimada</h6>
-                <input type="date" class="form-control" name="busqueda" [(ngModel)]="date" formControlName="fechaEsperada">
+                <input type="date" class="form-control" name="busqueda" [(ngModel)]="date" formControlName="fechaEsperada" required>
               </div>
             </div>
           </div>
@@ -149,7 +149,7 @@
             <div id="busqueda">
               <div class="form-group">
                 <h6 class="card-title">Observaciones</h6>
-                <textarea formControlName="observacionesTA" [(ngModel)]="observaciones" cols="56" rows="7"></textarea>
+                <textarea formControlName="observacionesTA" [(ngModel)]="observaciones" cols="56" rows="7" required></textarea>
               </div>
             </div>
           </div>
