@@ -82,6 +82,16 @@ def iniciar_sesion():
     cur.close()
     return response
 
+@app.route('/cerrar_sesion/', methods=['GET'])
+def cerrar_sesion():
+    response = {}
+    response = make_response(response)
+    response.delete_cookie('usrinfo')
+    response.delete_cookie('usuario')
+    response.delete_cookie('empresa')
+    response.delete_cookie('logged')
+    return response
+
 
 @app.route('/get_ok/', methods=['GET'])
 def enviar_ok():
@@ -92,14 +102,14 @@ def enviar_ok():
     return jsonify(response)
 
 
-@app.route('/add_empresa/', methods=['POST'])
+@app.route('/create_empresa/', methods=['POST'])
 def crear_empresa():
     response = {}
     cur = mysql.connection.cursor()
-    query = ("INSERT INTO EMPRESA (NOMBRE,"
-    "RAZSOC) VALUES ("
-    + "'" + request.form['NOMBRE'] + "', "
-    + "'" + request.form['RAZSOC'] + "');"
+    data = json.loads(request.data)
+    query = ("INSERT INTO EMPRESA (NOMBRE, RAZSOC) VALUES ('"
+    + data['NOMBRE'] + "', '"
+    + data['RAZSOC'] + "');"
     )
     cur.execute(query)
     mysql.connection.commit()
@@ -110,6 +120,21 @@ def crear_empresa():
         'id_insertado': last_id
     }
     cur.close()
+
+    response["empresas"] = []
+    cur = mysql.connection.cursor()
+    query = ("SELECT ID, RAZSOC FROM EMPRESA WHERE TIPO IS NULL;")
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+
+    for empresa in rows:
+        response["empresas"].append({
+            "id": empresa[0],
+            "razon_social": empresa[1]
+        })
+    cur.close()
+    
     return jsonify(response)
 
 
@@ -132,6 +157,76 @@ def obtener_empresas():
 
 
 ################ INICIO REPORTES ###################
+@app.route('/reporte_prestamo/', methods=['GET'])
+def reporte_prestamo():
+    empresa_id = int(request.cookies.get('empresa'))
+    response = {}
+    cur = mysql.connection.cursor()
+    cur.callproc('REPORTE_PRESTAMOS', [empresa_id])
+    rows = cur.fetchall()
+    response["prestamos"] = []
+    for prestamo in rows:
+        response["prestamos"].append({
+            "id": prestamo[0],
+            "estado": prestamo[1],
+            "usuario": prestamo[2],
+            "fecha_estimada": prestamo[3],
+            "fecha_regreso": prestamo[4],
+            "producto": prestamo[5],
+            "nserie": prestamo[6]
+        })
+    response["exito"] = len(response["prestamos"]) > 0
+    cur.close()
+    return response
+
+
+@app.route('/reporte_solicitudes/', methods=['GET'])
+def reporte_solicitudes():
+    empresa_id = int(request.cookies.get('empresa'))
+    response = {}
+    cur = mysql.connection.cursor()
+    cur.callproc('REPORTE_SOLICITUDES', [empresa_id])
+    rows = cur.fetchall()
+    response["solicitudes"] = []
+    for solicitud in rows:
+        response["solicitudes"].append({
+            "id": solicitud[0],
+            "estado": solicitud[1],
+            "usuario": solicitud[2],
+            "observaciones": solicitud[3],
+            "fecha_creacion": solicitud[4],
+            "fecha_revision": solicitud[5],
+            "producto": solicitud[6],
+            "nserie": solicitud[7]
+        })
+    response["exito"] = len(response["solicitudes"]) > 0
+    cur.close()
+    return response
+
+
+@app.route('/reporte_mantenimientos/', methods=['GET'])
+def reporte_mantenimientos():
+    empresa_id = int(request.cookies.get('empresa'))
+    response = {}
+    cur = mysql.connection.cursor()
+    cur.callproc('REPORTE_MANTENIMIENTOS', [empresa_id])
+    rows = cur.fetchall()
+    response["mantenimientos"] = []
+    for mantenimiento in rows:
+        response["mantenimientos"].append({
+            "id": mantenimiento[0],
+            "nserie": mantenimiento[1],
+            "producto": mantenimiento[2],
+            "costo": mantenimiento[3],
+            "descripcion": mantenimiento[4],
+            "f_inicio": mantenimiento[5],
+            "f_final": mantenimiento[6]
+        })
+    response["exito"] = len(response["mantenimientos"]) > 0
+    cur.close()
+    return response
+
+
 @app.route('/reportes/<tiempo>', methods=['GET'])
 def reportes(tiempo):
     response = {}
@@ -139,7 +234,6 @@ def reportes(tiempo):
     empresa_id = int(request.cookies.get('empresa'))
 
     cur = mysql.connection.cursor()
-    # select c.nombre, count(cp.producto_id) from categoria c, producto p, categoria_producto cp where p.id = cp.producto_id and p.empresa_id = 7 and c.id = cp.categoria_id group by cp.categoria_id; 
     cur.callproc('CONTEO_CATEGORIAS', [empresa_id])
     rows = cur.fetchall()
     response["categorias"] = []
@@ -151,39 +245,96 @@ def reportes(tiempo):
     cur.close()
     
     cur = mysql.connection.cursor()
-    cur.callproc('REPORTE_CONTEO_INCIDENCIA', [empresa_id, tiempo])
+    query = ("SELECT REPORTE_CONTEO_INCIDENCIA("
+    + str(empresa_id) + ", " + str(tiempo) +
+    ");")
+    cur.execute(query)
+    mysql.connection.commit()
     row_inc = cur.fetchone()
     cur.close()
-    cur = mysql.connection.cursor()
-    cur.callproc('REPORTE_CONTEO_MTTO', [empresa_id, tiempo])
-    row_mtto = cur.fetchone()
-    cur.close()
-    cur.callproc('REPORTE_CONTEO_SOLICITUD', [empresa_id, tiempo])
-    row_sol = cur.fetchone()
-    cur.close()
-    cur.callproc('REPORTE_CONTEO_PRESTAMO', [empresa_id, tiempo])
-    row_prest = cur.fetchone()
-    cur.close()
-    response["reportes"].append({
-        "incidencias": row_inc,
-        "mantenimientos": row_mtto,
-        "solicitudes": row_sol,
-        "prestamos": row_prest
-    })
 
     cur = mysql.connection.cursor()
-    cur.callproc('CHART_DINERO_INV', [empresa_id, tiempo])
-    row_inv = cur.fetchone()
-    cur.close()
-    cur = mysql.connection.cursor()
-    cur.callproc('CHART_DINERO_MTTO', [empresa_id, tiempo])
+    query = ("SELECT REPORTE_CONTEO_MTTO("
+    + str(empresa_id) + ", " + str(tiempo) +
+    ");")
+    cur.execute(query)
+    mysql.connection.commit()
     row_mtto = cur.fetchone()
     cur.close()
-    response["dinero"].append({
-        "inventario": row_inv,
-        "mantenimiento": row_mtto
-    })
+    
+    cur = mysql.connection.cursor()
+    query = ("SELECT REPORTE_CONTEO_SOLICITUD("
+    + str(empresa_id) + ", " + str(tiempo) +
+    ");")
+    cur.execute(query)
+    mysql.connection.commit()
+    row_sol = cur.fetchone()
+    cur.close()
+
+    cur = mysql.connection.cursor()
+    query = ("SELECT REPORTE_CONTEO_PRESTAMO("
+    + str(empresa_id) + ", " + str(tiempo) +
+    ");")
+    cur.execute(query)
+    mysql.connection.commit()
+    row_prest = cur.fetchone()
+    cur.close()
+
+    response["reportes"] = {}
+    response["reportes"] = {
+        "incidencias": row_inc[0],
+        "mantenimientos": row_mtto[0],
+        "solicitudes": row_sol[0],
+        "prestamos": row_prest[0]
+    }
+
+    cur = mysql.connection.cursor()
+    query = ("SELECT CHART_DINERO_INV("
+    + str(empresa_id) + ", " + str(tiempo) +
+    ");")
+    cur.execute(query)
+    mysql.connection.commit()
+    row_inv = cur.fetchone()
+    cur.close()
+    
+    cur = mysql.connection.cursor()
+    query = ("SELECT CHART_DINERO_MTTO("
+    + str(empresa_id) + ", " + str(tiempo) +
+    ");")
+    cur.execute(query)
+    mysql.connection.commit()
+    row_mtto = cur.fetchone()
+    cur.close()
+
+    response["dinero"] = {}
+    response["dinero"] = {
+        "inventario": row_inv[0],
+        "mantenimiento": row_mtto[0]
+    }
+
+    cur = mysql.connection.cursor()
+    cur.callproc('PROVEEDORES_MTTO', [empresa_id])
+    rows = cur.fetchall()
+    response["principales_prov_mtto"] = []
+    for conteo in rows:
+        response["principales_prov_mtto"].append({
+            "proveedores": conteo[0],
+            "cantidad": conteo[1]
+        })
+    cur.close()
+
+    cur = mysql.connection.cursor()
+    cur.callproc('PROVEEDORES_INVENTARIO', [empresa_id])
+    rows = cur.fetchall()
+    response["principales_prov_inv"] = []
+    for conteo in rows:
+        response["principales_prov_inv"].append({
+            "proveedores": conteo[0],
+            "cantidad": conteo[1]
+        })
+    cur.close()
     response['exito'] = True
+    return response
 
 ################ FIN REPORTES ######################
 
@@ -407,6 +558,35 @@ def crear_proveedores():
 ################ FIN CRUD PROVEEDORES ##################
 
 ################### INICIO FILTRO ######################
+@app.route('/filtro_consumibles', methods=['GET'])
+def obtener_consumibles_f():
+    response = {}
+    response["consumibles"] = []
+    cur = mysql.connection.cursor()
+    empresa_id = int(request.cookies.get('empresa'))
+    filtro = request.args.get('filtro')
+    filtro = filtro if filtro is not None else ''
+
+    cur.callproc('FILTRO_CONSUMIBLES', [filtro, empresa_id])
+    # mysql.connection.commit()
+    rows = cur.fetchall()
+    for consumible in rows:
+        response["consumibles"].append({
+            "id": consumible[0],
+            "nombre": consumible[1],
+            "sku": consumible[2],
+            "descripcion": consumible[3],
+            "proveedor": consumible[4],
+            "cantidad": consumible[5]
+        })
+    if len(response['consumibles']) == 0:
+        response['exito'] = False
+        response['desc'] = "No existen consumibles, intenta crear uno."
+    else:
+        response['exito'] = True
+    cur.close()        
+    return response
+
 @app.route('/filtro_productos', methods=['GET'])
 def obtener_productos():
     response = {}
@@ -439,6 +619,7 @@ def obtener_productos():
     return response
 ###################### FIN FILTRO ######################
 
+###################### INICIO CATEGORIA ################
 @app.route('/get_categorias/', methods=['GET'])
 def obtener_categorias():
     response = {}
@@ -541,8 +722,178 @@ def crear_categorias():
         })
     cur.close()
     return response
+###################### FIN CATEGORIA ######################
 
-######################### INICIO CONSUMIBLE #####################
+###################### INICIO INCIDENCIA ################
+@app.route('/get_incidencias/', methods=['GET'])
+@app.route('/get_incidencias/<inventario_id>', methods=['GET'])
+def obtener_incidencias(inventario_id = None):
+    response = {}
+    response["incidencias"] = []
+    empresa_id = int(request.cookies.get('empresa'))
+
+    cur = mysql.connection.cursor()
+    if inventario_id is not None:
+        query = ("SELECT I.ID, U.NOMBRE, PR.NOMBRE, INV.NSERIE, I.DESCRIPCION, I.FECHA, U.ID FROM INCIDENCIA I,"
+        " INVENTARIO INV, PRODUCTO PR, USUARIO U WHERE I.ARTICULO = INV.ID AND "
+        " PR.ID = INV.PRODUCTO_ID AND I.USUARIO_ID = U.ID AND I.ARTICULO = " + str(inventario_id))
+    else:
+        query = ("SELECT I.ID, U.NOMBRE, PR.NOMBRE, INV.NSERIE, I.DESCRIPCION, I.FECHA, U.ID FROM INCIDENCIA I,"
+        " INVENTARIO INV, PRODUCTO PR, USUARIO U WHERE I.ARTICULO = INV.ID AND "
+        " PR.ID = INV.PRODUCTO_ID AND I.USUARIO_ID = U.ID")
+
+    cur.execute(query)
+    mysql.connection.commit()
+
+    rows = cur.fetchall()
+    for incidencia in rows:
+        response["incidencias"].append({
+            "id": incidencia[0],
+            "nombre": incidencia[1],
+            "producto": incidencia[2],
+            "nserie": incidencia[3],
+            "descripcion": incidencia[4],
+            "fecha": incidencia[5],
+            "usrid": incidencia[6]
+        })
+
+    if len(response['incidencias']) == 0:
+        response['exito'] = False
+        response['desc'] = "No existen incidencias, intenta creando unas."
+    else:
+        response['exito'] = True
+    cur.close()
+    return response
+
+
+@app.route('/update_incidencia/', methods=['POST'])
+@app.route('/update_incidencia/<inventario_id>', methods=['POST'])
+def actualizar_incidencias(inventario_id = None):
+    response = {}
+    response["incidencias"] = []
+    cur = mysql.connection.cursor()
+    data = json.loads(request.data)
+    query = ("UPDATE INCIDENCIA SET DESCRIPCION = '" + data['DESCRIPCION'] +
+    "', FECHA = '" + data['FECHA'] + "' WHERE ID = " + data['ID'] + ";")
+
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response['exito'] = isinstance(last_id, int)
+    
+    cur = mysql.connection.cursor()
+    if inventario_id is not None:
+        query = ("SELECT I.ID, U.NOMBRE, PR.NOMBRE, INV.NSERIE, I.DESCRIPCION, I.FECHA, U.ID FROM INCIDENCIA I,"
+        " INVENTARIO INV, PRODUCTO PR, USUARIO U WHERE I.ARTICULO = INV.ID AND "
+        " PR.ID = INV.PRODUCTO_ID AND I.USUARIO_ID = U.ID AND I.ARTICULO = " + str(inventario_id))
+    else:
+        query = ("SELECT I.ID, U.NOMBRE, PR.NOMBRE, INV.NSERIE, I.DESCRIPCION, I.FECHA, U.ID FROM INCIDENCIA I,"
+        " INVENTARIO INV, PRODUCTO PR, USUARIO U WHERE I.ARTICULO = INV.ID AND "
+        " PR.ID = INV.PRODUCTO_ID AND I.USUARIO_ID = U.ID")
+    cur.execute(query)
+    mysql.connection.commit()
+
+    rows = cur.fetchall()
+    for incidencia in rows:
+        response["incidencias"].append({
+            "id": incidencia[0],
+            "nombre": incidencia[1],
+            "producto": incidencia[2],
+            "nserie": incidencia[3],
+            "descripcion": incidencia[4],
+            "fecha": incidencia[5],
+            "usrid": incidencia[6]
+        })
+    cur.close()
+    return response
+
+
+@app.route('/delete_incidencia/<id>/', methods=['GET'])
+@app.route('/delete_incidencia/<id>/<inventario_id>', methods=['GET'])
+def eliminar_incidencias(id, inventario_id = None):
+    response = {}
+
+    cur = mysql.connection.cursor()
+    query = "DELETE FROM INCIDENCIA WHERE ID = " + str(id) + ";"
+    
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    response["exito"] = True
+    cur.close()
+
+    cur = mysql.connection.cursor()
+    if inventario_id is not None:
+        query = ("SELECT I.ID, U.NOMBRE, PR.NOMBRE, INV.NSERIE, I.DESCRIPCION, I.FECHA, U.ID FROM INCIDENCIA I,"
+        " INVENTARIO INV, PRODUCTO PR, USUARIO U WHERE I.ARTICULO = INV.ID AND "
+        " PR.ID = INV.PRODUCTO_ID AND I.USUARIO_ID = U.ID AND I.ARTICULO = " + str(inventario_id))
+    else:
+        query = ("SELECT I.ID, U.NOMBRE, PR.NOMBRE, INV.NSERIE, I.DESCRIPCION, I.FECHA, U.ID FROM INCIDENCIA I,"
+        " INVENTARIO INV, PRODUCTO PR, USUARIO U WHERE I.ARTICULO = INV.ID AND "
+        " PR.ID = INV.PRODUCTO_ID AND I.USUARIO_ID = U.ID")
+    cur.execute(query)
+    mysql.connection.commit()
+
+    rows = cur.fetchall()
+    response["incidencias"] = []
+    for incidencia in rows:
+        response["incidencias"].append({
+            "id": incidencia[0],
+            "nombre": incidencia[1],
+            "producto": incidencia[2],
+            "nserie": incidencia[3],
+            "descripcion": incidencia[4],
+            "fecha": incidencia[5],
+            "usrid": incidencia[6]
+        })
+    cur.close()
+    return response
+
+
+@app.route('/create_incidencia/<producto_id>', methods=['POST'])
+def crear_incidencias(producto_id):
+    response = {}
+    response["incidencias"] = []
+    usuario_id = int(request.cookies.get('usuario'))
+
+    cur = mysql.connection.cursor()
+    data = json.loads(request.data)
+    query = ("INSERT INTO INCIDENCIA (USUARIO_ID, ARTICULO, DESCRIPCION, FECHA) VALUES ("
+       + str(usuario_id) + ", "
+       + str(producto_id) + ", "
+       + "'" + data['DESCRIPCION'] + "', "
+       + "'" + str(data['FECHA']) + "' "
+    ");")
+    
+    cur.execute(query)
+    mysql.connection.commit()
+    rows = cur.fetchall()
+    last_id = cur.lastrowid
+    response['exito'] = isinstance(last_id, int)
+
+    cur = mysql.connection.cursor()
+    query = ("SELECT I.ID, U.NOMBRE, PR.NOMBRE, INV.NSERIE, I.DESCRIPCION, I.FECHA, U.ID FROM INCIDENCIA I,"
+        " INVENTARIO INV, PRODUCTO PR, USUARIO U WHERE I.ARTICULO = INV.ID AND "
+        " PR.ID = INV.PRODUCTO_ID AND I.USUARIO_ID = U.ID AND I.ARTICULO = " + str(inventario_id))
+    cur.execute(query)
+    mysql.connection.commit()
+
+    rows = cur.fetchall()
+    for incidencia in rows:
+        response["incidencias"].append({
+            "id": incidencia[0],
+            "nombre": incidencia[1],
+            "producto": incidencia[2],
+            "nserie": incidencia[3],
+            "descripcion": incidencia[4],
+            "fecha": incidencia[5]
+        })
+    cur.close()
+    return response
+###################### FIN INCIDENCIA ######################
+
+######################### INICIO CONSUMIBLE ###############
 @app.route('/get_consumibles/', methods=['GET'])
 def obtener_consumibles():
     response = {}
@@ -664,7 +1015,6 @@ def obtener_usuarios():
     cur = mysql.connection.cursor()
     empresa_id = int(request.cookies.get('empresa'))
     usuario_id = request.cookies.get('usuario')
-
     cur.callproc('GET_USUARIOS', [empresa_id, usuario_id])
     rows = cur.fetchall()
     for usuario in rows:
@@ -1425,6 +1775,9 @@ def obtener_prestamos():
     return response
 
 
+@app.errorhandler(404) 
+def not_found(e):
+    return render_template("index.html") 
 
 
 @app.route('/')

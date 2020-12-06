@@ -1,0 +1,31 @@
+<div class="row p-3">
+    <div class="col-1"></div>
+    <div class="col-10">
+        <h3>Reporte de Mantenimientos</h3>
+        <button class="float-right btn btn-primary d-print-none" (click)="window.print()">Imprimir</button>
+        <table class="table table-bordered" *ngIf="this.mantenimientos.length > 0; else nomantenimientos">
+            <tr>
+                <th>ID</th>
+                <th>Producto Afectado</th>
+                <th>Número de Serie</th>
+                <th>Costo</th>
+                <th>Descripcion de los trabajos</th>
+                <th>Fecha de Inicio del Mantenimiento</th>
+                <th>Fecha de Fin de Mantenimiento</th>
+            </tr>
+            <tr *ngFor="let instancia of this.mantenimientos">
+                <td>{{ instancia.id }}</td>
+                <td>{{ instancia.producto }}</td>
+                <td>{{ instancia.nserie }}</td>
+                <td>{{ instancia.costo }}</td>
+                <td>{{ instancia.descripcion }}</td>
+                <td>{{ instancia.f_inicio }}</td>
+                <td>{{ instancia.f_final }}</td>
+            </tr>
+        </table>
+        <ng-template #nomantenimientos>
+            <h4>No existen mantenimientos en la empresa actual.</h4>
+        </ng-template>
+    </div>
+    <div class="col-1"></div>
+</div>

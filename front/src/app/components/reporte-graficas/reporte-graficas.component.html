@@ -1,4 +1,32 @@
-<div class="p-3">
-    <h3>Reportes del inventario</h3>
-    
+<div class="p-3 row mb-5">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+        <h3>Reportes del inventario</h3>
+        <div class="form-group">
+            <label for="selectorFecha">Selecciona el periodo de tiempo</label>
+            <select class="form-control" id="selectorFecha" (change)="cambiarTiempo()">
+                <option value="1">Última semana</option>
+                <option value="2">Último mes</option>
+                <option value="3">Último año</option>
+            </select>
+        </div>
+        <h2>Reportes Temporales</h2>
+        <h4 class="mt-3">Conteo general de sucesos</h4>
+        <canvas id="sucesos">{{ this.chart_reporte_conteos }}</canvas>
+
+        <h4 class="mt-3">¿Cómo se ha empleado dinero?</h4>
+        <canvas id="dinero">{{ this.data_chart_dinero }}</canvas>
+
+        <h2>Reportes Atemporales</h2>
+        <h4 class="mt-3">Conteo general de artículos en categorías</h4>
+        <canvas id="categorias">{{ this.chart_conteo_categorias }}</canvas>
+
+        <h4 class="mt-3">¿Cuáles son los principales proveedores de mantenimientos?</h4>
+        <canvas id="dinero_mtto">{{ this.data_chart_dinero }}</canvas>
+
+        <h4 class="mt-3">¿Cuáles son los principales proveedores de inventario?</h4>
+        <canvas id="dinero_inv">{{ this.chart_proveedores_inv }}</canvas>
+    </div>
+    <div class="col-sm-3"></div>
 </div>
+<br><br><br>

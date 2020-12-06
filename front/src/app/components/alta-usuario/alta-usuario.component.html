@@ -79,7 +79,7 @@
 
                     <div class="form-row row justify-content-md-center">
                         <div class="col mt-3">
-                            <label for="empresaSelect"></label>
+                            <label for="empresaSelect">Seleccione una empresa de trabajo</label>
                             <select [(ngModel)]="empresa" formControlName="company" class="custom-select"
                                 id="empresaSelect">
                                 <option *ngFor="let comp of empresas;" [value]="comp.id">{{ comp.razon_social }}

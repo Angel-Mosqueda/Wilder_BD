@@ -1,24 +1,13 @@
-<form class="mt-4 mr-2 mb-3">
-    <div class="row">
-        <div class="col-md-8">
-            <button class="btn btn-dark mb-3" [routerLink]="['/revisar-producto']">Atrás</button>
-        </div>
-        <div class="col-md-4 mb-3">
-            <input type="text" class="form-control align-bottom" placeholder="¿Qué Producto Estás Buscando?">
-        </div>
-    </div>
-</form>
-<div class="col mt-5">
-
+<div class="mt-5">
     <div>
-        <h3 class="row-md-12 text-center">CONSULTA CONSUMIBLE</h3>
+        <h3 class="row-md-12 text-center">CONSULTA CONSUMIBLES</h3>
+        <button class="btn btn-dark mb-3 float-right" [routerLink]="['/revisar-producto']">Atrás</button>
     </div>
-
 </div>
-<div class="container-md" style="margin-bottom: 45px;">
+<div style="margin-bottom: 45px;">
     <div class="row">
-
-        <div class="col-4 col-xl-2 mt-5">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-2 mt-3">
             <div class="card border-dark mb-3 bg-dark text-white text-align-center">
                 <form [formGroup]="this.form">
                     <div class="card-header">
@@ -32,18 +21,6 @@
                                     (change)="buscarQuery()">
                             </div>
                         </div>
-
-                        <div id="categoriaConsumible">
-                            <h6 class="card-title">Categoria</h6>
-                            <div class="custom-control custom-checkbox" *ngFor="let categoria of this.categorias">
-                                <input (change)="onCheckboxChange($event); buscarQuery()" class="form-check-input"
-                                    type="checkbox" [value]="categoria.id">
-                                <label class="form-check-label">
-                                    {{ categoria.nombre }}
-                                </label>
-                            </div>
-
-                        </div>
                         <!-- <div id="sliderCosto">
                 <h6 class="card-title">Costo</h6>
                 <div class="custom-slider">
@@ -56,36 +33,32 @@
                 </form>
             </div>
         </div>
-
-
-        <div class="col-xl-10" *ngIf="this.productos; else noproducto">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-8" *ngIf="this.consumibles; else noconsumibles">
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col">ID</th>
                         <th scope="col">Nombre</th>
-                        <th scope="col">Imagen de Referencia</th>
+                        <th scope="col">SKU</th>
+                        <th scope="col">Cantidad</th>
                         <th scope="col">Descripción</th>
-                        <th scope="col">Registrado por</th>
-                        <th scope="col">Ir a</th>
+                        <th scope="col">Proveedor</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let producto of this.productos">
-                        <th scope="row">{{ producto.id }}</th>
-                        <td>{{ producto.nombre }}</td>
-                        <td>
-                            <img class="w-100" src="/static/{{ producto.imagen_referencia }}" alt="" srcset="">
-                        </td>
-                        <td>{{ producto.descripcion }}</td>
-                        <td>{{ producto.usuario_id }}</td>
-                        <td><button type="button" class="btn btn-outline-info"
-                                [routerLink]="['/detalle-producto', producto.id]">Ver</button></td>
+                    <tr *ngFor="let consumible of this.consumibles">
+                        <th scope="row">{{ consumible.id }}</th>
+                        <td>{{ consumible.nombre }}</td>
+                        <td>{{ consumible.sku }}</td>
+                        <td>{{ consumible.cantidad }}</td>
+                        <td>{{ consumible.descripcion }}</td>
+                        <td>{{ consumible.proveedor }}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <ng-template #noproducto>
+        <ng-template #noconsumibles>
             <div>
                 <h3>No existen productos, intenta crear uno.</h3>
             </div>

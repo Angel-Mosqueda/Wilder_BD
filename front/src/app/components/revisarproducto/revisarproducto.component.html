@@ -8,21 +8,16 @@
                 <h2>Altas</h2>
             </div></a>
         </div>
+        
         <div *ngIf="globals.rol === 'admin' || globals.rol === 'encargado' " class="imagen">
-            <img src="../../../assets/images/bajas.png" alt="Option 2">
-            <a [routerLink]="['/consumible-inventario']" (click) ="esBaja()">
+            <img src="../../../assets/images/reportes.jpg" alt="Option 2">
+            <a [routerLink]="['/graficas']">
                 <div class="overlay">
-                    <h2>Bajas</h2><br>
+                    <h2>Reportes</h2><br>
                 </div>
             </a>
         </div>
-        <div *ngIf="globals.rol === 'admin' || globals.rol === 'encargado' " class="imagen">
-            <img src="../../../assets/images/cambios2.jpg" alt="Option 3">
-            <a [routerLink]="['/consumible-inventario']" (click) ="esCambio()">
-                <div class="overlay">
-                    <h2>Cambios</h2>
-                </div></a>
-        </div>
+        
         <div class="imagen">
             <img src="../../../assets/images/consultas.png" alt="Option 4">
             <a [routerLink]="['/consumible-inventario']" (click) ="esConsulta()"><div class="overlay">
@@ -37,13 +32,6 @@
                     <h2>Gestion de Categorías</h2><br>
                 </div>
             </a>
-        </div>
-
-        <div class="imagen">
-            <img src="../../../assets/images/ayuda.jpg" alt="Option 6">
-            <a [routerLink]="['/']"><div class="overlay">
-                <h2>Ayuda</h2>
-            </div></a>
         </div>
     </div>
 </div>

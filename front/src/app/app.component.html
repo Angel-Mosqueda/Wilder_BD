@@ -1,6 +1,6 @@
 <div class="d-flex" id="wrapper">
   <!-- Sidebar -->
-  <div class="bg-light border-right" id="sidebar-wrapper">
+  <div class="bg-light border-right d-print-none" id="sidebar-wrapper">
     <div class="sidebar-heading row justify-content-center"><img src="../assets/images/logo.png"></div>
     <div *ngIf="logged" class="list-group list-group-flush">
       <a *ngIf="globals.rol === 'admin' || globals.rol === 'encargado' " [routerLink]="['/revisar-producto']"
@@ -13,6 +13,14 @@
         Productos</a>
       <a *ngIf="globals.rol === 'admin' || globals.rol === 'encargado' " [routerLink]="['/prestamo-producto']"
         class="list-group-item list-group-item-action bg-light">Prestamo de Productos</a>
+      <a *ngIf="globals.rol === 'admin' || globals.rol === 'encargado' " [routerLink]="['/incidencias']"
+        class="list-group-item list-group-item-action bg-light">Reporte de Incidencias</a>
+      <a *ngIf="globals.rol === 'admin' || globals.rol === 'encargado' " [routerLink]="['/reporte_pres']"
+        class="list-group-item list-group-item-action bg-light">Reporte de Préstamos</a>
+      <a *ngIf="globals.rol === 'admin' || globals.rol === 'encargado' " [routerLink]="['/reporte_sol']"
+        class="list-group-item list-group-item-action bg-light">Reporte de Solicitudes</a>
+      <a *ngIf="globals.rol === 'admin' || globals.rol === 'encargado' " [routerLink]="['/reporte_mtto']"
+        class="list-group-item list-group-item-action bg-light">Reporte de Mantenimiento</a>
       <a *ngIf="globals.rol === 'admin'" [routerLink]="['/usuarios']"
         class="list-group-item list-group-item-action bg-light">Gestión de Usuarios</a>
       <!-- <a [routerLink]="['/contacto']" class="list-group-item list-group-item-action bg-light">Contacto</a> -->
@@ -24,7 +32,7 @@
   <!-- /#sidebar-wrapper -->
   <!-- Page Content -->
   <div id="page-content-wrapper">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom d-print-none">
       <button class="btn btn-primary" id="menu-toggle">Menu</button>
       <a class="nav-link text-decoration-none" [routerLink]="['/']">
         <h3 class="ml-3 mt-2">WILDER</h3>
@@ -54,8 +62,9 @@
           <li *ngIf="logged" class="nav-item dropdown" style="vertical-align:bottom;">
             <a class="nav-link " id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">
-              <img [src]="this._authService.isAuthenticated() ? '/static/' + this._authService.getInfo()['foto'] : '../assets/prueba.jpg'" class="border border-dark rounded-circle " width="40px"
-                height="40px">
+              <img
+                [src]="this._authService.isAuthenticated() ? '/static/' + this._authService.getInfo()['foto'] : '../assets/prueba.jpg'"
+                class="border border-dark rounded-circle " width="40px" height="40px">
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" (click)="cerrarSesion()" href="#">Cerrar Sesión</a>

@@ -44,6 +44,10 @@ import { ReporteInventarioComponent } from './components/reporte-inventario/repo
 import { UsuariosComponent } from './components/usuarios/usuarios.component';
 import { ReporteGraficasComponent } from './components/reporte-graficas/reporte-graficas.component';
 import { MantenimientoProductoComponent } from './components/mantenimiento-producto/mantenimiento-producto.component';
+import { IncidenciasComponent } from './components/incidencias/incidencias.component';
+import { ReportePrestamosComponent } from './components/reporte-prestamos/reporte-prestamos.component';
+import { ReporteSolicitudesComponent } from './components/reporte-solicitudes/reporte-solicitudes.component';
+import { ReporteMantenimientoComponent } from './components/reporte-mantenimiento/reporte-mantenimiento.component';
 
 
 @NgModule({
@@ -80,7 +84,11 @@ import { MantenimientoProductoComponent } from './components/mantenimiento-produ
     ReporteConsumibleComponent,
     ReporteInventarioComponent,
     UsuariosComponent,
-    MantenimientoProductoComponent
+    MantenimientoProductoComponent,
+    IncidenciasComponent,
+    ReportePrestamosComponent,
+    ReporteSolicitudesComponent,
+    ReporteMantenimientoComponent
   ],
   imports: [
     BrowserModule,
@@ -96,6 +104,7 @@ import { MantenimientoProductoComponent } from './components/mantenimiento-produ
   ],
   providers: [
     Globals,
+    { provide: Window, useValue: window }
   ],
   bootstrap: [AppComponent]
 })
