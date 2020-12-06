@@ -151,7 +151,7 @@ export class AltaProductoComponent implements OnInit {
         (success: any) => {
           if (success.exito) {
             alert("Producto registrado exitosamente.");
-            this.router.navigate(['/alta-producto/']);
+            this.router.navigate(['/revisar-producto/']);
           } else {
             alert('error en el registro, mensaje del server: ' + success.desc);
           }

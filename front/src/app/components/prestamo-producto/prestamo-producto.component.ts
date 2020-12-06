@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Options } from '@angular-slider/ngx-slider';
 import { Globals } from '../../globals/globals';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -16,9 +15,10 @@ export class PrestamoProductoComponent implements OnInit {
   public prestamos: any;
   globals: Globals;
   filter: any = {};
-  public form: FormGroup;
-  public form2: FormGroup;
-  submitted = false;
+  form: FormGroup;
+  form2: FormGroup;
+  submitted1 = false;
+  submitted2 = false;
   usrinfo = null;
   _authService = new AuthService;
   date: Date;
@@ -34,15 +34,15 @@ export class PrestamoProductoComponent implements OnInit {
     private _fb: FormBuilder
   ) {
     this.globals = globals;
+  }
+
+  ngOnInit(): void {
     this.form = this._fb.group({
       fechaEsperada: ['', Validators.required]
     });
     this.form2 = this._fb.group({
       observacionesTA: ['', Validators.required]
     });
-  }
-
-  ngOnInit(): void {
     
     this.indexVar = null;
     this.indexVarP = null;
@@ -83,7 +83,13 @@ export class PrestamoProductoComponent implements OnInit {
   }
 
   aceptarSolicitud(){
-    console.log(this.form.get('fechaEsperada').value);
+    console.log("entro a funcion");
+    this.submitted1 = true;
+    if (this.form.invalid) {
+      console.log("error");
+      return;
+    } else{
+      console.log(this.form.get('fechaEsperada').value);
     console.log(this.usrinfo['id'] + "  " + this.solicitudes[this.indexVar]['sol_id'] );
     console.log(this.solicitudes[this.indexVar]);
     this._requests.createSolicitudP2(this.usrinfo['id'], this.solicitudes[this.indexVar]['sol_id']).subscribe(
@@ -124,7 +130,7 @@ export class PrestamoProductoComponent implements OnInit {
         if (success.exito) {
           console.log("prestamo con exito")
           alert("Solicitud registrada exitosamente.");
-          this.router.navigate(['/']);
+          window.location.href = '/';
         } else {
           alert('error en el registro, mensaje del server: ' + success.desc);
         }
@@ -132,58 +138,70 @@ export class PrestamoProductoComponent implements OnInit {
       (error) => {
         alert("Error en el servidor.")
       }
-    );
+    );    
+    }
   }
 
 
 
   aceptarDevolucion(){
-    console.log("prueba " + this.indexVarP);
+    console.log("entro a funcion");
+    this.submitted2 = true;
+    if (this.form2.invalid) {
+      console.log("error");
+      return;
+    } else{
+      console.log("prueba " + this.indexVarP);
 
-    console.log(this.form2.get('observacionesTA').value);
-    console.log(this.prestamos[this.indexVarP]['sol_id']);
-    console.log(this.prestamos[this.indexVarP]['inv_id']);
-    this._requests.createSolicitudP3(this.form2.get('observacionesTA').value, this.prestamos[this.indexVarP]['sol_id']).subscribe(
-      (success: any) => {
-        if (success.exito) {
-          console.log("Exito");
-        } else {
-          alert('error en el registro, mensaje del server: ' + success.desc);
+      console.log(this.form2.get('observacionesTA').value);
+      console.log(this.prestamos[this.indexVarP]['sol_id']);
+      console.log(this.prestamos[this.indexVarP]['inv_id']);
+      this._requests.createSolicitudP3(this.form2.get('observacionesTA').value, this.prestamos[this.indexVarP]['sol_id']).subscribe(
+        (success: any) => {
+          if (success.exito) {
+            console.log("Exito");
+          } else {
+            alert('error en el registro, mensaje del server: ' + success.desc);
+          }
+        },
+        (error) => {
+          alert("Error en el servidor.")
         }
-      },
-      (error) => {
-        alert("Error en el servidor.")
-      }
-    );
-
-
-    this._requests.updateInvEst(this.prestamos[this.indexVarP]['inv_id'], 0).subscribe(
-      (success: any) => {
-        if (success.exito) {
-          console.log("exito")
-        } else {
-          alert('error en el registro, mensaje del server: ' + success.desc);
+      );
+  
+  
+      this._requests.updateInvEst(this.prestamos[this.indexVarP]['inv_id'], 0).subscribe(
+        (success: any) => {
+          if (success.exito) {
+            console.log("exito")
+          } else {
+            alert('error en el registro, mensaje del server: ' + success.desc);
+          }
+        },
+        (error) => {
+          alert("Error en el servidor.")
         }
-      },
-      (error) => {
-        alert("Error en el servidor.")
-      }
-    );
-
-
-    this._requests.updateInventario(this.prestamos[this.indexVarP]['prest_id']).subscribe(
-      (success: any) => {
-        if (success.exito) {
-          alert("Solicitud registrada exitosamente.");
-          this.router.navigate(['/']);
-        } else {
-          alert('error en el registro, mensaje del server: ' + success.desc);
+      );
+  
+  
+      this._requests.updateInventario(this.prestamos[this.indexVarP]['prest_id']).subscribe(
+        (success: any) => {
+          if (success.exito) {
+            alert("Solicitud registrada exitosamente.");
+            window.location.href = '/';
+          } else {
+            alert('error en el registro, mensaje del server: ' + success.desc);
+          }
+        },
+        (error) => {
+          alert("Error en el servidor.")
         }
-      },
-      (error) => {
-        alert("Error en el servidor.")
-      }
-    );
+      );
+
+   
+
+
+    }
   }
 
 }

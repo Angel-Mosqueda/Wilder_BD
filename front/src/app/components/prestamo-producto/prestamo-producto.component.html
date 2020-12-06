@@ -51,7 +51,7 @@
 </div>
 
 
-
+<form [formGroup]="this.form" (ngSubmit)="aceptarSolicitud()">
 <div class="modal fade" id="modalSolicitar" tabindex="-1" role="dialog" aria-labelledby="consultaModalLabel"
   aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -63,25 +63,31 @@
         </button>
       </div>
       <div class="modal-body">
-        <form [formGroup]="this.form">
+        
           <div class="card-body">
             <div id="busqueda">
               <div class="form-group">
                 <h6 class="card-title">Fecha Estimada</h6>
-                <input type="date" class="form-control" name="busqueda" [(ngModel)]="date" formControlName="fechaEsperada" required>
+                <input type="date" class="form-control" name="busqueda" 
+                [ngClass] = "{ 'is-invalid': submitted1 && f.fechaEsperada.errors }"
+                formControlName="fechaEsperada">
+                <div *ngIf="submitted1 && f.fechaEsperada.errors" class="invalid-feedback">
+                  <div *ngIf="f.fechaEsperada.errors.required">Por favor ingrese las observaciones correspondientes</div>
+                </div>
               </div>
             </div>
           </div>
-        </form>
+      
         <p>¿Seguro que quieres hacer una solicitud de este producto?</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="aceptarSolicitud()">Solicitar</button>
+        <button type="submit" class="btn btn-primary">Solicitar</button>
       </div>
     </div>
   </div>
 </div>
+</form>
 
 
 
@@ -133,6 +139,8 @@
   </div>
 </div>
 
+
+<form [formGroup]="this.form2" (ngSubmit)="aceptarDevolucion()">
 <div class="modal fade" id="modalPrestamo" tabindex="-1" role="dialog" aria-labelledby="consultaModalLabel"
   aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -144,24 +152,32 @@
         </button>
       </div>
       <div class="modal-body">
-        <form [formGroup]="this.form2">
+        
           <div class="card-body">
             <div id="busqueda">
+
               <div class="form-group">
                 <h6 class="card-title">Observaciones</h6>
-                <textarea formControlName="observacionesTA" [(ngModel)]="observaciones" cols="56" rows="7" required></textarea>
+                <textarea class="form-control" formControlName="observacionesTA" 
+                [ngClass] = "{ 'is-invalid': submitted2 && g.observacionesTA.errors }"
+                cols="56" rows="7"></textarea>
+                <div *ngIf="submitted2 && g.observacionesTA.errors" class="invalid-feedback">
+                  <div *ngIf="g.observacionesTA.errors.required">Por favor ingrese las observaciones correspondientes</div>
+                </div>
               </div>
+
+          
             </div>
           </div>
-        </form>
+       
         <p>¿Seguro que quieres aceptar la devolución de este producto?</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="aceptarDevolucion()">Aceptar</button>
+        <button type="submit" class="btn btn-danger">Aceptar</button>
       </div>
     </div>
   </div>
 </div>
-
+</form>
 
