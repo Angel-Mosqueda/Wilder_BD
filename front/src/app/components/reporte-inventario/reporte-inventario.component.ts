@@ -89,6 +89,23 @@ export class ReporteInventarioComponent implements OnInit {
     );
   }
 
+  eliminarProducto(pid) {
+    this._requests.eliminarProducto(pid).subscribe(
+      (success: any) => {
+        if (success.exito) {
+          this.productos = success.productos;
+        } else {
+          this.productos = null;
+          alert('Error en el servidor. Mensaje: ' + success.desc);
+        }
+      },
+      (error) => {
+        this.productos = null;
+        alert('Error en el servicio, contacta con un administrador,');
+      }
+    );
+  }
+  
   private addCheckboxes() {
     this._requests.getCategorias().subscribe(
       (success: any) => {

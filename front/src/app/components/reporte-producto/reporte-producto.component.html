@@ -30,14 +30,16 @@
             <div id="busqueda">
               <div class="form-group">
                 <h6 class="card-title">Búsqueda directa</h6>
-                <input type="text" class="form-control" name="busqueda" formControlName="busqueda" (change)="buscarQuery()">
+                <input type="text" class="form-control" name="busqueda" formControlName="busqueda"
+                  (change)="buscarQuery()">
               </div>
             </div>
 
             <div id="categoriaConsumible">
               <h6 class="card-title">Categoria</h6>
               <div class="custom-control custom-checkbox" *ngFor="let categoria of this.categorias">
-                <input (change)="onCheckboxChange($event); buscarQuery()" class="form-check-input" type="checkbox" [value]="categoria.id">
+                <input (change)="onCheckboxChange($event); buscarQuery()" class="form-check-input" type="checkbox"
+                  [value]="categoria.id">
                 <label class="form-check-label">
                   {{ categoria.nombre }}
                 </label>
@@ -68,6 +70,7 @@
             <th scope="col">Descripción</th>
             <th scope="col">Registrado por</th>
             <th scope="col">Ir a</th>
+            <th scope="col">Eliminar</th>
           </tr>
         </thead>
         <tbody>
@@ -79,7 +82,11 @@
             </td>
             <td>{{ producto.descripcion }}</td>
             <td>{{ producto.usuario_id }}</td>
-            <td><button type="button" class="btn btn-outline-info" [routerLink]="['/detalle-producto', producto.id]">Ver</button></td>
+            <td><button type="button" class="btn btn-outline-info"
+                [routerLink]="['/detalle-producto', producto.id]">Ver</button></td>
+            <td><button type="button" class="btn btn-outline-danger" data-toggle="tooltip" data-placement="top"
+                title="Esta acción no puede deshacerse, se eliminará todo lo relativo al producto."
+                (click)="eliminarProducto(producto.id)">Eliminar</button></td>
           </tr>
         </tbody>
       </table>

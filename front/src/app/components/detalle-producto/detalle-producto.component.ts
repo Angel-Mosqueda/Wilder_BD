@@ -160,6 +160,36 @@ export class DetalleProductoComponent implements OnInit {
     }
   }*/
 
+  eliminarInventario(pid) {
+    this._requests.eliminarInventario(pid).subscribe(
+      (success: any) => {
+        if (!success.exito) {
+          alert('Error en el servidor. Mensaje: ' + success.desc);
+        }
+      },
+      (error) => {
+        alert('Error en el servicio, contacta con un administrador.');
+      }
+    );
+    this._requests.getProductoInfo(this.id).subscribe(
+      (success: any) => {
+        if (success.exito) {
+          this.categorias = success.categorias;
+          this.producto_info = success.producto;
+          this.inventario = success.inventario;
+          console.log(this.inventario);
+        } else {
+          this.categorias = null;
+          alert('Error en el servidor. Mensaje: ' + success.desc);
+        }
+      },
+      (error) => {
+        this.categorias = null;
+        alert('Error en el servicio, contacta con un administrador.');
+      }
+    )
+  }
+
 
   fileChange(event) {
     this.file = event.target.files.item(0);

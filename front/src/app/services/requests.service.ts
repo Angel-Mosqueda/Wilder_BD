@@ -238,6 +238,14 @@ export class RequestsService {
     return this.http.get(url);
   }
 
+  eliminarProducto(pid: any) {
+    return this.http.get('/eliminar_producto/' + pid);
+  }
+
+  eliminarInventario(pid: any) {
+    return this.http.get('/eliminar_inventario/' + pid);
+  }
+
   //////////////////// Filtro Consumibles
   obtenerConsumibles(filtro: any) {
     let url = "/filtro_consumibles";

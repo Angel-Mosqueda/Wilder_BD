@@ -71,8 +71,25 @@ export class ReporteProductoComponent implements OnInit {
   public buscarQuery() {
     let nombre = this.form.controls["busqueda"].value;
     let checks = this.form.controls.categorias.value;
-    checks.splice(0,2);
+    checks.splice(0, 2);
     this._requests.obtenerProductos(checks, nombre).subscribe(
+      (success: any) => {
+        if (success.exito) {
+          this.productos = success.productos;
+        } else {
+          this.productos = null;
+          alert('Error en el servidor. Mensaje: ' + success.desc);
+        }
+      },
+      (error) => {
+        this.productos = null;
+        alert('Error en el servicio, contacta con un administrador,');
+      }
+    );
+  }
+
+  eliminarProducto(pid) {
+    this._requests.eliminarProducto(pid).subscribe(
       (success: any) => {
         if (success.exito) {
           this.productos = success.productos;

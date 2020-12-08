@@ -617,6 +617,49 @@ def obtener_productos():
         response['exito'] = True
     cur.close()
     return response
+
+
+@app.route('/eliminar_producto/<p_id>', methods=['GET'])
+def eliminar_producto(p_id):
+    response = {}
+    response["productos"] = []
+    cur = mysql.connection.cursor()
+    empresa_id = int(request.cookies.get('empresa'))
+    cur.callproc('ELIMINAR_PRODUCTO', [p_id, empresa_id])
+    mysql.connection.commit()
+    rows = cur.fetchall()
+
+    cur.callproc('FILTRO_PRODUCTOS', ['', '', empresa_id])
+    rows = cur.fetchall()
+    for producto in rows:
+        response["productos"].append({
+            "id": producto[0],
+            "usuario_id": producto[1],
+            "nombre": producto[2],
+            "descripcion": producto[3],
+            "imagen_referencia": producto[4]
+        })
+    if len(response['productos']) == 0:
+        response['exito'] = False
+        response['desc'] = "No existen productos, intenta crear uno."
+    else:
+        response['exito'] = True
+    cur.close()
+    return response
+
+
+@app.route('/eliminar_inventario/<pid>', methods=['GET'])
+def eliminar_inventario(pid):
+    response = {}
+    cur = mysql.connection.cursor()
+    empresa_id = int(request.cookies.get('empresa'))
+    cur.callproc('ELIMINAR_INVENTARIO', [pid, empresa_id])
+    mysql.connection.commit()
+    cur.close()
+    response['exito'] = True
+    cur.close()
+    return response
+    
 ###################### FIN FILTRO ######################
 
 ###################### INICIO CATEGORIA ################

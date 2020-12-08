@@ -62,7 +62,8 @@
     <div class="row">
         <div class="col-12">
             <h4>Existencias de inventario para este producto:</h4>
-            <button *ngIf="this.globals.rol != 'normal'" class="float-right d-print-none btn btn-success" (click)="this.modo_creacion = !this.modo_creacion;">Añade una
+            <button *ngIf="this.globals.rol != 'normal'" class="float-right d-print-none btn btn-success"
+                (click)="this.modo_creacion = !this.modo_creacion;">Añade una
                 nueva existencia de este producto</button>
             <button class="btn btn-primary d-print-none" (click)="window.print();">Imprimir pantalla</button>
         </div>
@@ -81,6 +82,7 @@
                     <th rowspan="2" class="d-print-none">Mostrar Factura</th>
                     <th rowspan="2" class="d-print-none">Mostrar Mantenimiento</th>
                     <th rowspan="2" class="d-print-none">Incidencias</th>
+                    <th rowspan="2" *ngIf="this.globals.rol != 'normal'" class="d-print-none">Eliminar</th>
                 </tr>
                 <tr>
                     <th>Nombre</th>
@@ -104,10 +106,17 @@
                             data-toggle="modal" data-target="#modalFactura">Factura</button>
                     </td>
                     <td class="d-print-none">
-                        <button class="btn btn-secondary" [routerLink]="['/mantenimiento-producto', inv.id]" >Mantenimiento</button>
+                        <button class="btn btn-secondary"
+                            [routerLink]="['/mantenimiento-producto', inv.id]">Mantenimiento</button>
                     </td>
                     <td class="d-print-none">
-                        <button class="btn btn-secondary" [routerLink]="['/incidencias', inv.id]" >Incidencias</button>
+                        <button class="btn btn-secondary" [routerLink]="['/incidencias', inv.id]">Incidencias</button>
+                    </td>
+                    <td class="d-print-none">
+                        <button class="btn btn-danger" *ngIf="this.globals.rol != 'normal'" data-toggle="tooltip"
+                            data-placement="top"
+                            title="Esta acción no puede deshacerse, se eliminará todo lo relativo a la instancia del producto."
+                            (click)="eliminarInventario(inv.id)">Eliminar</button>
                     </td>
                 </tr>
             </table>
