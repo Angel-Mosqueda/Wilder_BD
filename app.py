@@ -1367,7 +1367,7 @@ def crear_mantenimiento(id_producto):
     response = {}
     cur = mysql.connection.cursor()
     data = json.loads(request.data)
-    F_FINAL = ' F_FINAL = NULL ' if data['F_FINAL'] == '' else " F_FINAL = '" + str(data['F_FINAL']) + "' "
+    F_FINAL = ' NULL ' if data['F_FINAL'] == '' else " '" + str(data['F_FINAL']) + "' "
     query = ("INSERT INTO MANTENIMIENTO (INVENTARIO_ID, COSTO, DESCRIPCION, PROVEEDOR_MTTO, F_INICIO, F_FINAL) VALUES ("
     + str(id_producto) + ", "
     + str(data['COSTO']) + ", "

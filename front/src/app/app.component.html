@@ -5,9 +5,6 @@
     <div *ngIf="logged" class="list-group list-group-flush">
       <a *ngIf="globals.rol === 'admin' || globals.rol === 'encargado' " [routerLink]="['/revisar-producto']"
         class="list-group-item list-group-item-action bg-light">Gestion De Productos</a>
-      <a *ngIf="globals.rol === 'normal'" [routerLink]="['/mantenimiento']"
-        class="list-group-item list-group-item-action bg-light">Solicitud De
-        Mantenimiento</a>
       <a *ngIf="globals.rol === 'normal'" [routerLink]="['/solicitud']"
         class="list-group-item list-group-item-action bg-light">Solicitud De
         Productos</a>
